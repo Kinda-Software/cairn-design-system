@@ -1,0 +1,365 @@
+/*
+ * Cairn Design System — shadcn-svelte theme
+ * Tailwind v4 / OKLCH colours
+ *
+ * Drop this file into your SvelteKit project as src/app.css
+ * and import it in your root +layout.svelte.
+ *
+ * Per-product theming: wrap your app root in data-theme="beacon" etc.
+ * and override the --brand-* primitives defined at the bottom of this file.
+ *
+ * Dark mode: shadcn-svelte uses a .dark class on <html>.
+ * Wire this up with mode-watcher: https://mode-watcher.svecosystem.com
+ */
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* ─── Dark mode variant ────────────────────────────────────────────── */
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Cairn primitives ─────────────────────────────────────────────── */
+/*
+ * These are the raw palette values. Never reference these directly in
+ * components — use the semantic tokens below. The brand primitives are
+ * overridden per-product via data-theme attributes.
+ */
+:root {
+  /* Brand primitives — default product: Orbit (indigo) */
+  --cairn-brand-500:        oklch(0.5834 0.1747 272.76); /* #5B6EE1 */
+  --cairn-brand-400:        oklch(0.6801 0.1583 276.93); /* #818CF8 — dark mode */
+  --cairn-brand-50:         oklch(0.9418 0.0284 281.50); /* #E8EAFF */
+  --cairn-brand-700:        oklch(0.4834 0.1909 270.66); /* #3A4DC8 */
+  --cairn-brand-900:        oklch(0.2994 0.1026 272.66); /* #1E2660 */
+  --cairn-brand-dark-muted: oklch(0.2792 0.0685 273.13); /* #1E254A */
+  --cairn-brand-dark-nav:   oklch(0.1993 0.0591 275.38); /* #0F1230 */
+
+  /* Stone neutrals — warm-tinted, never pure grey */
+  --cairn-neutral-50:   oklch(0.9699 0.0013 106.42); /* #F5F5F4 */
+  --cairn-neutral-200:  oklch(0.9213 0.0027 106.45); /* #E5E5E3 */
+  --cairn-neutral-500:  oklch(0.5534 0.0116 58.07);  /* #78716C */
+  --cairn-neutral-900:  oklch(0.2161 0.0061 56.04);  /* #1C1917 */
+  --cairn-ink:          oklch(0.2099 0.0039 286.06); /* #18181A */
+  --cairn-white:        oklch(1.0000 0.0000 89.88);  /* #FFFFFF */
+
+  /* Status */
+  --cairn-sage:         oklch(0.6300 0.1403 158.87); /* #16A269 */
+  --cairn-sage-muted:   oklch(0.9505 0.0507 163.05); /* #D1FAE5 */
+  --cairn-sage-text:    oklch(0.4318 0.0865 166.91); /* #065F46 */
+  --cairn-ember:        oklch(0.6380 0.1719 33.25);  /* #E05B40 */
+  --cairn-ember-muted:  oklch(0.9653 0.0157 32.01);  /* #FEF0ED */
+  --cairn-ember-text:   oklch(0.4437 0.1613 26.90);  /* #991B1B */
+  --cairn-warning-muted:oklch(0.9619 0.0580 95.62);  /* #FEF3C7 */
+  --cairn-warning-text: oklch(0.4732 0.1247 46.20);  /* #92400E */
+
+  /* Marketing canvas — always explicit, never inherited */
+  --cairn-mkt-canvas:        oklch(0.1615 0.0105 285.17); /* #0D0D12 */
+  --cairn-mkt-surface:       oklch(0.2040 0.0158 284.91); /* #16161E */
+  --cairn-mkt-surface-raised:oklch(0.2396 0.0190 284.87); /* #1E1E28 */
+}
+
+/* ─── Shadcn semantic tokens — light mode ──────────────────────────── */
+/*
+ * These are the variables shadcn-svelte components consume.
+ * They map Cairn's token architecture onto shadcn's naming convention.
+ * Components reference these; never the primitives above.
+ */
+:root {
+  /* Page canvas */
+  --background:            var(--cairn-neutral-50);
+  --foreground:            var(--cairn-ink);
+
+  /* Cards and raised surfaces */
+  --card:                  var(--cairn-white);
+  --card-foreground:       var(--cairn-ink);
+
+  /* Popovers, dropdowns, command palette */
+  --popover:               var(--cairn-white);
+  --popover-foreground:    var(--cairn-ink);
+
+  /* Primary — brand interactive colour */
+  --primary:               var(--cairn-brand-500);
+  --primary-foreground:    var(--cairn-white);
+
+  /* Secondary — alternative actions */
+  --secondary:             var(--cairn-neutral-50);
+  --secondary-foreground:  var(--cairn-ink);
+
+  /* Muted — ghost elements, disabled, placeholder areas */
+  --muted:                 var(--cairn-neutral-50);
+  --muted-foreground:      var(--cairn-neutral-500);
+
+  /* Accent — hover states on ghost/nav items */
+  --accent:                var(--cairn-brand-50);
+  --accent-foreground:     var(--cairn-brand-700);
+
+  /* Destructive — delete, remove, critical errors */
+  --destructive:           var(--cairn-ember);
+  --destructive-foreground:var(--cairn-white);
+
+  /* Structural */
+  --border:                var(--cairn-neutral-200);
+  --input:                 var(--cairn-neutral-200);
+  --ring:                  var(--cairn-brand-500);
+
+  /* Radius — Cairn uses 12px as the base "card" radius */
+  --radius: 12px;
+
+  /* Sidebar — always dark in Cairn, regardless of mode */
+  --sidebar:               oklch(0.1993 0.0591 275.38); /* #0F1330 */
+  --sidebar-foreground:    oklch(1.0000 0.0000 89.88);
+  --sidebar-primary:       var(--cairn-brand-500);
+  --sidebar-primary-foreground: var(--cairn-white);
+  --sidebar-accent:        oklch(0.5834 0.1747 272.76 / 0.15); /* brand-500 at 15% */
+  --sidebar-accent-foreground: oklch(1.0000 0.0000 89.88);
+  --sidebar-border:        oklch(1.0000 0.0000 89.88 / 0.07); /* white/7% */
+  --sidebar-ring:          var(--cairn-brand-400);
+}
+
+/* ─── Shadcn semantic tokens — dark mode ───────────────────────────── */
+/*
+ * Surface hierarchy inverts in dark mode:
+ * Light: page=stone-50, cards=white (lighter than page)
+ * Dark:  page=ink-950, cards=ink-900 (lighter than page — same logic)
+ *
+ * Brand colour shifts from 500 to 400 (lighter stop) — saturated colours
+ * at 500 are too heavy on dark backgrounds.
+ */
+.dark {
+  --background:            oklch(0.2099 0.0039 286.06); /* ink #18181A */
+  --foreground:            oklch(0.9699 0.0013 106.42); /* stone-50 */
+
+  --card:                  oklch(0.2570 0.0037 286.14); /* #232325 — lighter than bg */
+  --card-foreground:       oklch(0.9699 0.0013 106.42);
+
+  --popover:               oklch(0.2570 0.0037 286.14);
+  --popover-foreground:    oklch(0.9699 0.0013 106.42);
+
+  --primary:               var(--cairn-brand-400);      /* lighter stop in dark mode */
+  --primary-foreground:    var(--cairn-ink);
+
+  --secondary:             oklch(0.2570 0.0037 286.14);
+  --secondary-foreground:  oklch(0.9699 0.0013 106.42);
+
+  --muted:                 oklch(0.2570 0.0037 286.14);
+  --muted-foreground:      oklch(0.6989 0.0103 93.62);  /* stone-400 */
+
+  --accent:                var(--cairn-brand-dark-muted);
+  --accent-foreground:     var(--cairn-brand-400);
+
+  --destructive:           var(--cairn-ember);
+  --destructive-foreground:var(--cairn-white);
+
+  --border:                oklch(0.3492 0.0034 286.22); /* #3A3A3C */
+  --input:                 oklch(0.3492 0.0034 286.22);
+  --ring:                  var(--cairn-brand-400);
+
+  /* Sidebar stays dark in dark mode — just goes slightly deeper */
+  --sidebar:               var(--cairn-brand-dark-nav);
+  --sidebar-border:        oklch(1.0000 0.0000 89.88 / 0.07);
+}
+
+/* ─── @theme — expose tokens as Tailwind utilities ─────────────────── */
+@theme inline {
+  /* Colours */
+  --color-background:           var(--background);
+  --color-foreground:           var(--foreground);
+  --color-card:                 var(--card);
+  --color-card-foreground:      var(--card-foreground);
+  --color-popover:              var(--popover);
+  --color-popover-foreground:   var(--popover-foreground);
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-secondary:            var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:                var(--muted);
+  --color-muted-foreground:     var(--muted-foreground);
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-destructive:          var(--destructive);
+  --color-destructive-foreground:var(--destructive-foreground);
+  --color-border:               var(--border);
+  --color-input:                var(--input);
+  --color-ring:                 var(--ring);
+  --color-sidebar:              var(--sidebar);
+  --color-sidebar-foreground:   var(--sidebar-foreground);
+  --color-sidebar-primary:      var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:       var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border:       var(--sidebar-border);
+  --color-sidebar-ring:         var(--sidebar-ring);
+
+  /* Cairn status colours — available as bg-success, text-success-foreground etc. */
+  --color-success:              var(--cairn-sage);
+  --color-success-muted:        var(--cairn-sage-muted);
+  --color-success-foreground:   var(--cairn-sage-text);
+  --color-warning-muted:        var(--cairn-warning-muted);
+  --color-warning-foreground:   var(--cairn-warning-text);
+
+  /* Marketing surface colours — used inside .surface-marketing wrapper */
+  --color-mkt-canvas:           var(--cairn-mkt-canvas);
+  --color-mkt-surface:          var(--cairn-mkt-surface);
+  --color-mkt-surface-raised:   var(--cairn-mkt-surface-raised);
+
+  /* Radius — shadcn derives its scale from --radius */
+  --radius-sm:   calc(var(--radius) * 0.333);  /* ~4px  — chips */
+  --radius-md:   calc(var(--radius) * 0.667);  /* ~8px  — inputs, buttons */
+  --radius-lg:   var(--radius);                /* 12px  — cards */
+  --radius-xl:   calc(var(--radius) * 1.333);  /* ~16px — modals */
+  --radius-full: 9999px;                       /* badges, pills */
+
+  /* Typography */
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+/* ─── Base styles ───────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border;
+    /* Cairn uses 0.5px borders — override shadcn's default 1px */
+    border-width: 0.5px;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+    /* Slightly tighter line height to compensate for Space Grotesk's natural width */
+    line-height: 1.65;
+  }
+
+  /*
+   * Inputs and buttons default to 0.5px border.
+   * Focus ring uses brand colour at 12% opacity — Cairn spec.
+   */
+  input, select, textarea, button {
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px oklch(from var(--ring) l c h / 0.12),
+                0 0 0 1px var(--ring);
+  }
+
+  /*
+   * Headings: negative tracking increases with size.
+   * Cairn spec: 600 weight only at 22px (heading-lg) and above.
+   */
+  h1 { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.03em;  line-height: 1.15; }
+  h2 { font-size: 1.375rem; font-weight: 500; letter-spacing: -0.022em; line-height: 1.25; }
+  h3 { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.015em; line-height: 1.3;  }
+  h4 { font-size: 0.9375rem;font-weight: 500; letter-spacing: 0;        line-height: 1.4;  }
+
+  /*
+   * Numeric figures in table cells use tabular nums.
+   * Apply font-mono class for financial tables that need strict alignment.
+   */
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+}
+
+/* ─── Cairn utility classes ─────────────────────────────────────────── */
+@layer utilities {
+  /*
+   * .surface-marketing
+   * Wrapper class for marketing sections. Applies the dark canvas and
+   * mkt-* token overrides. Never bleeds into app UI.
+   */
+  .surface-marketing {
+    --background:         var(--cairn-mkt-canvas);
+    --foreground:         oklch(1.0000 0.0000 89.88);
+    --card:               var(--cairn-mkt-surface);
+    --card-foreground:    oklch(1.0000 0.0000 89.88);
+    --border:             oklch(1.0000 0.0000 89.88 / 0.08);
+    --muted-foreground:   oklch(1.0000 0.0000 89.88 / 0.55);
+    --primary:            var(--cairn-brand-500);
+    --primary-foreground: oklch(1.0000 0.0000 89.88);
+    --accent:             var(--cairn-brand-400);         /* eyebrow colour */
+    --accent-foreground:  var(--cairn-brand-400);
+    background-color: var(--cairn-mkt-canvas);
+    color: oklch(1.0000 0.0000 89.88);
+  }
+
+  /* Marketing typography overrides inside .surface-marketing */
+  .surface-marketing h1 {
+    font-size: 4rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+  .surface-marketing h2 {
+    font-size: 2.25rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+  .surface-marketing h3 {
+    font-size: 1.375rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+
+  /* Eyebrow — marketing section labels */
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--cairn-brand-400);
+  }
+  /* Eyebrow inside surface-marketing inherits brand-muted (#818CF8) automatically */
+
+  /* Border width override — Cairn uses 0.5px throughout */
+  .border-cairn { border-width: 0.5px; }
+
+  /* Featured item border — the one exception: 1px brand colour */
+  .border-featured {
+    border-width: 1px;
+    border-color: var(--cairn-brand-500);
+  }
+}
+
+/* ─── Per-product theme overrides ──────────────────────────────────── */
+/*
+ * Each product overrides the 7 brand primitive tokens.
+ * Semantic tokens (--primary, --ring, --sidebar etc.) update automatically.
+ * See Cairn design system docs for authoring guidance on --cairn-brand-900
+ * and --cairn-brand-dark-nav — these must be independently authored per
+ * product; do not mechanically darken the brand colour.
+ */
+[data-theme="orbit"] {
+  /* Default — indigo. Defined above in :root. No override needed. */
+}
+
+[data-theme="beacon"] {
+  --cairn-brand-500:        oklch(0.5764 0.1262 164.81); /* #0E9E72 */
+  --cairn-brand-400:        oklch(0.7338 0.1349 163.39); /* #34C98F */
+  --cairn-brand-50:         oklch(0.9591 0.0445 162.90); /* #D4F5EA */
+  --cairn-brand-700:        oklch(0.4458 0.0997 166.42); /* #097355 */
+  --cairn-brand-900:        oklch(0.3274 0.0744 167.07); /* #065440 */
+  --cairn-brand-dark-muted: oklch(0.2312 0.0481 166.82); /* #0A2E22 */
+  --cairn-brand-dark-nav:   oklch(0.1645 0.0334 167.55); /* #031F18 */
+}
+
+[data-theme="vault"] {
+  --cairn-brand-500:        oklch(0.5529 0.1751 302.60); /* #9755D4 */
+  --cairn-brand-400:        oklch(0.6882 0.1545 305.14); /* #B97EEC */
+  --cairn-brand-50:         oklch(0.9416 0.0316 307.36); /* #EEE2FA */
+  --cairn-brand-700:        oklch(0.4321 0.1502 301.84); /* #6B35A8 */
+  --cairn-brand-900:        oklch(0.2609 0.1028 303.72); /* #3A1860 */
+  --cairn-brand-dark-muted: oklch(0.2083 0.0693 303.22); /* #261140 */
+  --cairn-brand-dark-nav:   oklch(0.1600 0.0543 304.01); /* #190A2E */
+}
+
+[data-theme="pulse"] {
+  --cairn-brand-500:        oklch(0.6071 0.1748 37.54);  /* #D44B22 */
+  --cairn-brand-400:        oklch(0.7012 0.1620 39.18);  /* #E87050 — adjusted */
+  --cairn-brand-50:         oklch(0.9601 0.0227 37.10);  /* #FAE9E3 */
+  --cairn-brand-700:        oklch(0.4789 0.1482 35.85);  /* #A8350F */
+  --cairn-brand-900:        oklch(0.3098 0.1024 35.20);  /* #5C1A06 */
+  --cairn-brand-dark-muted: oklch(0.2453 0.0665 34.98);  /* #3A1104 */
+  --cairn-brand-dark-nav:   oklch(0.1812 0.0512 35.47);  /* #220A02 */
+}

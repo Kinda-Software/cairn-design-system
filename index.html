@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cairn Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-500: #5B6EE1;
+    --brand-400: #818CF8;
+    --brand-50:  #E8EAFF;
+    --brand-700: #3A4DC8;
+    --brand-900: #1E2660;
+
+    --color-surface: #F5F5F4;
+    --color-surface-raised: #FFFFFF;
+    --color-border: #E5E5E3;
+    --color-border-mid: rgba(0,0,0,0.12);
+    --color-text-primary: #18181A;
+    --color-text-secondary: #78716C;
+    --color-text-tertiary: #A09E97;
+    --color-interactive: var(--brand-500);
+
+    --sage: #16A269;
+    --ember: #E05B40;
+
+    --mkt-canvas: #0D0D12;
+    --mkt-surface: #16161E;
+    --mkt-surface-raised: #1E1E28;
+    --mkt-border: rgba(255,255,255,0.08);
+    --mkt-text-primary: #FFFFFF;
+    --mkt-text-secondary: rgba(255,255,255,0.55);
+    --mkt-text-tertiary: rgba(255,255,255,0.30);
+    --mkt-brand: #5B6EE1;
+    --mkt-brand-muted: #818CF8;
+
+    --font-sans: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* Layout */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: #0F1330;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-brand {
+    padding: 20px 16px 16px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  }
+
+  .sidebar-wordmark {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: #fff;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .sidebar-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .sidebar-nav { padding: 12px 8px; flex: 1; }
+
+  .nav-group { margin-bottom: 20px; }
+
+  .nav-group-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    padding: 4px 8px;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 6px 8px;
+    border-radius: 7px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    margin-bottom: 1px;
+    transition: background 0.1s, color 0.1s;
+  }
+
+  .nav-link:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+  .nav-link.active { background: rgba(91,110,225,0.15); color: #fff; }
+
+  .main { flex: 1; min-width: 0; }
+
+  .topbar {
+    height: 52px;
+    background: var(--color-surface-raised);
+    border-bottom: 0.5px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    gap: 12px;
+  }
+
+  .topbar-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); }
+  .topbar-sep { color: var(--color-border); }
+  .topbar-current { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+
+  .topbar-badge {
+    margin-left: auto;
+    background: var(--brand-50);
+    color: var(--brand-700);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .content { padding: 48px 40px 80px; max-width: 900px; }
+
+  /* Sections */
+  .doc-section { margin-bottom: 64px; scroll-margin-top: 72px; }
+
+  .section-header { margin-bottom: 28px; }
+
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-500);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .section-title {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--color-text-primary);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    max-width: 620px;
+  }
+
+  .divider { height: 0.5px; background: var(--color-border); margin-bottom: 32px; }
+
+  /* Subsections */
+  .subsection { margin-bottom: 40px; }
+
+  .subsection-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+  }
+
+  .subsection-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* Reasoning callout */
+  .reasoning {
+    background: var(--brand-50);
+    border-left: 2px solid var(--brand-500);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--brand-700);
+    line-height: 1.6;
+  }
+
+  .reasoning strong { font-weight: 500; }
+
+  /* Preview containers */
+  .preview {
+    background: var(--color-surface-raised);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .preview-inner { padding: 24px; }
+
+  .preview-dark {
+    background: var(--mkt-canvas);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .preview-dark .preview-inner { padding: 24px; }
+
+  .preview-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    padding: 8px 16px;
+    border-bottom: 0.5px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .preview-label-dark {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    padding: 8px 16px;
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  }
+
+  /* Spec table */
+  .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+  .spec-table th {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    text-align: left;
+    padding: 6px 12px;
+    border-bottom: 0.5px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .spec-table td {
+    padding: 8px 12px;
+    border-bottom: 0.5px solid var(--color-border);
+    color: var(--color-text-secondary);
+    vertical-align: middle;
+  }
+  .spec-table tr:last-child td { border-bottom: none; }
+  .spec-table td:first-child { font-weight: 500; color: var(--color-text-primary); }
+  .spec-table code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: var(--color-surface);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--brand-700);
+  }
+
+  /* Code block */
+  .code-block {
+    background: #0D0D12;
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 16px;
+    overflow-x: auto;
+  }
+  .code-block .k { color: #818CF8; }
+  .code-block .s { color: #5DCAA5; }
+  .code-block .c { color: rgba(255,255,255,0.3); }
+
+  /* Token grid */
+  .token-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .token-card {
+    background: var(--color-surface-raised);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+  }
+  .token-card-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--color-border);
+  }
+  .token-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 0.5px solid var(--color-border); font-size: 12px; }
+  .token-row:last-child { border-bottom: none; }
+  .token-key { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); }
+  .token-val { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-primary); display: flex; align-items: center; gap: 6px; }
+  .token-dot { width: 12px; height: 12px; border-radius: 3px; border: 0.5px solid rgba(0,0,0,0.1); flex-shrink: 0; }
+
+  /* Swatches */
+  .swatch-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .swatch-item { text-align: center; }
+  .swatch-box { width: 52px; height: 52px; border-radius: var(--radius-md); display: block; border: 0.5px solid rgba(0,0,0,0.08); }
+  .swatch-name { font-size: 11px; color: var(--color-text-tertiary); margin-top: 5px; }
+  .swatch-hex { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); }
+
+  /* Type specimens */
+  .type-specimen { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 0.5px solid var(--color-border); }
+  .type-specimen:last-child { border-bottom: none; }
+  .type-meta { font-size: 11px; font-family: var(--font-mono); color: var(--color-text-tertiary); margin-top: 3px; }
+
+  /* Component demos */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid transparent;
+    transition: background 0.12s, border-color 0.12s;
+  }
+
+  .btn-primary { background: var(--brand-500); color: #fff; border-color: var(--brand-500); }
+  .btn-primary:hover { background: var(--brand-700); }
+  .btn-secondary { background: transparent; color: var(--color-text-primary); border-color: var(--color-border-mid); }
+  .btn-secondary:hover { background: var(--color-surface); }
+  .btn-ghost { background: var(--color-surface); color: var(--color-text-secondary); border-color: var(--color-border); }
+  .btn-destructive { background: #FEF0ED; color: var(--ember); border-color: #F5C4B3; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* Architecture diagram */
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .arch-card {
+    background: var(--color-surface-raised);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+  }
+  .arch-card-num {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--brand-500);
+    margin-bottom: 6px;
+  }
+  .arch-card-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  .arch-card-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.55; }
+  .arch-card-tokens { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-tertiary); line-height: 2; margin-top: 8px; }
+
+  /* Surface comparison */
+  .surface-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; }
+  .surface-col { padding: 16px; }
+  .surface-col:first-child { border-right: 0.5px solid var(--color-border); }
+  .surface-col-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 0.5px solid var(--color-border); }
+  .surface-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; }
+  .surface-rule { display: flex; gap: 8px; padding: 5px 0; border-bottom: 0.5px solid var(--color-border); font-size: 12px; }
+  .surface-rule:last-child { border-bottom: none; }
+  .surface-rule-prop { font-weight: 500; color: var(--color-text-primary); min-width: 100px; flex-shrink: 0; }
+  .surface-rule-val { color: var(--color-text-secondary); line-height: 1.5; }
+
+  /* Nav demos */
+  .mkt-nav-demo { background: var(--mkt-canvas); }
+  .mkt-nav-bar { height: 52px; display: flex; align-items: center; padding: 0 20px; gap: 0; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+  .mkt-wordmark { font-size: 16px; font-weight: 600; letter-spacing: -0.025em; color: #fff; margin-right: 28px; }
+  .mkt-links { display: flex; gap: 2px; flex: 1; }
+  .mkt-link { font-size: 13px; color: rgba(255,255,255,0.5); padding: 5px 10px; border-radius: 6px; cursor: default; }
+  .mkt-link.active { color: #fff; }
+  .mkt-actions { display: flex; align-items: center; gap: 8px; }
+  .mkt-cta-btn { background: var(--brand-500); color: #fff; border: none; padding: 6px 14px; border-radius: 7px; font-size: 13px; font-weight: 500; font-family: var(--font-sans); cursor: default; }
+  .mkt-text-link { font-size: 13px; color: rgba(255,255,255,0.55); cursor: default; padding: 5px 10px; }
+  .mkt-go-app { font-size: 13px; color: var(--mkt-brand-muted); cursor: default; padding: 5px 10px; font-weight: 500; }
+  .mkt-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--brand-500); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
+  .mkt-sep { width: 0.5px; height: 16px; background: rgba(255,255,255,0.12); }
+
+  .app-sidebar-demo { display: flex; height: 200px; background: var(--mkt-canvas); border-radius: var(--radius-lg); overflow: hidden; }
+  .app-sb { width: 180px; background: #0F1330; display: flex; flex-direction: column; flex-shrink: 0; border-right: 0.5px solid rgba(255,255,255,0.07); }
+  .app-sb-top { padding: 10px 10px 8px; border-bottom: 0.5px solid rgba(255,255,255,0.07); }
+  .app-sb-product { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 7px; }
+  .app-sb-icon { width: 22px; height: 22px; border-radius: 5px; background: var(--brand-500); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: #fff; flex-shrink: 0; }
+  .app-sb-name { font-size: 13px; font-weight: 500; color: #fff; }
+  .app-sb-chevron { margin-left: auto; font-size: 10px; color: rgba(255,255,255,0.3); }
+  .app-sb-nav { padding: 6px; flex: 1; }
+  .app-sb-item { display: flex; align-items: center; gap: 7px; padding: 5px 7px; border-radius: 6px; margin-bottom: 1px; cursor: default; }
+  .app-sb-item.active { background: rgba(91,110,225,0.15); }
+  .app-sb-item-dot { width: 14px; height: 14px; border-radius: 3px; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+  .app-sb-item.active .app-sb-item-dot { background: var(--brand-500); }
+  .app-sb-label { font-size: 12px; color: rgba(255,255,255,0.45); }
+  .app-sb-item.active .app-sb-label { color: #fff; }
+  .app-sb-footer { padding: 8px 10px; border-top: 0.5px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 7px; }
+  .app-sb-av { width: 22px; height: 22px; border-radius: 50%; background: var(--brand-500); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: #fff; flex-shrink:0; }
+  .app-sb-uname { font-size: 11px; color: rgba(255,255,255,0.6); flex: 1; }
+  .app-body-demo { flex: 1; background: var(--color-surface); display: flex; flex-direction: column; }
+  .app-topbar-demo { height: 40px; background: var(--color-surface-raised); border-bottom: 0.5px solid var(--color-border); display: flex; align-items: center; padding: 0 14px; }
+  .app-topbar-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .app-body-content { padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .app-stat { background: var(--color-surface-raised); border: 0.5px solid var(--color-border); border-radius: 7px; padding: 8px 10px; }
+  .app-stat-lbl { font-size: 9px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .app-stat-val { font-size: 16px; font-weight: 600; letter-spacing: -0.025em; color: var(--color-text-primary); }
+
+  /* Spacing scale */
+  .spacing-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+  .spacing-item { text-align: center; }
+  .spacing-bar { background: var(--brand-50); border: 0.5px solid var(--brand-500); border-radius: 2px; height: 24px; }
+
+  /* Radius demo */
+  .radius-row { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+  .radius-box { background: var(--color-surface); border: 0.5px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--color-text-secondary); width: 80px; height: 52px; }
+
+  /* Motion demo */
+  .motion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .motion-card { background: var(--color-surface-raised); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 14px; }
+  .motion-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 8px; }
+  .motion-spec { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); margin-bottom: 4px; }
+  .motion-use { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  /* Handoff section */
+  .handoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .handoff-mkt { background: var(--mkt-canvas); padding: 20px; border-right: 0.5px solid rgba(255,255,255,0.06); }
+  .handoff-app { background: var(--color-surface); padding: 20px; }
+
+  /* Data table demo */
+  .demo-table { width: 100%; border-collapse: collapse; }
+  .demo-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); padding: 0 12px; height: 36px; text-align: left; border-bottom: 0.5px solid var(--color-border-mid); }
+  .demo-table td { font-size: 13px; color: var(--color-text-primary); padding: 0 12px; height: 44px; border-bottom: 0.5px solid var(--color-border); vertical-align: middle; }
+  .demo-table tr:last-child td { border-bottom: none; }
+  .demo-table tr:hover td { background: var(--color-surface); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Pricing demo */
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .pricing-card { background: var(--mkt-surface); border: 0.5px solid var(--mkt-border); border-radius: var(--radius-lg); padding: 20px; position: relative; }
+  .pricing-card.featured { border: 1px solid var(--brand-500); }
+  .pricing-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--brand-500); color: #fff; font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 12px; border-radius: 999px; white-space: nowrap; }
+  .pricing-tier { font-size: 13px; font-weight: 500; color: var(--mkt-text-secondary); margin-bottom: 14px; }
+  .pricing-price { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; color: var(--mkt-text-primary); margin-bottom: 2px; }
+  .pricing-price span { font-size: 14px; font-weight: 400; color: var(--mkt-text-tertiary); }
+  .pricing-users { font-size: 12px; color: var(--mkt-text-tertiary); margin-bottom: 16px; }
+  .pricing-btn { width: 100%; padding: 9px; border-radius: var(--radius-md); font-family: var(--font-sans); font-size: 14px; font-weight: 500; cursor: default; margin-bottom: 16px; }
+  .pricing-btn-primary { background: var(--brand-500); color: #fff; border: none; }
+  .pricing-btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  .pricing-feature { font-size: 12px; color: var(--mkt-text-secondary); display: flex; gap: 7px; margin-bottom: 7px; }
+  .pricing-check { color: rgba(255,255,255,0.25); flex-shrink: 0; }
+  .pricing-check.active { color: var(--brand-500); }
+
+  /* Page header */
+  .page-header {
+    padding: 48px 40px 36px;
+    border-bottom: 0.5px solid var(--color-border);
+    margin-bottom: 48px;
+    background: var(--color-surface-raised);
+  }
+
+  .page-header-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-500); margin-bottom: 10px; display: block; }
+  .page-header-title { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; color: var(--color-text-primary); margin-bottom: 10px; line-height: 1.15; }
+  .page-header-desc { font-size: 15px; color: var(--color-text-secondary); line-height: 1.65; max-width: 560px; }
+  .page-header-meta { display: flex; gap: 16px; margin-top: 16px; }
+  .page-header-meta-item { font-size: 12px; color: var(--color-text-tertiary); display: flex; align-items: center; gap: 5px; }
+  .page-header-meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-border-mid); }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="sidebar-wordmark">Cairn</span>
+      <span class="sidebar-sub">Design System v1.0</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <span class="nav-group-label">Getting started</span>
+        <a href="#shadcn" class="nav-link">shadcn-svelte</a>
+        <a href="#design-md" class="nav-link">Design.md</a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-label">Foundation</span>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#surfaces" class="nav-link">Two surfaces</a>
+        <a href="#typography" class="nav-link">Typography</a>
+        <a href="#colour" class="nav-link">Colour</a>
+        <a href="#spacing" class="nav-link">Spacing</a>
+        <a href="#radius" class="nav-link">Border radius</a>
+        <a href="#elevation" class="nav-link">Elevation</a>
+        <a href="#motion" class="nav-link">Motion</a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-label">App components</span>
+        <a href="#buttons" class="nav-link">Buttons</a>
+        <a href="#badges" class="nav-link">Badges</a>
+        <a href="#forms" class="nav-link">Form inputs</a>
+        <a href="#tables" class="nav-link">Data tables</a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-label">Marketing components</span>
+        <a href="#mkt-buttons" class="nav-link">Buttons</a>
+        <a href="#mkt-sections" class="nav-link">Section patterns</a>
+        <a href="#mkt-pricing" class="nav-link">Pricing cards</a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-label">Navigation</span>
+        <a href="#mkt-nav" class="nav-link">Marketing nav</a>
+        <a href="#app-nav" class="nav-link">App sidebar</a>
+        <a href="#handoff" class="nav-link">The handoff</a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-group-label">Multi-product</span>
+        <a href="#theming" class="nav-link">Theming</a>
+        <a href="#dark-mode" class="nav-link">Dark mode</a>
+        <a href="#new-theme" class="nav-link">Creating a theme</a>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <span class="topbar-title">Cairn</span>
+      <span class="topbar-sep">/</span>
+      <span class="topbar-current">Design System</span>
+      <span class="topbar-badge">v1.0</span>
+    </div>
+
+    <div class="page-header">
+      <span class="page-header-eyebrow">Design system</span>
+      <h1 class="page-header-title">Cairn</h1>
+      <p class="page-header-desc">Named after the stone trail markers of the Peak District — a cairn guides you through uncertain terrain without getting in your way. This system works the same: one shared foundation, per-product brand colour, two distinct surfaces for app UI and marketing, Space Grotesk throughout.</p>
+      <div class="page-header-meta">
+        <span class="page-header-meta-item">Space Grotesk + Space Mono</span>
+        <span class="page-header-meta-dot"></span>
+        <span class="page-header-meta-item">shadcn-svelte</span>
+        <span class="page-header-meta-dot"></span>
+        <span class="page-header-meta-item">Light + dark mode</span>
+        <span class="page-header-meta-dot"></span>
+        <span class="page-header-meta-item">Multi-product theming</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- Architecture -->
+      <section class="doc-section" id="architecture">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Architecture</h2>
+          <p class="section-desc">Cairn uses three layers of design tokens. Components only ever reference semantic tokens — they are unaware of which product is active or which mode is set.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>Why three layers?</strong> Most design systems have two — a palette and component values. The third layer (semantic tokens) is what enables multi-product theming and light/dark mode without touching component code. A button uses <code>color-interactive</code>, not a hex value. Swap the hex behind that token and every component updates automatically.
+        </div>
+
+        <div class="arch-grid">
+          <div class="arch-card">
+            <div class="arch-card-num">Layer 1</div>
+            <div class="arch-card-title">Primitive tokens</div>
+            <div class="arch-card-body">Raw values. Never used directly in components. Define the full palette.</div>
+            <div class="arch-card-tokens">indigo-500<br>stone-200<br>sage-600<br>radius-lg</div>
+          </div>
+          <div class="arch-card" style="border-color: #C7CBFF;">
+            <div class="arch-card-num">Layer 2 — swapped per product &amp; mode</div>
+            <div class="arch-card-title">Semantic tokens</div>
+            <div class="arch-card-body">Named by purpose. Components reference only these. This layer absorbs all theme and mode switches.</div>
+            <div class="arch-card-tokens">color-interactive<br>color-surface<br>color-text-primary<br>nav-background</div>
+          </div>
+          <div class="arch-card">
+            <div class="arch-card-num">Layer 3 — optional</div>
+            <div class="arch-card-title">Component tokens</div>
+            <div class="arch-card-body">For complex components that need their own overrides. Used sparingly.</div>
+            <div class="arch-card-tokens">nav-bg<br>badge-text<br>focus-ring</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- shadcn-svelte -->
+      <section class="doc-section" id="shadcn">
+        <div class="section-header">
+          <span class="section-eyebrow">Getting started</span>
+          <h2 class="section-title">shadcn-svelte</h2>
+          <p class="section-desc">shadcn-svelte is the default component set for all Kinda products. Cairn provides the CSS tokens, theming model, and usage guidelines — shadcn provides the component implementations.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>Why shadcn?</strong> shadcn copies component files directly into your repo — you own them and can edit them without fighting a library API. Cairn's <code>app.css</code> overrides shadcn's default palette by redefining <code>--background</code>, <code>--primary</code>, <code>--border</code>, and related variables with Cairn tokens. Every shadcn component picks up Cairn's stone neutrals, brand colour, and radius scale automatically — no per-component changes needed for base styling.
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">1 · Initialise</div>
+          <div class="code-block"><span class="k">npx</span> shadcn-svelte@latest init</div>
+          <div class="subsection-desc">When prompted: <strong>Style → new-york</strong> &nbsp;·&nbsp; <strong>Base colour → stone</strong> (overridden anyway — stone is closest to Cairn's warm neutrals) &nbsp;·&nbsp; <strong>CSS variables → yes</strong>.</div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">2 · Replace app.css with the Cairn theme file</div>
+          <div class="subsection-desc">Delete the generated <code>src/app.css</code> and replace it with <a href="app.css" style="color:var(--brand-500);text-decoration:none;font-weight:500">app.css</a> from this repo. Add the fonts to <code>src/app.html</code>:</div>
+          <div class="code-block">&lt;<span class="k">link</span> <span class="s">rel</span>=<span class="s">"preconnect"</span> <span class="s">href</span>=<span class="s">"https://fonts.googleapis.com"</span>&gt;
+&lt;<span class="k">link</span>
+  <span class="s">href</span>=<span class="s">"https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap"</span>
+  <span class="s">rel</span>=<span class="s">"stylesheet"</span>
+&gt;</div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">3 · Set the product theme</div>
+          <div class="subsection-desc">In your root <code>+layout.svelte</code>, set <code>data-theme</code> on the html element. The theme name maps to a <code>[data-theme]</code> block in <code>app.css</code> which defines the 7 brand primitive tokens.</div>
+          <div class="code-block">&lt;<span class="k">script</span>&gt;
+  <span class="c">// 'orbit' | 'beacon' | 'vault' | 'pulse'</span>
+  <span class="k">const</span> product = <span class="s">'orbit'</span>;
+&lt;/<span class="k">script</span>&gt;
+
+&lt;<span class="k">html</span> <span class="s">data-theme</span>={product} <span class="s">lang</span>=<span class="s">"en"</span>&gt;
+  &lt;<span class="k">body</span>&gt;&lt;<span class="s">slot</span> /&gt;&lt;/<span class="k">body</span>&gt;
+&lt;/<span class="k">html</span>&gt;</div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">4 · Add dark mode support</div>
+          <div class="code-block"><span class="k">npx</span> shadcn-svelte@latest add mode-watcher</div>
+          <div class="code-block"><span class="c">&lt;!-- src/routes/+layout.svelte --&gt;</span>
+&lt;<span class="k">script</span>&gt;
+  <span class="k">import</span> { ModeWatcher } <span class="k">from</span> <span class="s">'mode-watcher'</span>;
+&lt;/<span class="k">script</span>&gt;
+
+&lt;<span class="k">ModeWatcher</span> /&gt;
+&lt;<span class="s">slot</span> /&gt;</div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Token mapping — shadcn → Cairn</div>
+          <div class="subsection-desc">These are the shadcn CSS variables that <code>app.css</code> overrides with Cairn tokens. All shadcn components reference these variables — setting them correctly themes the entire component set.</div>
+          <table class="spec-table">
+            <thead><tr><th>shadcn variable</th><th>Cairn token</th><th>Light</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>--background</code></td><td>neutral</td><td><code>#F5F5F4</code></td><td>App canvas — stone warm white, never pure grey</td></tr>
+              <tr><td><code>--foreground</code></td><td>ink</td><td><code>#18181A</code></td><td>Primary text</td></tr>
+              <tr><td><code>--card</code></td><td>neutral-raised</td><td><code>#FFFFFF</code></td><td>Cards and panels — white on stone canvas creates surface hierarchy</td></tr>
+              <tr><td><code>--primary</code></td><td>primary</td><td><code>#5B6EE1</code></td><td>Brand colour — buttons, focus rings, active states. Dark: shifts to primary-light</td></tr>
+              <tr><td><code>--muted</code></td><td>neutral</td><td><code>#F5F5F4</code></td><td>Ghost elements, placeholder backgrounds, disabled areas</td></tr>
+              <tr><td><code>--muted-foreground</code></td><td>neutral-mid</td><td><code>#78716C</code></td><td>Secondary and tertiary text</td></tr>
+              <tr><td><code>--accent</code></td><td>primary-muted</td><td><code>#E8EAFF</code></td><td>Ghost hover, sidebar active bg, selected row backgrounds</td></tr>
+              <tr><td><code>--accent-foreground</code></td><td>primary-text</td><td><code>#3A4DC8</code></td><td>Text on accent backgrounds</td></tr>
+              <tr><td><code>--destructive</code></td><td>error</td><td><code>#E05B40</code></td><td>Ember — destructive actions only, never a red brand variant</td></tr>
+              <tr><td><code>--border</code></td><td>neutral-border</td><td><code>#E5E5E3</code></td><td>All structural borders — used at 0.5px throughout</td></tr>
+              <tr><td><code>--ring</code></td><td>primary</td><td><code>#5B6EE1</code></td><td>Focus ring colour — focus-visible rule applies 12% opacity</td></tr>
+              <tr><td><code>--radius</code></td><td>rounded.lg</td><td><code>12px</code></td><td>Base radius — shadcn derives sm (~4px), md (~8px), xl (~16px) from this</td></tr>
+              <tr><td><code>--sidebar</code></td><td>primary-dark-nav</td><td><code>#0F1330</code></td><td>Always dark — sidebar is product context, not content area</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Component overrides</div>
+          <div class="subsection-desc">Most shadcn components work without changes once the token layer is applied. These are the exceptions — all standard shadcn customisation pattern, not hacks:</div>
+          <table class="spec-table">
+            <thead><tr><th>Component</th><th>Override</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>Button</td><td>Replace <code>cursor-pointer</code> with <code>cursor-default</code> in buttonVariants base class</td><td>Desktop app convention — pointer is for links, not actions</td></tr>
+              <tr><td>Badge</td><td>Add <code>success</code>, <code>warning</code>, <code>outline</code> variants to <code>badgeVariants</code></td><td>shadcn default maps to badge-neutral only; Cairn needs 5 semantic states</td></tr>
+              <tr><td>Table row</td><td>Add <code>hover:bg-muted transition-colors</code></td><td>No zebra stripes — hover highlight only per Cairn table spec</td></tr>
+              <tr><td>Table head</td><td>Add <code>text-[11px] uppercase tracking-[0.06em] text-muted-foreground</code></td><td>Receded header style — eye lands on data, not labels</td></tr>
+              <tr><td>Separator</td><td>Add <code>opacity-50</code></td><td>All app borders are 0.5px (50% opacity on a 1px element)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Marketing surface</div>
+          <div class="subsection-desc">Wrap marketing sections in <code>.surface-marketing</code>. shadcn components inside automatically inherit <code>--mkt-</code> token overrides for the dark canvas context. Use <code>class="eyebrow"</code> for section labels (12px / 600 / +0.09em / uppercase / brand-400).</div>
+          <div class="code-block"><span class="c">&lt;!-- Wrap any marketing section --&gt;</span>
+&lt;<span class="k">section</span> <span class="s">class</span>=<span class="s">"surface-marketing px-10 py-20"</span>&gt;
+
+  &lt;<span class="k">p</span> <span class="s">class</span>=<span class="s">"eyebrow"</span>&gt;Feature&lt;/<span class="k">p</span>&gt;
+
+  <span class="c">&lt;!-- shadcn Card inherits dark canvas overrides inside this wrapper --&gt;</span>
+  &lt;<span class="k">Card</span> <span class="s">class</span>=<span class="s">"border-white/8"</span>&gt;
+    &lt;<span class="k">CardTitle</span> <span class="s">class</span>=<span class="s">"text-white"</span>&gt;Your data, always current&lt;/<span class="k">CardTitle</span>&gt;
+  &lt;/<span class="k">Card</span>&gt;
+
+  <span class="c">&lt;!-- Marketing primary button — taller than app buttons --&gt;</span>
+  &lt;<span class="k">Button</span> <span class="s">class</span>=<span class="s">"h-[50px] px-7 text-[17px]"</span>&gt;Start free trial&lt;/<span class="k">Button</span>&gt;
+
+&lt;/<span class="k">section</span>&gt;</div>
+        </div>
+      </section>
+
+      <!-- Design.md -->
+      <section class="doc-section" id="design-md">
+        <div class="section-header">
+          <span class="section-eyebrow">Getting started</span>
+          <h2 class="section-title">Design.md</h2>
+          <p class="section-desc">The <a href="Design.md" style="color:var(--brand-500);text-decoration:none;font-weight:500">Design.md</a> file is the machine-readable source of truth for the Cairn design system. It is the first thing any coding agent or AI tool should read before generating UI for a Kinda product.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>What Design.md is for.</strong> Design.md follows the <a href="https://github.com/google-labs-code/design.md" style="color:var(--brand-500);text-decoration:none" target="_blank">google-labs-code/design.md specification</a> — a structured format that lets coding agents reliably understand a design system. It combines YAML front-matter (machine-readable tokens) with Markdown prose (human-readable guidelines). Agents read the YAML for exact values and the prose for intent and constraints.
+        </div>
+
+        <div class="arch-grid">
+          <div class="arch-card">
+            <div class="arch-card-num">YAML front-matter</div>
+            <div class="arch-card-title">Machine-readable tokens</div>
+            <div class="arch-card-body">All colour, typography, spacing, radius, and component tokens in a structured schema. This is what agents and CLI tools parse for exact values.</div>
+            <div class="arch-card-tokens">colors<br>typography<br>rounded<br>spacing<br>components</div>
+          </div>
+          <div class="arch-card" style="border-color:#C7CBFF">
+            <div class="arch-card-num">Markdown body</div>
+            <div class="arch-card-title">Design intent and constraints</div>
+            <div class="arch-card-body">Explains why each decision was made and what rules must not be broken. Agents use this for context when token values alone are ambiguous.</div>
+            <div class="arch-card-tokens">Overview<br>Colors<br>Typography<br>Components<br>Do's and Don'ts</div>
+          </div>
+          <div class="arch-card">
+            <div class="arch-card-num"><a href="cairn-shadcn.md" style="color:var(--brand-500);text-decoration:none">cairn-shadcn.md ↗</a></div>
+            <div class="arch-card-title">Technical integration guide</div>
+            <div class="arch-card-body">Companion file covering setup, token mapping details, and component override code. References Design.md for usage guidelines.</div>
+            <div class="arch-card-tokens">Setup steps<br>Token mapping<br>Component overrides<br>New theme steps</div>
+          </div>
+        </div>
+
+        <div class="subsection" style="margin-top:24px">
+          <div class="subsection-title">Using Design.md with a coding agent</div>
+          <div class="subsection-desc">Point any agent at the file before generating UI. With Claude Code or similar tools:</div>
+          <div class="code-block"><span class="c"># Reference in your CLAUDE.md or project instructions</span>
+<span class="k">Read</span> <span class="s">Design.md</span> before generating any UI component for this project.
+<span class="k">All</span> colours, typography, spacing, and component behaviour must
+match the tokens and constraints defined in that file.</div>
+          <div class="subsection-desc" style="margin-top:12px">The <code>@google/design.md</code> CLI can lint the file for broken references and WCAG contrast issues, and export tokens to Tailwind v4 CSS or DTCG format:</div>
+          <div class="code-block"><span class="k">npx</span> @google/design.md lint Design.md
+<span class="k">npx</span> @google/design.md export --format tailwind-v4 Design.md</div>
+        </div>
+      </section>
+
+      <!-- Surfaces -->
+      <section class="doc-section" id="surfaces">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Two surfaces</h2>
+          <p class="section-desc">The system supports two fundamentally different surface types. They share the same token foundation but follow different rules for how those tokens are deployed.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>Why split surfaces?</strong> App UI and marketing have opposite jobs. The app user has already committed — the job is efficiency. The marketing visitor hasn't committed — the job is confidence and momentum. Trying to use one visual language for both creates a UI that is either too cold for marketing or too noisy for a task surface. The split is maintained in code via a <code>.surface-marketing</code> wrapper class and a <code>--mkt-</code> token namespace that never bleeds into app components.
+        </div>
+
+        <div class="surface-compare">
+          <div class="surface-col">
+            <div class="surface-col-head">
+              <span class="surface-tag" style="background:#E8EAFF;color:#3A4DC8">App UI</span>
+              <span style="font-size:12px;color:var(--color-text-secondary)">Task surface</span>
+            </div>
+            <div class="surface-rule"><span class="surface-rule-prop">Purpose</span><span class="surface-rule-val">Help users do work. Get out of the way.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Canvas</span><span class="surface-rule-val">Stone-50 warm white. Never pure grey.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Brand colour</span><span class="surface-rule-val">Interactive elements only. Never decorative.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Display size</span><span class="surface-rule-val">Max 30px</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Motion</span><span class="surface-rule-val">Micro only. 100–150ms.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Shadows</span><span class="surface-rule-val">Never</span></div>
+          </div>
+          <div class="surface-col">
+            <div class="surface-col-head">
+              <span class="surface-tag" style="background:#1E2660;color:#818CF8">Marketing</span>
+              <span style="font-size:12px;color:var(--color-text-secondary)">Persuasion surface</span>
+            </div>
+            <div class="surface-rule"><span class="surface-rule-prop">Purpose</span><span class="surface-rule-val">Build confidence. Create momentum. Convert.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Canvas</span><span class="surface-rule-val">#0D0D12 dark. Always explicit, never inherited.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Brand colour</span><span class="surface-rule-val">Light source on dark canvas. CTAs + eyebrows.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Display size</span><span class="surface-rule-val">48–72px permitted</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Motion</span><span class="surface-rule-val">Entrance + scroll reveals. 250–350ms.</span></div>
+            <div class="surface-rule"><span class="surface-rule-prop">Shadows</span><span class="surface-rule-val">Brand glow on CTA only</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Typography -->
+      <section class="doc-section" id="typography">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Typography</h2>
+          <p class="section-desc">Space Grotesk across all surfaces. Space Mono for code, keys, and financial tables. The pairing shares design DNA — intentional, not assembled.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>Why Space Grotesk over Inter?</strong> Inter is neutral by design — it deliberately disappears. Space Grotesk has detectable character in specific letters: the double-storey <em>a</em>, the spurred <em>G</em>, the curved-tail <em>t</em>, and particularly strong numerals. At display sizes this distinction is what makes metric cards and hero headlines feel designed rather than default. It still works at 12px in dense UIs without losing legibility.
+          <br><br>
+          <strong>Why 600 weight only at 22px+?</strong> Space Grotesk 500 is optically heavier than Inter 500. Using 600 at body or label sizes produces a heavy, overworked feeling. 600 is reserved for display-scale headings where the extra weight reads as editorial rather than aggressive.
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">App type scale</div>
+          <div class="preview">
+            <div class="preview-label">Specimens</div>
+            <div class="preview-inner">
+              <div class="type-specimen">
+                <div style="font-size:30px;font-weight:600;letter-spacing:-0.03em;line-height:1.15">Display heading</div>
+                <div class="type-meta">30px / 600 / −0.03em / 1.15 leading — page titles only</div>
+              </div>
+              <div class="type-specimen">
+                <div style="font-size:22px;font-weight:500;letter-spacing:-0.022em;line-height:1.25">Heading 1</div>
+                <div class="type-meta">22px / 500 / −0.022em — section titles, modal headers</div>
+              </div>
+              <div class="type-specimen">
+                <div style="font-size:18px;font-weight:500;letter-spacing:-0.015em;line-height:1.3">Heading 2</div>
+                <div class="type-meta">18px / 500 / −0.015em — card titles, subsections</div>
+              </div>
+              <div class="type-specimen">
+                <div style="font-size:15px;font-weight:500">Label / UI text</div>
+                <div class="type-meta">15px / 500 / 0 — nav items, table headers, buttons</div>
+              </div>
+              <div class="type-specimen">
+                <div style="font-size:14px;font-weight:400;color:var(--color-text-secondary);line-height:1.65">Body — used for descriptions, secondary content, and help text throughout the application interface.</div>
+                <div class="type-meta">14px / 400 / 0 / 1.65 leading</div>
+              </div>
+              <div class="type-specimen">
+                <div style="font-size:12px;font-weight:400;color:var(--color-text-tertiary);letter-spacing:0.01em">Caption — timestamps, metadata, helper text</div>
+                <div class="type-meta">12px / 400 / +0.01em</div>
+              </div>
+              <div class="type-specimen" style="border-bottom:none">
+                <div style="font-family:var(--font-mono);font-size:13px;background:var(--color-surface);padding:3px 8px;border-radius:4px;display:inline-block">Space Mono — code, IDs, keys, financial figures</div>
+                <div class="type-meta">13px / 400 / Space Mono</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Marketing type scale</div>
+          <div class="preview-dark">
+            <div class="preview-label-dark">Marketing specimens — dark canvas</div>
+            <div class="preview-inner">
+              <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid rgba(255,255,255,0.07)">
+                <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#818CF8;margin-bottom:10px">Revenue intelligence</div>
+                <div style="font-size:48px;font-weight:600;letter-spacing:-0.04em;color:#fff;line-height:1.05;margin-bottom:10px">Know exactly where<br>your growth comes from</div>
+                <div style="font-size:17px;color:rgba(255,255,255,0.55);line-height:1.65;max-width:440px">Connect billing, CRM, and product data. Stop arguing about numbers and start moving them.</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+                <div>
+                  <div style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:5px">Eyebrow</div>
+                  <div style="font-size:12px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#818CF8">12px / 600 / +0.09em</div>
+                </div>
+                <div>
+                  <div style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:5px">Hero</div>
+                  <div style="font-size:14px;font-weight:600;letter-spacing:-0.03em;color:#fff">48–72px / 600 / −0.04em</div>
+                </div>
+                <div>
+                  <div style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:5px">Body lead</div>
+                  <div style="font-size:13px;color:rgba(255,255,255,0.55)">17–18px / 400 / 1.65</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="reasoning">
+            <strong>Why use brand-muted (#818CF8) for eyebrows, not white?</strong> On a dark canvas, a white uppercase label above a headline creates two elements fighting for first read. The brand-muted colour signals "this is the category" without competing with the headline's job. It also reinforces the brand colour as an active presence on the dark canvas, where it reads as a light source rather than a tint.
+          </div>
+        </div>
+      </section>
+
+      <!-- Colour -->
+      <section class="doc-section" id="colour">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Colour</h2>
+          <p class="section-desc">Indigo is the default brand colour (Orbit product). Each product defines its own brand ramp. Stone neutrals carry all app surface structure. Sage and Ember are status-only.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>Why stone neutrals rather than grey?</strong> Pure grey (#f5f5f5) reads as "default browser" on screen. Stone has a barely-perceptible warm undertone that makes surfaces feel considered. The difference is subtle in isolation but clearly visible when grey and stone are placed side by side. It also prevents the app from feeling clinical — important for a product users spend hours in daily.
+          <br><br>
+          <strong>Why is brand colour restricted to interactive elements?</strong> Every use of brand colour in the app UI should answer "is this something I can interact with?" If the answer is no, the colour shouldn't be there. Decorative brand colour dilutes the interactive signal and makes the UI harder to scan.
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Brand (default — Orbit)</div>
+          <div class="swatch-row">
+            <div class="swatch-item"><div class="swatch-box" style="background:#E8EAFF"></div><div class="swatch-name">Indigo 50</div><div class="swatch-hex">#E8EAFF</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#5B6EE1"></div><div class="swatch-name">Indigo 500</div><div class="swatch-hex">#5B6EE1</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#3A4DC8"></div><div class="swatch-name">Indigo 700</div><div class="swatch-hex">#3A4DC8</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#1E2660"></div><div class="swatch-name">Indigo 900</div><div class="swatch-hex">#1E2660</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#818CF8"></div><div class="swatch-name">Indigo 400</div><div class="swatch-hex">#818CF8</div></div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Neutrals (stone)</div>
+          <div class="swatch-row">
+            <div class="swatch-item"><div class="swatch-box" style="background:#F5F5F4"></div><div class="swatch-name">Stone 50</div><div class="swatch-hex">#F5F5F4</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#E5E5E3"></div><div class="swatch-name">Stone 200</div><div class="swatch-hex">#E5E5E3</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#78716C"></div><div class="swatch-name">Stone 500</div><div class="swatch-hex">#78716C</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#1C1917"></div><div class="swatch-name">Stone 900</div><div class="swatch-hex">#1C1917</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#18181A"></div><div class="swatch-name">Ink</div><div class="swatch-hex">#18181A</div></div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Status — Sage (success) &amp; Ember (error)</div>
+          <div class="reasoning">
+            <strong>Why are there only two status colours?</strong> Most design systems have four (success, warning, error, info). Info usually maps to the brand colour — which in Cairn is already doing interactive-element duty. Warning (amber) is added only when a product genuinely needs it. Sage and Ember are used for status only, never for branding or decoration. Keeping the set small makes each colour more meaningful when it appears.
+          </div>
+          <div class="swatch-row">
+            <div class="swatch-item"><div class="swatch-box" style="background:#16A269"></div><div class="swatch-name">Sage</div><div class="swatch-hex">#16A269</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#D1FAE5"></div><div class="swatch-name">Sage 50</div><div class="swatch-hex">#D1FAE5</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#E05B40"></div><div class="swatch-name">Ember</div><div class="swatch-hex">#E05B40</div></div>
+            <div class="swatch-item"><div class="swatch-box" style="background:#FEF0ED"></div><div class="swatch-name">Ember 50</div><div class="swatch-hex">#FEF0ED</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Spacing -->
+      <section class="doc-section" id="spacing">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Spacing</h2>
+          <p class="section-desc">4px base unit. All spacing is a multiple of 4. Page gutters: 24px mobile / 40px desktop (app). Marketing sections: 80px vertical padding desktop / 48px mobile.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview">
+          <div class="preview-inner">
+            <div class="spacing-row">
+              <div class="spacing-item"><div class="spacing-bar" style="width:4px"></div><div class="swatch-name" style="margin-top:6px">4</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:8px"></div><div class="swatch-name" style="margin-top:6px">8</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:12px"></div><div class="swatch-name" style="margin-top:6px">12</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:16px"></div><div class="swatch-name" style="margin-top:6px">16</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:24px"></div><div class="swatch-name" style="margin-top:6px">24</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:32px"></div><div class="swatch-name" style="margin-top:6px">32</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:48px"></div><div class="swatch-name" style="margin-top:6px">48</div></div>
+              <div class="spacing-item"><div class="spacing-bar" style="width:64px"></div><div class="swatch-name" style="margin-top:6px">64</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Border radius -->
+      <section class="doc-section" id="radius">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Border radius</h2>
+          <p class="section-desc">Five stops. Each maps to a specific element type — don't use radius-xl on a button or radius-sm on a modal.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview">
+          <div class="preview-inner">
+            <div class="radius-row">
+              <div><div class="radius-box" style="border-radius:4px;border:0.5px solid var(--color-border)">4px</div><div class="swatch-name" style="margin-top:6px;text-align:center">sm — chips</div></div>
+              <div><div class="radius-box" style="border-radius:8px;border:0.5px solid var(--color-border)">8px</div><div class="swatch-name" style="margin-top:6px;text-align:center">md — inputs</div></div>
+              <div><div class="radius-box" style="border-radius:12px;border:0.5px solid var(--color-border)">12px</div><div class="swatch-name" style="margin-top:6px;text-align:center">lg — cards</div></div>
+              <div><div class="radius-box" style="border-radius:16px;border:0.5px solid var(--color-border)">16px</div><div class="swatch-name" style="margin-top:6px;text-align:center">xl — modals</div></div>
+              <div><div class="radius-box" style="border-radius:999px;border:0.5px solid var(--color-border)">pill</div><div class="swatch-name" style="margin-top:6px;text-align:center">full — badges</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Elevation -->
+      <section class="doc-section" id="elevation">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Elevation</h2>
+          <p class="section-desc">Elevation is expressed through border weight and surface contrast — never box shadows in the app UI.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why borders instead of shadows?</strong> Box shadows create visual noise that competes with content. They also render inconsistently across displays and are invisible in dark mode unless carefully managed. A 0.5px border is precise, scales perfectly at any resolution, and works identically in light and dark mode. The one exception is marketing: a subtle brand-colour glow on CTA buttons is permitted because in that context the glow serves as a signal of interactivity on a dark surface, not a decorative effect.
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>Use</th><th>Style</th><th>Exception</th></tr></thead>
+          <tbody>
+            <tr><td>Default border</td><td><code>0.5px solid color-border</code></td><td>—</td></tr>
+            <tr><td>Hover / emphasis</td><td><code>0.5px solid color-border-secondary</code></td><td>—</td></tr>
+            <tr><td>Featured item</td><td><code>1px solid color-interactive</code></td><td>Only exception to 0.5px rule</td></tr>
+            <tr><td>App UI shadows</td><td>Never</td><td>—</td></tr>
+            <tr><td>Marketing CTA glow</td><td><code>box-shadow: 0 0 24px rgba(91,110,225,0.25)</code></td><td>CTA buttons on dark canvas only</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Motion -->
+      <section class="doc-section" id="motion">
+        <div class="section-header">
+          <span class="section-eyebrow">Foundation</span>
+          <h2 class="section-title">Motion</h2>
+          <p class="section-desc">Motion rules differ significantly between surfaces. App motion is nearly invisible. Marketing motion is choreographed.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why such different motion rules per surface?</strong> In the app, motion that draws attention is a distraction — the user is trying to complete a task. In marketing, motion is part of the persuasion. A feature section that reveals on scroll feels alive; the same animation on a data table row would be maddening. The shared principle across both: motion should be purposeful, not ornamental. No continuous loops, no parallax, no motion for its own sake.
+        </div>
+        <div class="motion-grid">
+          <div class="motion-card">
+            <div class="motion-label">App UI</div>
+            <div class="motion-spec">100–150ms / ease-out</div>
+            <div class="motion-use">Hover states, focus rings, dropdown open/close. Never decorative. Users should not consciously notice transitions.</div>
+          </div>
+          <div class="motion-card">
+            <div class="motion-label">Marketing</div>
+            <div class="motion-spec">250–350ms / cubic-bezier(0.16, 1, 0.3, 1)</div>
+            <div class="motion-use">Scroll reveals: translateY(24px→0) + fade. Sibling stagger: 60ms, max 4 items. Hero headline: fade only — never translate large text.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- App: Buttons -->
+      <section class="doc-section" id="buttons">
+        <div class="section-header">
+          <span class="section-eyebrow">App components</span>
+          <h2 class="section-title">Buttons</h2>
+          <p class="section-desc">Four variants. One primary per view. No gradients on any button variant.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview">
+          <div class="preview-label">Variants</div>
+          <div class="preview-inner">
+            <div class="btn-row">
+              <button class="btn btn-primary">Primary action</button>
+              <button class="btn btn-secondary">Secondary</button>
+              <button class="btn btn-ghost">Ghost</button>
+              <button class="btn btn-destructive">Destructive</button>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <strong>Why is "Sign in" a text link, not a secondary button?</strong> Giving sign-in a button border creates two competing CTAs next to the primary. Sign-in is for returning users who know what they want — it doesn't need to compete. The hierarchy should be: new user (primary CTA) is more prominent than returning user (text link). This also reduces visual noise in the nav.
+        </div>
+        <table class="spec-table">
+          <thead><tr><th>Variant</th><th>Height</th><th>Font</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td>Primary</td><td>36px</td><td>14px / 500</td><td>One per view. The most important action.</td></tr>
+            <tr><td>Secondary</td><td>36px</td><td>14px / 500</td><td>Alternative actions. Can appear alongside primary.</td></tr>
+            <tr><td>Ghost</td><td>36px</td><td>14px / 500</td><td>Tertiary actions, toolbar actions, low-emphasis.</td></tr>
+            <tr><td>Destructive</td><td>36px</td><td>14px / 500</td><td>Delete, remove. Ember colour. Never use primary red.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- App: Badges -->
+      <section class="doc-section" id="badges">
+        <div class="section-header">
+          <span class="section-eyebrow">App components</span>
+          <h2 class="section-title">Badges</h2>
+          <p class="section-desc">Pill shape. 12px / 500. Used for status, plan tier, and filterable tags.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview">
+          <div class="preview-inner">
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="badge" style="background:#E8EAFF;color:#3A4DC8">Active</span>
+              <span class="badge" style="background:#D1FAE5;color:#065F46">Complete</span>
+              <span class="badge" style="background:#FEE2E2;color:#991B1B">Failed</span>
+              <span class="badge" style="background:#FEF3C7;color:#92400E">Pending</span>
+              <span class="badge" style="background:var(--color-surface);color:var(--color-text-secondary);border:0.5px solid var(--color-border)">Archived</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- App: Forms -->
+      <section class="doc-section" id="forms">
+        <div class="section-header">
+          <span class="section-eyebrow">App components</span>
+          <h2 class="section-title">Form inputs</h2>
+          <p class="section-desc">36px height. Focus ring uses brand colour at 12% opacity — visible without being distracting.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview">
+          <div class="preview-inner" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input style="font-family:var(--font-sans);border:0.5px solid var(--color-border-mid);border-radius:var(--radius-md);padding:7px 12px;font-size:14px;background:var(--color-surface-raised);color:var(--color-text-primary);outline:none;width:200px" placeholder="Search…">
+            <select style="font-family:var(--font-sans);border:0.5px solid var(--color-border-mid);border-radius:var(--radius-md);padding:7px 12px;font-size:14px;background:var(--color-surface-raised);color:var(--color-text-primary);outline:none">
+              <option>All projects</option><option>Active</option>
+            </select>
+            <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-text-primary);cursor:pointer">
+              <div style="width:16px;height:16px;border-radius:4px;border:0.5px solid var(--brand-500);background:var(--brand-500);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              Notifications
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- App: Tables -->
+      <section class="doc-section" id="tables">
+        <div class="section-header">
+          <span class="section-eyebrow">App components</span>
+          <h2 class="section-title">Data tables</h2>
+          <p class="section-desc">No zebra stripes. Hover highlight only. Numeric columns right-aligned with tabular numerals. Density: comfortable (44px) default, compact (32px) available.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why no zebra stripes?</strong> Alternating row colours fragment attention horizontally — your eye reads across a stripe rather than scanning down a column. Hover-only highlighting keeps the table visually quiet and lets status badges and avatars carry their colour without competing with row backgrounds. When you need to draw attention to a row, the hover state is more precise and intentional than a permanent background tint on every other row.
+        </div>
+        <div class="preview" style="padding:0">
+          <table class="demo-table">
+            <thead>
+              <tr>
+                <th style="width:35%">Customer</th>
+                <th style="width:20%">Plan</th>
+                <th class="num" style="width:15%">MRR</th>
+                <th style="width:15%">Joined</th>
+                <th style="width:15%">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#E8EAFF;color:#3A4DC8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">AL</div>Acme Labs</div></td>
+                <td style="color:var(--color-text-secondary)">Enterprise</td>
+                <td class="num" style="font-family:var(--font-mono);font-size:12px">£4,200</td>
+                <td style="color:var(--color-text-secondary)">Jan 2023</td>
+                <td><span class="badge" style="background:#D1FAE5;color:#065F46">Active</span></td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#FEF3C7;color:#92400E;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">CC</div>Cedar Co.</div></td>
+                <td style="color:var(--color-text-secondary)">Starter</td>
+                <td class="num" style="font-family:var(--font-mono);font-size:12px">£149</td>
+                <td style="color:var(--color-text-secondary)">Jun 2023</td>
+                <td><span class="badge" style="background:#FEE2E2;color:#991B1B">Churned</span></td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#D1FAE5;color:#065F46;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0">DS</div>Datastream</div></td>
+                <td style="color:var(--color-text-secondary)">Enterprise</td>
+                <td class="num" style="font-family:var(--font-mono);font-size:12px">£6,500</td>
+                <td style="color:var(--color-text-secondary)">Nov 2022</td>
+                <td><span class="badge" style="background:#D1FAE5;color:#065F46">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Marketing: Buttons -->
+      <section class="doc-section" id="mkt-buttons">
+        <div class="section-header">
+          <span class="section-eyebrow">Marketing components</span>
+          <h2 class="section-title">Marketing buttons</h2>
+          <p class="section-desc">More presence than app buttons. The ghost uses a visible white border — the app ghost would disappear on the dark canvas.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview-dark">
+          <div class="preview-label-dark">Button variants — dark canvas</div>
+          <div class="preview-inner" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+            <button style="font-family:var(--font-sans);background:var(--brand-500);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:15px;font-weight:500;cursor:default;letter-spacing:-0.01em">Start free trial</button>
+            <button style="font-family:var(--font-sans);background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.25);padding:11px 22px;border-radius:8px;font-size:15px;font-weight:500;cursor:default">See a demo</button>
+            <button style="font-family:var(--font-sans);background:transparent;color:#818CF8;border:none;padding:11px 16px;border-radius:8px;font-size:15px;font-weight:500;cursor:default">Learn more →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Marketing: Sections -->
+      <section class="doc-section" id="mkt-sections">
+        <div class="section-header">
+          <span class="section-eyebrow">Marketing components</span>
+          <h2 class="section-title">Section patterns</h2>
+          <p class="section-desc">Three reusable section layouts. One idea per section. Consistent vertical padding (80px desktop / 48px mobile) creates rhythm.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="preview-dark" style="margin-bottom:10px">
+          <div class="preview-label-dark">Hero — centred, full-width</div>
+          <div class="preview-inner" style="text-align:center;padding:36px 24px">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#818CF8;margin-bottom:12px">Revenue intelligence</div>
+            <div style="font-size:38px;font-weight:600;letter-spacing:-0.04em;color:#fff;line-height:1.08;margin-bottom:14px;max-width:480px;margin-left:auto;margin-right:auto">Know exactly where your growth comes from</div>
+            <div style="font-size:16px;color:rgba(255,255,255,0.5);line-height:1.65;max-width:380px;margin:0 auto 24px">Connect billing, CRM, and product data in one place.</div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+              <button style="font-family:var(--font-sans);background:var(--brand-500);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:500;cursor:default">Start free trial</button>
+              <button style="font-family:var(--font-sans);background:transparent;color:rgba(255,255,255,0.6);border:none;padding:12px 14px;font-size:15px;cursor:default">See a demo →</button>
+            </div>
+          </div>
+        </div>
+        <div class="preview-dark">
+          <div class="preview-label-dark">Feature split — text left / visual right</div>
+          <div class="preview-inner">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center">
+              <div>
+                <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#818CF8;margin-bottom:10px">Live sync</div>
+                <div style="font-size:26px;font-weight:600;letter-spacing:-0.03em;color:#fff;line-height:1.15;margin-bottom:10px">Your data, always current</div>
+                <div style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:16px">Changes in Stripe or HubSpot appear within seconds. No manual exports.</div>
+                <button style="font-family:var(--font-sans);background:transparent;color:#818CF8;border:none;padding:0;font-size:14px;font-weight:500;cursor:default">See all integrations →</button>
+              </div>
+              <div style="background:#16161E;border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px">
+                <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em">MRR</div>
+                <div style="font-size:28px;font-weight:600;letter-spacing:-0.03em;color:#fff;margin-bottom:4px">£24,830</div>
+                <div style="font-size:12px;color:#16A269">↑ 12% vs last month</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Marketing: Pricing -->
+      <section class="doc-section" id="mkt-pricing">
+        <div class="section-header">
+          <span class="section-eyebrow">Marketing components</span>
+          <h2 class="section-title">Pricing cards</h2>
+          <p class="section-desc">Featured plan uses a 1px brand-colour border — the only 1px border in the system. The card background is never filled with brand colour.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why not fill the featured card with brand colour?</strong> A brand-colour background on the featured card reads as "this is selected", not "this is recommended". It also forces white text on a coloured background, which reduces the legibility of the feature list — exactly the content that needs to be read carefully. The 1px border achieves the same differentiation without the legibility cost.
+        </div>
+        <div class="preview-dark">
+          <div class="preview-inner">
+            <div class="pricing-grid">
+              <div class="pricing-card">
+                <div class="pricing-tier">Starter</div>
+                <div class="pricing-price">£49<span>/mo</span></div>
+                <div class="pricing-users">Up to 3 users</div>
+                <button class="pricing-btn pricing-btn-ghost">Get started</button>
+                <div class="pricing-feature"><span class="pricing-check">✓</span>1 data source</div>
+                <div class="pricing-feature"><span class="pricing-check">✓</span>30-day history</div>
+                <div class="pricing-feature"><span class="pricing-check">✓</span>Email reports</div>
+              </div>
+              <div class="pricing-card featured">
+                <div class="pricing-badge">Most popular</div>
+                <div class="pricing-tier">Pro</div>
+                <div class="pricing-price">£149<span>/mo</span></div>
+                <div class="pricing-users">Up to 10 users</div>
+                <button class="pricing-btn pricing-btn-primary">Start free trial</button>
+                <div class="pricing-feature"><span class="pricing-check active">✓</span>5 data sources</div>
+                <div class="pricing-feature"><span class="pricing-check active">✓</span>Unlimited history</div>
+                <div class="pricing-feature"><span class="pricing-check active">✓</span>Slack alerts</div>
+                <div class="pricing-feature"><span class="pricing-check active">✓</span>Custom dashboards</div>
+              </div>
+              <div class="pricing-card">
+                <div class="pricing-tier">Enterprise</div>
+                <div class="pricing-price" style="font-size:22px">Custom</div>
+                <div class="pricing-users">Unlimited users</div>
+                <button class="pricing-btn pricing-btn-ghost">Talk to sales</button>
+                <div class="pricing-feature"><span class="pricing-check">✓</span>Unlimited sources</div>
+                <div class="pricing-feature"><span class="pricing-check">✓</span>SSO / SAML</div>
+                <div class="pricing-feature"><span class="pricing-check">✓</span>SLA + support</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Nav: Marketing -->
+      <section class="doc-section" id="mkt-nav">
+        <div class="section-header">
+          <span class="section-eyebrow">Navigation</span>
+          <h2 class="section-title">Marketing nav</h2>
+          <p class="section-desc">52px height. Transparent at page top, solid on scroll. Authenticated state replaces CTA with "Go to app" + avatar.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="subsection">
+          <div class="subsection-title">Signed out</div>
+          <div class="preview-dark" style="padding:0;border-radius:var(--radius-lg);overflow:hidden">
+            <div class="mkt-nav-bar">
+              <span class="mkt-wordmark">Orbit</span>
+              <div class="mkt-links">
+                <span class="mkt-link active">Product</span>
+                <span class="mkt-link">Pricing</span>
+                <span class="mkt-link">Docs</span>
+              </div>
+              <div class="mkt-actions">
+                <span class="mkt-text-link">Sign in</span>
+                <button class="mkt-cta-btn">Start free trial</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-title">Signed in</div>
+          <div class="preview-dark" style="padding:0;border-radius:var(--radius-lg);overflow:hidden">
+            <div class="mkt-nav-bar">
+              <span class="mkt-wordmark">Orbit</span>
+              <div class="mkt-links">
+                <span class="mkt-link active">Product</span>
+                <span class="mkt-link">Pricing</span>
+                <span class="mkt-link">Docs</span>
+              </div>
+              <div class="mkt-actions">
+                <span class="mkt-go-app">Go to app →</span>
+                <div class="mkt-sep"></div>
+                <div class="mkt-avatar">SK</div>
+              </div>
+            </div>
+          </div>
+          <div class="reasoning" style="margin-top:12px">
+            <strong>Why "Go to app →" in brand-muted, not white?</strong> White would make it compete with the wordmark and active nav link. Brand-muted (#818CF8) reads as a navigation action — something purposeful — rather than a label. It also creates visual continuity with the eyebrow colour used in marketing sections, reinforcing that brand-muted is "the accent" on dark surfaces.
+          </div>
+        </div>
+      </section>
+
+      <!-- Nav: App -->
+      <section class="doc-section" id="app-nav">
+        <div class="section-header">
+          <span class="section-eyebrow">Navigation</span>
+          <h2 class="section-title">App sidebar</h2>
+          <p class="section-desc">192px wide. Always dark regardless of light/dark mode. Product switcher at top, user identity at bottom.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why a sidebar instead of a top nav in the app?</strong> Top navs force all products to share the same horizontal space. As features are added, top nav items overflow into dropdowns or truncate. A sidebar scales vertically without compression and keeps all navigation visible. It also creates a clear spatial separation between navigation (left, dark) and content (right, light) that aids orientation in information-dense interfaces.
+          <br><br>
+          <strong>Why is the sidebar always dark, even in light mode?</strong> The sidebar's job is product context — which product, which section, who you are. Keeping it anchored to the dark treatment makes it consistent across all products regardless of their brand colour, and gives the product icon somewhere to land with real contrast. A light sidebar in a light-mode app would require careful work to avoid looking like a continuation of the content area.
+        </div>
+        <div class="app-sidebar-demo">
+          <div class="app-sb">
+            <div class="app-sb-top">
+              <div class="app-sb-product">
+                <div class="app-sb-icon">O</div>
+                <span class="app-sb-name">Orbit</span>
+                <span class="app-sb-chevron">⌄</span>
+              </div>
+            </div>
+            <div class="app-sb-nav">
+              <div class="app-sb-item active">
+                <div class="app-sb-item-dot"></div>
+                <span class="app-sb-label">Overview</span>
+              </div>
+              <div class="app-sb-item">
+                <div class="app-sb-item-dot"></div>
+                <span class="app-sb-label">Customers</span>
+              </div>
+              <div class="app-sb-item">
+                <div class="app-sb-item-dot"></div>
+                <span class="app-sb-label">Invoices</span>
+              </div>
+              <div class="app-sb-item">
+                <div class="app-sb-item-dot"></div>
+                <span class="app-sb-label">Reports</span>
+              </div>
+            </div>
+            <div class="app-sb-footer">
+              <div class="app-sb-av">SK</div>
+              <span class="app-sb-uname">Sara K.</span>
+              <span style="font-size:12px;color:rgba(255,255,255,0.25);cursor:default">⚙</span>
+            </div>
+          </div>
+          <div class="app-body-demo">
+            <div class="app-topbar-demo">
+              <span class="app-topbar-title">Overview</span>
+              <div style="margin-left:auto">
+                <span style="font-size:12px;font-weight:500;color:var(--brand-500);background:var(--brand-50);border:0.5px solid #C7CBFF;padding:4px 10px;border-radius:6px;cursor:default">Export</span>
+              </div>
+            </div>
+            <div class="app-body-content">
+              <div class="app-stat"><div class="app-stat-lbl">MRR</div><div class="app-stat-val">£24,830</div></div>
+              <div class="app-stat"><div class="app-stat-lbl">Customers</div><div class="app-stat-val">348</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Handoff -->
+      <section class="doc-section" id="handoff">
+        <div class="section-header">
+          <span class="section-eyebrow">Navigation</span>
+          <h2 class="section-title">The handoff moment</h2>
+          <p class="section-desc">The transition from marketing to app is a designed moment, not just a route change. The visual jump is intentional — it signals the user has crossed a threshold.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why design the handoff explicitly?</strong> Most SaaS products treat the marketing-to-app transition as a technical problem (routing). The user clicks "Start free trial", gets redirected, and lands in an empty dashboard. That jarring emptiness after a high-energy conversion moment is a missed opportunity. The three principles: (1) the dark sidebar appears immediately — it's the visual anchor that says "you're in the product". (2) First load shows an onboarding checklist, not an empty state. (3) Brand colour (#5B6EE1) is the continuous thread — it appears in the marketing CTA button, then immediately in the app sidebar and the first active checklist item.
+        </div>
+        <div class="handoff-grid">
+          <div class="handoff-mkt">
+            <div style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px">Marketing surface</div>
+            <div style="font-size:24px;font-weight:600;letter-spacing:-0.03em;color:#fff;line-height:1.15;margin-bottom:10px">Know exactly where your growth comes from</div>
+            <button style="font-family:var(--font-sans);background:var(--brand-500);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:default">Start free trial</button>
+          </div>
+          <div class="handoff-app">
+            <div style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:14px">App surface — first load</div>
+            <div style="background:var(--color-surface-raised);border:0.5px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden">
+              <div style="background:#0F1330;height:32px;display:flex;align-items:center;padding:0 10px;gap:7px">
+                <div style="width:18px;height:18px;border-radius:4px;background:var(--brand-500);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0">O</div>
+                <span style="font-size:12px;font-weight:500;color:#fff">Orbit</span>
+              </div>
+              <div style="padding:12px">
+                <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px">Welcome — let's get you set up</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--brand-500);border-radius:7px;background:var(--brand-50)">
+                    <div style="width:16px;height:16px;border-radius:50%;background:var(--brand-500);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;flex-shrink:0">1</div>
+                    <span style="font-size:12px;font-weight:500;color:var(--brand-700)">Connect your first data source</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--color-border);border-radius:7px;background:var(--color-surface)">
+                    <div style="width:16px;height:16px;border-radius:50%;background:var(--color-border);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--color-text-tertiary);font-weight:600;flex-shrink:0">2</div>
+                    <span style="font-size:12px;color:var(--color-text-secondary)">Invite your team</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theming -->
+      <section class="doc-section" id="theming">
+        <div class="section-header">
+          <span class="section-eyebrow">Multi-product</span>
+          <h2 class="section-title">Per-product theming</h2>
+          <p class="section-desc">Each product defines 7 brand tokens under a <code style="font-family:var(--font-mono);font-size:12px;background:var(--color-surface);padding:2px 6px;border-radius:4px">data-theme</code> attribute. Everything else is shared.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Why not override semantic tokens directly per product?</strong> If products override <code>--color-interactive</code> directly, you lose the ability to control light/dark mode separately. The brand primitive tokens (<code>--brand-500</code>, etc.) sit between primitives and semantic tokens — semantic tokens reference brand tokens, brand tokens are set per product. This means a product theme file only needs to define 7 values, and the entire semantic layer — including dark mode variants — updates automatically.
+          <br><br>
+          <strong>Important caveat:</strong> not all brand colours work in all positions. A pale or low-saturation brand colour cannot be used as a nav background the same way deep indigo can. Each product's theme file must be authored with care — <code>--brand-dark-nav</code> in particular may need to be an independently chosen dark value rather than a mechanical darkening of the brand colour.
+        </div>
+        <div class="code-block">
+<span class="c">/* Required per-product brand tokens */</span>
+[<span class="k">data-theme</span>=<span class="s">"orbit"</span>] {
+  <span class="k">--brand-500</span>:        <span class="s">#5B6EE1</span>;  <span class="c">/* Primary interactive */</span>
+  <span class="k">--brand-400</span>:        <span class="s">#818CF8</span>;  <span class="c">/* Dark mode variant (lighter) */</span>
+  <span class="k">--brand-50</span>:         <span class="s">#E8EAFF</span>;  <span class="c">/* Light muted fill */</span>
+  <span class="k">--brand-700</span>:        <span class="s">#3A4DC8</span>;  <span class="c">/* Text on brand-50 background */</span>
+  <span class="k">--brand-900</span>:        <span class="s">#1E2660</span>;  <span class="c">/* Nav background (light mode) */</span>
+  <span class="k">--brand-dark-muted</span>: <span class="s">#1E254A</span>;  <span class="c">/* Dark mode badge fill */</span>
+  <span class="k">--brand-dark-nav</span>:   <span class="s">#0F1330</span>;  <span class="c">/* Dark mode nav — independently authored */</span>
+}
+
+[<span class="k">data-theme</span>=<span class="s">"beacon"</span>] {
+  <span class="k">--brand-500</span>:        <span class="s">#0E9E72</span>;
+  <span class="k">--brand-400</span>:        <span class="s">#34C98F</span>;
+  <span class="k">--brand-50</span>:         <span class="s">#D4F5EA</span>;
+  <span class="k">--brand-700</span>:        <span class="s">#097355</span>;
+  <span class="k">--brand-900</span>:        <span class="s">#065440</span>;
+  <span class="k">--brand-dark-muted</span>: <span class="s">#0A2E22</span>;
+  <span class="k">--brand-dark-nav</span>:   <span class="s">#031F18</span>;
+}
+        </div>
+      </section>
+
+      <!-- New theme -->
+      <section class="doc-section" id="new-theme">
+        <div class="section-header">
+          <span class="section-eyebrow">Multi-product</span>
+          <h2 class="section-title">Creating a new theme</h2>
+          <p class="section-desc">Each product requires exactly 7 brand primitive tokens. Everything else — typography, spacing, neutral palette, radius, component behaviour — is shared and updates automatically when those 7 values change.</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="reasoning">
+          <strong>Don't mechanically darken the brand colour for <code>--brand-dark-nav</code>.</strong> Not all brand colours work in all positions. A pale or low-saturation brand colour cannot serve as a nav background the same way deep indigo can. <code>--brand-dark-nav</code> should be independently chosen — a dark surface that feels right as a sidebar, not a mathematical shade derived from the brand. Treat it as a dedicated dark-surface colour that happens to share the brand's hue family.
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">The 7 brand tokens</div>
+          <div class="code-block"><span class="c">/* app.css — one [data-theme] block per product */</span>
+[<span class="k">data-theme</span>=<span class="s">"yourproduct"</span>] {
+  <span class="k">--brand-500</span>:        <span class="s">oklch(…)</span>;  <span class="c">/* Primary interactive — buttons, focus rings */</span>
+  <span class="k">--brand-400</span>:        <span class="s">oklch(…)</span>;  <span class="c">/* Dark mode variant — lighter stop */</span>
+  <span class="k">--brand-50</span>:         <span class="s">oklch(…)</span>;  <span class="c">/* Light muted fill — badge bg, hover states */</span>
+  <span class="k">--brand-700</span>:        <span class="s">oklch(…)</span>;  <span class="c">/* Text on brand-50 backgrounds */</span>
+  <span class="k">--brand-900</span>:        <span class="s">oklch(…)</span>;  <span class="c">/* Nav background (light mode) */</span>
+  <span class="k">--brand-dark-muted</span>: <span class="s">oklch(…)</span>;  <span class="c">/* Dark mode badge fill — must be a dark stop */</span>
+  <span class="k">--brand-dark-nav</span>:   <span class="s">oklch(…)</span>;  <span class="c">/* Dark mode nav — independently authored */</span>
+}</div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">What each token drives</div>
+          <table class="spec-table">
+            <thead><tr><th>Token</th><th>Used in</th><th>Contrast requirement</th></tr></thead>
+            <tbody>
+              <tr><td><code>--brand-500</code></td><td>Primary buttons, focus rings, active nav items, links</td><td>≥ 4.5:1 on white (#FFFFFF) — WCAG AA</td></tr>
+              <tr><td><code>--brand-400</code></td><td>Dark mode buttons, marketing eyebrow text</td><td>≥ 4.5:1 on #0D0D12 (marketing canvas)</td></tr>
+              <tr><td><code>--brand-50</code></td><td>Badge backgrounds, focus fill, hover states, selected rows</td><td>Must support brand-700 text at ≥ 4.5:1</td></tr>
+              <tr><td><code>--brand-700</code></td><td>Text on brand-50 backgrounds, badge labels</td><td>≥ 4.5:1 on brand-50 — WCAG AA</td></tr>
+              <tr><td><code>--brand-900</code></td><td>Light mode nav background</td><td>White text at 45% opacity must be legible</td></tr>
+              <tr><td><code>--brand-dark-muted</code></td><td>Dark mode badge fill, muted interactive backgrounds</td><td>Must be dark — a tint (50-stop) would read as light bleed</td></tr>
+              <tr><td><code>--brand-dark-nav</code></td><td>Dark mode nav background</td><td>White text at 100% must pass AA ≥ 4.5:1</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Set the theme in your layout</div>
+          <div class="code-block"><span class="c">// src/routes/+layout.svelte</span>
+&lt;<span class="k">html</span> <span class="s">data-theme</span>=<span class="s">"yourproduct"</span> <span class="s">lang</span>=<span class="s">"en"</span>&gt;
+  &lt;<span class="k">body</span>&gt;&lt;<span class="s">slot</span> /&gt;&lt;/<span class="k">body</span>&gt;
+&lt;/<span class="k">html</span>&gt;</div>
+        </div>
+
+        <div class="subsection">
+          <div class="subsection-title">Ship checklist</div>
+          <table class="spec-table">
+            <thead><tr><th>Check</th><th>Pass condition</th></tr></thead>
+            <tbody>
+              <tr><td>brand-500 on white</td><td>≥ 4.5:1 contrast ratio (WCAG AA)</td></tr>
+              <tr><td>brand-400 on #0D0D12</td><td>≥ 4.5:1 contrast ratio (WCAG AA)</td></tr>
+              <tr><td>brand-700 on brand-50</td><td>≥ 4.5:1 contrast ratio (WCAG AA)</td></tr>
+              <tr><td>White (45% opacity) on brand-900</td><td>Nav resting state legible</td></tr>
+              <tr><td>White (100%) on brand-dark-nav</td><td>≥ 4.5:1 contrast ratio</td></tr>
+              <tr><td>brand-dark-nav independently authored</td><td>Not a mechanical darkening of brand-900</td></tr>
+              <tr><td>data-theme set on &lt;html&gt; in root layout</td><td>All semantic tokens resolve through brand layer</td></tr>
+              <tr><td>Run Design.md linter</td><td><code>npx @google/design.md lint Design.md</code> exits 0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Dark mode -->
+      <section class="doc-section" id="dark-mode">
+        <div class="section-header">
+          <span class="section-eyebrow">Multi-product</span>
+          <h2 class="section-title">Dark mode</h2>
+          <p class="section-desc">Semantic tokens absorb the mode switch. Components never know which mode is active.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Key rules for dark mode colour shifts:</strong> Brand colour lightens (500 → 400) because saturated colours at 500 feel too heavy on dark backgrounds. The muted tint inverts — a light 50-stop tint on a dark surface reads as a light bleed, not a badge. Nav stays darkest even in dark mode — losing the hierarchy between nav and page background makes the sidebar disappear visually. Surface hierarchy inverts: in light mode, page is stone-50 and cards are white (lighter). In dark mode, page is ink-950 and cards are ink-900 (lighter). Same logic, opposite direction.
+        </div>
+        <div class="token-grid">
+          <div class="token-card">
+            <div class="token-card-title" style="color:var(--brand-500)">Light mode</div>
+            <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val"><div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4</span></div>
+            <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val"><div class="token-dot" style="background:#FFFFFF;border-color:rgba(0,0,0,0.1)"></div>#FFFFFF</span></div>
+            <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val"><div class="token-dot" style="background:#18181A"></div>#18181A</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val"><div class="token-dot" style="background:#5B6EE1"></div>#5B6EE1 (500)</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val"><div class="token-dot" style="background:#E8EAFF;border-color:rgba(0,0,0,0.08)"></div>#E8EAFF (50)</span></div>
+          </div>
+          <div class="token-card">
+            <div class="token-card-title" style="color:#818CF8">Dark mode</div>
+            <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val"><div class="token-dot" style="background:#18181A"></div>#18181A</span></div>
+            <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val"><div class="token-dot" style="background:#232325"></div>#232325</span></div>
+            <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val"><div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val"><div class="token-dot" style="background:#818CF8"></div>#818CF8 (400)</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val"><div class="token-dot" style="background:#1E254A"></div>#1E254A (dark)</span></div>
+          </div>
+        </div>
+        <div class="code-block">
+<span class="c">/* Semantic tokens — light defaults */</span>
+:<span class="k">root</span> {
+  <span class="k">--color-surface</span>:          <span class="s">#F5F5F4</span>;
+  <span class="k">--color-surface-raised</span>:   <span class="s">#FFFFFF</span>;
+  <span class="k">--color-border</span>:           <span class="s">#E5E5E3</span>;
+  <span class="k">--color-text-primary</span>:     <span class="s">#18181A</span>;
+  <span class="k">--color-text-secondary</span>:   <span class="s">#78716C</span>;
+  <span class="k">--color-interactive</span>:      <span class="k">var</span>(<span class="s">--brand-500</span>);
+  <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span class="s">--brand-50</span>);
+  <span class="k">--nav-background</span>:         <span class="k">var</span>(<span class="s">--brand-900</span>);
+}
+
+<span class="c">/* Dark mode overrides */</span>
+@<span class="k">media</span> (<span class="k">prefers-color-scheme</span>: <span class="s">dark</span>) {
+  :<span class="k">root</span> {
+    <span class="k">--color-surface</span>:          <span class="s">#18181A</span>;
+    <span class="k">--color-surface-raised</span>:   <span class="s">#232325</span>;
+    <span class="k">--color-border</span>:           <span class="s">#3A3A3C</span>;
+    <span class="k">--color-text-primary</span>:     <span class="s">#F5F5F4</span>;
+    <span class="k">--color-text-secondary</span>:   <span class="s">#A09E97</span>;
+    <span class="k">--color-interactive</span>:      <span class="k">var</span>(<span class="s">--brand-400</span>);
+    <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span class="s">--brand-dark-muted</span>);
+    <span class="k">--nav-background</span>:         <span class="k">var</span>(<span class="s">--brand-dark-nav</span>);
+  }
+}
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.doc-section');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
