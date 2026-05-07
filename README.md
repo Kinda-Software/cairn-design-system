@@ -2,7 +2,7 @@
 
 Named after the stone trail markers of the Peak District — Cairn guides consistent UI decisions across Kinda products without getting in the way.
 
-**Live docs:** https://[your-username].github.io/cairn-design-system/
+**Live docs:** [https://kinda-software.github.io/cairn-design-system/](https://kinda-software.github.io/cairn-design-system/)
 
 ---
 
@@ -23,7 +23,7 @@ npx shadcn-svelte@latest init
 # Style: new-york · Base colour: stone · CSS variables: yes
 
 # 2. Replace src/app.css with the Cairn theme file
-# Download: https://[your-username].github.io/cairn-design-system/app.css
+# Download: https://kinda-software.github.io/cairn-design-system/app.css
 
 # 3. Set data-theme on your root layout's <html> element
 # 'orbit' | 'beacon' | 'vault' | 'pulse'
@@ -49,4 +49,4 @@ npx @google/design.md lint Design.md
 
 ---
 
-Part of [Kinda Software](https://kinda.design) — SaaS tools built for a single goal, as simply as possible.
+Part of [Kinda Software](https://kindasoftware.com) — SaaS tools built for a single goal, as simply as possible.
