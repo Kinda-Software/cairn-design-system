@@ -71,20 +71,27 @@
   }
 
   .sidebar-brand {
-    padding: 20px 16px 16px;
+    padding: 20px 16px 0 16px;
     border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-
+.sidebar-logo {
+   height: 1.5em;
+   width: 1.5em;
+    color: #fff;
+}
   .sidebar-wordmark {
     font-size: 16px;
     font-weight: 600;
     letter-spacing: -0.025em;
     color: #fff;
-    display: block;
     margin-bottom: 3px;
   }
 
   .sidebar-sub {
+    padding: 0 16px 20px;
     font-size: 11px;
     color: rgba(255,255,255,0.35);
   }
@@ -507,9 +514,16 @@
 
   <aside class="sidebar">
     <div class="sidebar-brand">
+      <span class="sidebar-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+          <path d="M20,20 Q32,8 44,20 L45,22 L19,22 Z"/>
+          <path d="M18,26 Q32,22 46,26 L49,37 L15,37 Z"/>
+          <path d="M14,41 Q32,37 50,41 L54,54 L10,54 Z"/>
+        </svg>
+      </span>
       <span class="sidebar-wordmark">Cairn</span>
-      <span class="sidebar-sub">Design System v1.0</span>
     </div>
+    <div class="sidebar-sub">Design System v1.0</div>
     <nav class="sidebar-nav">
       <div class="nav-group">
         <span class="nav-group-label">Getting started</span>
