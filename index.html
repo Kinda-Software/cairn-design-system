@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cairn Design System</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='%235B6EE1'%3E%3Cpath d='M20,20 Q32,8 44,20 L45,22 L19,22 Z'/%3E%3Cpath d='M18,26 Q32,22 46,26 L49,37 L15,37 Z'/%3E%3Cpath d='M14,41 Q32,37 50,41 L54,54 L10,54 Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -87,7 +88,6 @@
     font-weight: 600;
     letter-spacing: -0.025em;
     color: #fff;
-    margin-bottom: 3px;
   }
 
   .sidebar-sub {
@@ -501,7 +501,8 @@
   }
 
   .page-header-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-500); margin-bottom: 10px; display: block; }
-  .page-header-title { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; color: var(--color-text-primary); margin-bottom: 10px; line-height: 1.15; }
+  .page-header-title { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; color: var(--color-text-primary); margin-bottom: 10px; line-height: 1.15; display: flex; align-items: center; gap: 12px; }
+  .page-header-logo { height: 1.5em; width: 1.5em; color: var(--brand-500); flex-shrink: 0; }
   .page-header-desc { font-size: 15px; color: var(--color-text-secondary); line-height: 1.65; max-width: 560px; }
   .page-header-meta { display: flex; gap: 16px; margin-top: 16px; }
   .page-header-meta-item { font-size: 12px; color: var(--color-text-tertiary); display: flex; align-items: center; gap: 5px; }
@@ -579,7 +580,16 @@
 
     <div class="page-header">
       <span class="page-header-eyebrow">Design system</span>
-      <h1 class="page-header-title">Cairn</h1>
+      <h1 class="page-header-title">
+        <span class="page-header-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+            <path d="M20,20 Q32,8 44,20 L45,22 L19,22 Z"/>
+            <path d="M18,26 Q32,22 46,26 L49,37 L15,37 Z"/>
+            <path d="M14,41 Q32,37 50,41 L54,54 L10,54 Z"/>
+          </svg>
+        </span>
+        Cairn
+      </h1>
       <p class="page-header-desc">Named after the stone trail markers of the Peak District — a cairn guides you through uncertain terrain without getting in your way. This system works the same: one shared foundation, per-product brand colour, two distinct surfaces for app UI and marketing, Space Grotesk throughout.</p>
       <div class="page-header-meta">
         <span class="page-header-meta-item">Space Grotesk + Space Mono</span>
@@ -1477,6 +1487,63 @@ match the tokens and constraints defined in that file.</div>
 }
         </div>
       </section>
+      <!-- Dark mode -->
+      <section class="doc-section" id="dark-mode">
+        <div class="section-header">
+          <span class="section-eyebrow">Multi-product</span>
+          <h2 class="section-title">Dark mode</h2>
+          <p class="section-desc">Semantic tokens absorb the mode switch. Components never know which mode is active.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="reasoning">
+          <strong>Key rules for dark mode colour shifts:</strong> Brand colour lightens (500 → 400) because saturated colours at 500 feel too heavy on dark backgrounds. The muted tint inverts — a light 50-stop tint on a dark surface reads as a light bleed, not a badge. Nav stays darkest even in dark mode — losing the hierarchy between nav and page background makes the sidebar disappear visually. Surface hierarchy inverts: in light mode, page is stone-50 and cards are white (lighter). In dark mode, page is ink-950 and cards are ink-900 (lighter). Same logic, opposite direction.
+        </div>
+        <div class="token-grid">
+          <div class="token-card">
+            <div class="token-card-title" style="color:var(--brand-500)">Light mode</div>
+            <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val"><div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4</span></div>
+            <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val"><div class="token-dot" style="background:#FFFFFF;border-color:rgba(0,0,0,0.1)"></div>#FFFFFF</span></div>
+            <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val"><div class="token-dot" style="background:#18181A"></div>#18181A</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val"><div class="token-dot" style="background:#5B6EE1"></div>#5B6EE1 (500)</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val"><div class="token-dot" style="background:#E8EAFF;border-color:rgba(0,0,0,0.08)"></div>#E8EAFF (50)</span></div>
+          </div>
+          <div class="token-card">
+            <div class="token-card-title" style="color:#818CF8">Dark mode</div>
+            <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val"><div class="token-dot" style="background:#18181A"></div>#18181A</span></div>
+            <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val"><div class="token-dot" style="background:#232325"></div>#232325</span></div>
+            <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val"><div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val"><div class="token-dot" style="background:#818CF8"></div>#818CF8 (400)</span></div>
+            <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val"><div class="token-dot" style="background:#1E254A"></div>#1E254A (dark)</span></div>
+          </div>
+        </div>
+        <div class="code-block">
+<span class="c">/* Semantic tokens — light defaults */</span>
+:<span class="k">root</span> {
+  <span class="k">--color-surface</span>:          <span class="s">#F5F5F4</span>;
+  <span class="k">--color-surface-raised</span>:   <span class="s">#FFFFFF</span>;
+  <span class="k">--color-border</span>:           <span class="s">#E5E5E3</span>;
+  <span class="k">--color-text-primary</span>:     <span class="s">#18181A</span>;
+  <span class="k">--color-text-secondary</span>:   <span class="s">#78716C</span>;
+  <span class="k">--color-interactive</span>:      <span class="k">var</span>(<span class="s">--brand-500</span>);
+  <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span class="s">--brand-50</span>);
+  <span class="k">--nav-background</span>:         <span class="k">var</span>(<span class="s">--brand-900</span>);
+}
+
+<span class="c">/* Dark mode overrides */</span>
+@<span class="k">media</span> (<span class="k">prefers-color-scheme</span>: <span class="s">dark</span>) {
+  :<span class="k">root</span> {
+    <span class="k">--color-surface</span>:          <span class="s">#18181A</span>;
+    <span class="k">--color-surface-raised</span>:   <span class="s">#232325</span>;
+    <span class="k">--color-border</span>:           <span class="s">#3A3A3C</span>;
+    <span class="k">--color-text-primary</span>:     <span class="s">#F5F5F4</span>;
+    <span class="k">--color-text-secondary</span>:   <span class="s">#A09E97</span>;
+    <span class="k">--color-interactive</span>:      <span class="k">var</span>(<span class="s">--brand-400</span>);
+    <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span class="s">--brand-dark-muted</span>);
+    <span class="k">--nav-background</span>:         <span class="k">var</span>(<span class="s">--brand-dark-nav</span>);
+  }
+}
+        </div>
+      </section>
 
       <!-- New theme -->
       <section class="doc-section" id="new-theme">
@@ -1546,65 +1613,6 @@ match the tokens and constraints defined in that file.</div>
           </table>
         </div>
       </section>
-
-      <!-- Dark mode -->
-      <section class="doc-section" id="dark-mode">
-        <div class="section-header">
-          <span class="section-eyebrow">Multi-product</span>
-          <h2 class="section-title">Dark mode</h2>
-          <p class="section-desc">Semantic tokens absorb the mode switch. Components never know which mode is active.</p>
-        </div>
-        <div class="divider"></div>
-        <div class="reasoning">
-          <strong>Key rules for dark mode colour shifts:</strong> Brand colour lightens (500 → 400) because saturated colours at 500 feel too heavy on dark backgrounds. The muted tint inverts — a light 50-stop tint on a dark surface reads as a light bleed, not a badge. Nav stays darkest even in dark mode — losing the hierarchy between nav and page background makes the sidebar disappear visually. Surface hierarchy inverts: in light mode, page is stone-50 and cards are white (lighter). In dark mode, page is ink-950 and cards are ink-900 (lighter). Same logic, opposite direction.
-        </div>
-        <div class="token-grid">
-          <div class="token-card">
-            <div class="token-card-title" style="color:var(--brand-500)">Light mode</div>
-            <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val"><div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4</span></div>
-            <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val"><div class="token-dot" style="background:#FFFFFF;border-color:rgba(0,0,0,0.1)"></div>#FFFFFF</span></div>
-            <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val"><div class="token-dot" style="background:#18181A"></div>#18181A</span></div>
-            <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val"><div class="token-dot" style="background:#5B6EE1"></div>#5B6EE1 (500)</span></div>
-            <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val"><div class="token-dot" style="background:#E8EAFF;border-color:rgba(0,0,0,0.08)"></div>#E8EAFF (50)</span></div>
-          </div>
-          <div class="token-card">
-            <div class="token-card-title" style="color:#818CF8">Dark mode</div>
-            <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val"><div class="token-dot" style="background:#18181A"></div>#18181A</span></div>
-            <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val"><div class="token-dot" style="background:#232325"></div>#232325</span></div>
-            <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val"><div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4</span></div>
-            <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val"><div class="token-dot" style="background:#818CF8"></div>#818CF8 (400)</span></div>
-            <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val"><div class="token-dot" style="background:#1E254A"></div>#1E254A (dark)</span></div>
-          </div>
-        </div>
-        <div class="code-block">
-<span class="c">/* Semantic tokens — light defaults */</span>
-:<span class="k">root</span> {
-  <span class="k">--color-surface</span>:          <span class="s">#F5F5F4</span>;
-  <span class="k">--color-surface-raised</span>:   <span class="s">#FFFFFF</span>;
-  <span class="k">--color-border</span>:           <span class="s">#E5E5E3</span>;
-  <span class="k">--color-text-primary</span>:     <span class="s">#18181A</span>;
-  <span class="k">--color-text-secondary</span>:   <span class="s">#78716C</span>;
-  <span class="k">--color-interactive</span>:      <span class="k">var</span>(<span class="s">--brand-500</span>);
-  <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span class="s">--brand-50</span>);
-  <span class="k">--nav-background</span>:         <span class="k">var</span>(<span class="s">--brand-900</span>);
-}
-
-<span class="c">/* Dark mode overrides */</span>
-@<span class="k">media</span> (<span class="k">prefers-color-scheme</span>: <span class="s">dark</span>) {
-  :<span class="k">root</span> {
-    <span class="k">--color-surface</span>:          <span class="s">#18181A</span>;
-    <span class="k">--color-surface-raised</span>:   <span class="s">#232325</span>;
-    <span class="k">--color-border</span>:           <span class="s">#3A3A3C</span>;
-    <span class="k">--color-text-primary</span>:     <span class="s">#F5F5F4</span>;
-    <span class="k">--color-text-secondary</span>:   <span class="s">#A09E97</span>;
-    <span class="k">--color-interactive</span>:      <span class="k">var</span>(<span class="s">--brand-400</span>);
-    <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span class="s">--brand-dark-muted</span>);
-    <span class="k">--nav-background</span>:         <span class="k">var</span>(<span class="s">--brand-dark-nav</span>);
-  }
-}
-        </div>
-      </section>
-
     </div>
   </div>
 </div>
@@ -1612,17 +1620,24 @@ match the tokens and constraints defined in that file.</div>
 <script>
   const sections = document.querySelectorAll('.doc-section');
   const navLinks = document.querySelectorAll('.nav-link');
+  const visible = new Set();
+
+  function updateActive() {
+    let activeId = null;
+    sections.forEach(section => {
+      if (visible.has(section.id) && !activeId) activeId = section.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + activeId);
+    });
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-        });
-      }
+      entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id);
     });
-  }, { rootMargin: '-20% 0px -70% 0px' });
+    updateActive();
+  }, { rootMargin: '-10% 0px -60% 0px' });
 
   sections.forEach(s => observer.observe(s));
 </script>
