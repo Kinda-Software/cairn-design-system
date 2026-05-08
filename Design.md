@@ -79,37 +79,37 @@ typography:
     letterSpacing: 0em
   mkt-display:
     fontFamily: Space Grotesk
-    fontSize: 64px
+    fontSize: 72px
     fontWeight: 600
-    lineHeight: 1.05
+    lineHeight: 1.0
     letterSpacing: -0.04em
   mkt-heading:
     fontFamily: Space Grotesk
-    fontSize: 36px
+    fontSize: 48px
     fontWeight: 600
-    lineHeight: 1.15
-    letterSpacing: -0.025em
+    lineHeight: 1.1
+    letterSpacing: -0.03em
   mkt-subheading:
     fontFamily: Space Grotesk
-    fontSize: 22px
+    fontSize: 28px
     fontWeight: 500
-    lineHeight: 1.3
-    letterSpacing: -0.015em
+    lineHeight: 1.25
+    letterSpacing: -0.018em
   mkt-body:
     fontFamily: Space Grotesk
-    fontSize: 17px
+    fontSize: 18px
     fontWeight: 400
-    lineHeight: 1.65
+    lineHeight: 1.7
     letterSpacing: 0em
   mkt-eyebrow:
     fontFamily: Space Grotesk
-    fontSize: 12px
+    fontSize: 13px
     fontWeight: 600
     lineHeight: 1
     letterSpacing: 0.09em
   mkt-caption:
     fontFamily: Space Grotesk
-    fontSize: 13px
+    fontSize: 15px
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: 0em
@@ -218,7 +218,7 @@ components:
     backgroundColor: "{colors.primary-dark-nav}"
     width: 192px
   nav-item-rest:
-    textColor: "rgba(255,255,255,0.45)"
+    textColor: "rgba(255,255,255,0.65)"
     rounded: "{rounded.md}"
     padding: 6px 8px
   nav-item-active:
@@ -323,13 +323,13 @@ Space Grotesk is used across both surfaces. Its double-storey `a`, spurred `G`, 
 
 **Weight rule:** 600 is reserved for headings at 22px and above only. Space Grotesk 500 is optically heavier than Inter 500 — using 600 at smaller sizes produces a heavy, overworked result.
 
-**Tracking rule:** Negative tracking increases with size. App display: −0.03em. Marketing hero: −0.04em (pushed further because at 64px letterforms need more compression). Body and label tracking is always 0.
+**Tracking rule:** Negative tracking increases with size. App display: −0.03em. Marketing display: −0.04em at 72px (letterforms need maximum compression). Marketing heading: −0.03em at 48px. Body and label tracking is always 0.
 
 **App scale:** 12px captions → 30px display. Tight tracking on headings, neutral on body. Line height 1.65 for body (slightly tighter than default to compensate for Space Grotesk's natural width).
 
-**Marketing scale:** 12px eyebrows → 64px hero. Eyebrows use uppercase with wide positive tracking (+0.09em) in `primary-light` colour — never white, which would compete with the headline for first read.
+**Marketing scale:** 13px eyebrows → 72px hero. Eyebrows use uppercase with wide positive tracking (+0.09em) in `primary-light` colour — never white, which would compete with the headline for first read. Section headings at 48px, subheadings at 28px, body at 18px. The scale is deliberately larger than the app UI — marketing pages reward confidence.
 
-**Animation rule:** Marketing headlines at 48px+ use fade-only animation transitions. Never use translateY on large text — moving text at that scale looks like a rendering error.
+**Animation rule:** Marketing headlines at 48px+ use fade-only animation transitions. Never use translateY on large text — moving text at that scale looks like a rendering error. This applies to the new mkt-heading size (48px) and above.
 
 ## Layout
 
@@ -379,11 +379,11 @@ In the marketing nav, "Sign in" is always a plain text link, never a button. It 
 
 **Data tables:** No zebra stripes — use hover highlight (`table-row-hover`) only. Alternating row colours fragment attention horizontally. Header cells use uppercase 11px tracking at +0.06em so they recede and the eye lands on data. All numeric columns must be right-aligned with `font-variant-numeric: tabular-nums`. Financial figures use `mono` typography for strict column alignment. Total rows use a slightly heavier border (`1px solid`) and `body-md` 500 weight. Density: `table-row` (44px) default, `table-row-compact` (32px) available.
 
-**App sidebar nav:** Always dark (#0F1330) regardless of light/dark mode. Structure top to bottom: product switcher (product icon + wordmark + chevron — opens product panel) → optional section labels (10px/500/uppercase/25%-white) → nav items → user identity footer. `nav-item-active` uses `rgba(brand, 0.15)` fill, full white label, full opacity icon. Product switcher is the multi-product entry point — clicking reveals a panel listing all accessible products.
+**App sidebar nav:** Always dark (#0F1330) regardless of light/dark mode. Structure top to bottom: product switcher (product icon + wordmark + chevron — opens product panel) → optional section labels (11px/500/uppercase/50%-white — decorative only, never convey critical navigation state) → nav items → user identity footer. `nav-item-active` uses `rgba(brand, 0.15)` fill, full white label, full opacity icon. Product switcher is the multi-product entry point — clicking reveals a panel listing all accessible products.
 
 **Marketing nav:** `mkt-nav` is transparent at page top. `mkt-nav-scrolled` applies `mkt-canvas` background and a `rgba(255,255,255,0.10)` bottom border on scroll (transition: 200ms ease, position: sticky). Signed-out right side: "Sign in" text link (55%-white) → primary CTA (32px height). Signed-in right side: "Go to app →" in `primary-light` + thin divider + avatar. "Go to app" uses `primary-light` not white — white would compete with the active nav link and wordmark.
 
-**Marketing feature cards (`mkt-feature-card`):** Small 32×32px icon container with brand-tinted background and low-opacity brand border. Symbolic, not illustrative — scales across products without bespoke artwork. Title uses `body-md` 500 weight in white. Body copy uses `body-sm` at 45%-white opacity.
+**Marketing feature cards (`mkt-feature-card`):** Small 32×32px icon container with brand-tinted background and low-opacity brand border. Symbolic, not illustrative — scales across products without bespoke artwork. Title uses `body-md` 500 weight in white. Body copy uses `body-sm` at `--muted-foreground` (65%-white) — never hardcode opacity below 55% on any text-bearing element.
 
 **Marketing pricing cards:** Standard uses `mkt-pricing-card`. Featured uses `mkt-pricing-card-featured` with `1px solid primary` border override. Never fill the featured card with the brand colour — a colour-filled background reads as "selected" not "recommended" and reduces legibility of the feature list. "Most popular" pill (`rounded.full`, `primary` background, white text) is positioned above the card's top edge.
 
@@ -402,6 +402,7 @@ In the marketing nav, "Sign in" is always a plain text link, never a button. It 
 - Don't use box shadows in the app UI — elevation is expressed through border weight and background contrast
 - Do author each product's `--brand-dark-nav` token independently — do not mechanically darken the brand colour
 - Don't animate marketing headlines (48px+) with translateY — use opacity fade only
+- Do ensure all text-bearing elements on the dark marketing canvas use at least 55% white opacity — 65% is preferred for comfortable reading. The 30% and 45% opacity levels fail WCAG AA and must never carry informational text
 - Do verify WCAG AA contrast (4.5:1 minimum) for each product theme, particularly `primary-light` on `mkt-canvas` for eyebrow text
 - Don't mix radius scales within the same view — `rounded.md` on buttons and `rounded.lg` on cards is correct; `rounded.lg` on buttons is not
 - Do use `mono` typography for all financial figures in data tables requiring column alignment

@@ -273,7 +273,7 @@
     --card:               var(--cairn-mkt-surface);
     --card-foreground:    oklch(1.0000 0.0000 89.88);
     --border:             oklch(1.0000 0.0000 89.88 / 0.08);
-    --muted-foreground:   oklch(1.0000 0.0000 89.88 / 0.55);
+    --muted-foreground:   oklch(1.0000 0.0000 89.88 / 0.65);
     --primary:            var(--cairn-brand-500);
     --primary-foreground: oklch(1.0000 0.0000 89.88);
     --accent:             var(--cairn-brand-400);         /* eyebrow colour */
@@ -284,27 +284,27 @@
 
   /* Marketing typography overrides inside .surface-marketing */
   .surface-marketing h1 {
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 600;
     letter-spacing: -0.04em;
-    line-height: 1.05;
+    line-height: 1.0;
   }
   .surface-marketing h2 {
-    font-size: 2.25rem;
+    font-size: 3rem;
     font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.15;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
   }
   .surface-marketing h3 {
-    font-size: 1.375rem;
+    font-size: 1.75rem;
     font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.3;
+    letter-spacing: -0.018em;
+    line-height: 1.25;
   }
 
   /* Eyebrow — marketing section labels */
   .eyebrow {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     letter-spacing: 0.09em;
     text-transform: uppercase;
