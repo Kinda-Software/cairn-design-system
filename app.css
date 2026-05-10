@@ -273,7 +273,17 @@
     --card:               var(--cairn-mkt-surface);
     --card-foreground:    oklch(1.0000 0.0000 89.88);
     --border:             oklch(1.0000 0.0000 89.88 / 0.08);
-    --muted-foreground:   oklch(1.0000 0.0000 89.88 / 0.65);
+    /*
+     * Solid cool-neutral body text. Verified WCAG 2.2 AA on all three
+     * marketing surface levels:
+     *   mkt-canvas  #0D0D12  → 8.2 : 1
+     *   mkt-surface #16161E  → 7.0 : 1
+     *   mkt-raised  #1E1E28  → 7.0 : 1
+     * Use --foreground (white) for primary headings; --muted-foreground
+     * here for body copy, captions, and secondary UI text.
+     * Never replace this token with a raw opacity value for informational text.
+     */
+    --muted-foreground:   oklch(0.7400 0.0040 275);
     --primary:            var(--cairn-brand-500);
     --primary-foreground: oklch(1.0000 0.0000 89.88);
     --accent:             var(--cairn-brand-400);         /* eyebrow colour */

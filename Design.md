@@ -383,7 +383,7 @@ In the marketing nav, "Sign in" is always a plain text link, never a button. It 
 
 **Marketing nav:** `mkt-nav` is transparent at page top. `mkt-nav-scrolled` applies `mkt-canvas` background and a `rgba(255,255,255,0.10)` bottom border on scroll (transition: 200ms ease, position: sticky). Signed-out right side: "Sign in" text link (55%-white) → primary CTA (32px height). Signed-in right side: "Go to app →" in `primary-light` + thin divider + avatar. "Go to app" uses `primary-light` not white — white would compete with the active nav link and wordmark.
 
-**Marketing feature cards (`mkt-feature-card`):** Small 32×32px icon container with brand-tinted background and low-opacity brand border. Symbolic, not illustrative — scales across products without bespoke artwork. Title uses `body-md` 500 weight in white. Body copy uses `body-sm` at `--muted-foreground` (65%-white) — never hardcode opacity below 55% on any text-bearing element.
+**Marketing feature cards (`mkt-feature-card`):** Small 32×32px icon container with brand-tinted background and low-opacity brand border. Symbolic, not illustrative — scales across products without bespoke artwork. Title uses `body-md` 500 weight in white (`--foreground`). Body copy uses `body-sm` at `--muted-foreground` — a solid, WCAG 2.2 AA-guaranteed cool-neutral token (`oklch(0.7400 0.0040 275)`) that achieves ≥ 7:1 contrast on all three marketing surface levels. Never substitute a raw white-opacity value for body copy: the effective contrast of opacity-based text varies by surface, and values below 60% cannot guarantee AA compliance on the raised card background.
 
 **Marketing pricing cards:** Standard uses `mkt-pricing-card`. Featured uses `mkt-pricing-card-featured` with `1px solid primary` border override. Never fill the featured card with the brand colour — a colour-filled background reads as "selected" not "recommended" and reduces legibility of the feature list. "Most popular" pill (`rounded.full`, `primary` background, white text) is positioned above the card's top edge.
 
@@ -402,8 +402,9 @@ In the marketing nav, "Sign in" is always a plain text link, never a button. It 
 - Don't use box shadows in the app UI — elevation is expressed through border weight and background contrast
 - Do author each product's `--brand-dark-nav` token independently — do not mechanically darken the brand colour
 - Don't animate marketing headlines (48px+) with translateY — use opacity fade only
-- Do ensure all text-bearing elements on the dark marketing canvas use at least 55% white opacity — 65% is preferred for comfortable reading. The 30% and 45% opacity levels fail WCAG AA and must never carry informational text
-- Do verify WCAG AA contrast (4.5:1 minimum) for each product theme, particularly `primary-light` on `mkt-canvas` for eyebrow text
+- Do use `--muted-foreground` for all body copy and secondary text within `.surface-marketing` — it is a solid token with verified WCAG 2.2 AA contrast (≥ 7:1) across canvas, card, and raised-card surfaces. Never replace it with a hardcoded opacity value for informational text
+- Do not use raw white-opacity values for any text that conveys information in `.surface-marketing`; if a decorative label absolutely requires opacity, the minimum is 60% white — below that, WCAG AA cannot be guaranteed on the raised card surface (`#1E1E28`). The 30% and 45% levels fail on raised surfaces (4.4:1 and below) and must never carry text
+- Do verify WCAG 2.2 AA contrast (4.5:1 minimum for normal text, 3:1 for large text ≥ 24px/18px bold) for each product theme's `--cairn-brand-400` used as eyebrow text on `mkt-canvas`
 - Don't mix radius scales within the same view — `rounded.md` on buttons and `rounded.lg` on cards is correct; `rounded.lg` on buttons is not
 - Do use `mono` typography for all financial figures in data tables requiring column alignment
 - Don't give "Sign in" a button border in the marketing nav — it must remain a plain text link so it does not compete with the primary CTA
