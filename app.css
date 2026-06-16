@@ -37,7 +37,8 @@
   /* Stone neutrals — warm-tinted, never pure grey */
   --cairn-neutral-50:   oklch(0.9699 0.0013 106.42); /* #F5F5F4 */
   --cairn-neutral-200:  oklch(0.9213 0.0027 106.45); /* #E5E5E3 */
-  --cairn-neutral-500:  oklch(0.5534 0.0116 58.07);  /* #78716C */
+  --cairn-neutral-500:  oklch(0.5534 0.0116 58.07);  /* #78716C — decorative/icon use only, fails AA as body text on canvas */
+  --cairn-neutral-550:  oklch(0.5107 0.0109 62.43);  /* #6B6560 — secondary TEXT stop, 5.3:1 on canvas / 5.7:1 on white */
   --cairn-neutral-900:  oklch(0.2161 0.0061 56.04);  /* #1C1917 */
   --cairn-ink:          oklch(0.2099 0.0039 286.06); /* #18181A */
   --cairn-white:        oklch(1.0000 0.0000 89.88);  /* #FFFFFF */
@@ -46,9 +47,10 @@
   --cairn-sage:         oklch(0.6300 0.1403 158.87); /* #16A269 */
   --cairn-sage-muted:   oklch(0.9505 0.0507 163.05); /* #D1FAE5 */
   --cairn-sage-text:    oklch(0.4318 0.0865 166.91); /* #065F46 */
-  --cairn-ember:        oklch(0.6380 0.1719 33.25);  /* #E05B40 */
+  --cairn-ember:        oklch(0.6380 0.1719 33.25);  /* #E05B40 — soft/icon ember; fails white text, never a solid-button fill */
+  --cairn-ember-solid:  oklch(0.4949 0.1561 33.41);  /* #A8341C — solid destructive fill, 6.6:1 with white */
   --cairn-ember-muted:  oklch(0.9653 0.0157 32.01);  /* #FEF0ED */
-  --cairn-ember-text:   oklch(0.4437 0.1613 26.90);  /* #991B1B */
+  --cairn-ember-text:   oklch(0.4437 0.1613 26.90);  /* #991B1B — 6.8:1+ on ember-muted */
   --cairn-warning-muted:oklch(0.9619 0.0580 95.62);  /* #FEF3C7 */
   --cairn-warning-text: oklch(0.4732 0.1247 46.20);  /* #92400E */
 
@@ -65,6 +67,24 @@
  * Components reference these; never the primitives above.
  */
 :root {
+  /*
+   * Brand interactive layer — semantic, AA-safe.
+   * brand-500 is vibrant but only reaches 3.4–4.6:1 with white, so it must
+   * NOT carry white text or sit under body text. These two tokens are the
+   * accessible interactive pair every component should reference for solid
+   * fills and brand-coloured text:
+   *   --brand-solid    : the fill behind white text / brand text on light
+   *                      surfaces. Resolves to brand-700 (≥5.8:1 with white,
+   *                      all four products) in light mode; brand-400 in dark.
+   *   --brand-contrast : the text/icon colour that sits on --brand-solid.
+   * Keep brand-500 for focus rings, 0.5px borders, and large display accents
+   * only — never for normal-size text or as a white-text background.
+   */
+  --brand-solid:           var(--cairn-brand-700);
+  --brand-contrast:        var(--cairn-white);
+  /* Hover darkens the solid fill by ~6% lightness, hue-locked, mode-agnostic. */
+  --brand-solid-hover:     oklch(from var(--brand-solid) calc(l - 0.06) c h);
+
   /* Page canvas */
   --background:            var(--cairn-neutral-50);
   --foreground:            var(--cairn-ink);
@@ -77,9 +97,9 @@
   --popover:               var(--cairn-white);
   --popover-foreground:    var(--cairn-ink);
 
-  /* Primary — brand interactive colour */
-  --primary:               var(--cairn-brand-500);
-  --primary-foreground:    var(--cairn-white);
+  /* Primary — brand interactive colour. Points at the AA-safe solid stop. */
+  --primary:               var(--brand-solid);
+  --primary-foreground:    var(--brand-contrast);
 
   /* Secondary — alternative actions */
   --secondary:             var(--cairn-neutral-50);
@@ -87,14 +107,18 @@
 
   /* Muted — ghost elements, disabled, placeholder areas */
   --muted:                 var(--cairn-neutral-50);
-  --muted-foreground:      var(--cairn-neutral-500);
+  /* Secondary text uses neutral-550 (not 500) so it clears 4.5:1 on the
+     stone-50 canvas as well as on white cards. */
+  --muted-foreground:      var(--cairn-neutral-550);
 
   /* Accent — hover states on ghost/nav items */
   --accent:                var(--cairn-brand-50);
   --accent-foreground:     var(--cairn-brand-700);
 
-  /* Destructive — delete, remove, critical errors */
-  --destructive:           var(--cairn-ember);
+  /* Destructive — delete, remove, critical errors.
+     Solid fill uses ember-solid (6.6:1 with white); the soft/subtle variant
+     pairs ember-text on ember-muted (see components / Design.md). */
+  --destructive:           var(--cairn-ember-solid);
   --destructive-foreground:var(--cairn-white);
 
   /* Structural */
@@ -108,7 +132,10 @@
   /* Sidebar — always dark in Cairn, regardless of mode */
   --sidebar:               oklch(0.1993 0.0591 275.38); /* #0F1330 */
   --sidebar-foreground:    oklch(1.0000 0.0000 89.88);
-  --sidebar-primary:       var(--cairn-brand-500);
+  /* Sidebar is always dark in both modes, with white foreground — pin to the
+     brand-700 stop so white text/icons clear AA (≥5.8:1) regardless of mode.
+     brand-500 here would fail (4.41:1) if it ever backs a label. */
+  --sidebar-primary:       var(--cairn-brand-700);
   --sidebar-primary-foreground: var(--cairn-white);
   --sidebar-accent:        oklch(0.5834 0.1747 272.76 / 0.15); /* brand-500 at 15% */
   --sidebar-accent-foreground: oklch(1.0000 0.0000 89.88);
@@ -126,6 +153,11 @@
  * at 500 are too heavy on dark backgrounds.
  */
 .dark {
+  /* Interactive layer flips to the lighter stop: brand-400 + ink text gives
+     5.9–8.4:1 on dark surfaces (saturated 500/700 are too heavy / too dark). */
+  --brand-solid:           var(--cairn-brand-400);
+  --brand-contrast:        var(--cairn-ink);
+
   --background:            oklch(0.2099 0.0039 286.06); /* ink #18181A */
   --foreground:            oklch(0.9699 0.0013 106.42); /* stone-50 */
 
@@ -135,19 +167,20 @@
   --popover:               oklch(0.2570 0.0037 286.14);
   --popover-foreground:    oklch(0.9699 0.0013 106.42);
 
-  --primary:               var(--cairn-brand-400);      /* lighter stop in dark mode */
-  --primary-foreground:    var(--cairn-ink);
+  --primary:               var(--brand-solid);          /* lighter stop in dark mode */
+  --primary-foreground:    var(--brand-contrast);
 
   --secondary:             oklch(0.2570 0.0037 286.14);
   --secondary-foreground:  oklch(0.9699 0.0013 106.42);
 
   --muted:                 oklch(0.2570 0.0037 286.14);
-  --muted-foreground:      oklch(0.6989 0.0103 93.62);  /* stone-400 */
+  --muted-foreground:      oklch(0.6989 0.0103 93.62);  /* stone-400 #A09E97 — 6.6:1 on dark bg, 5.9:1 on card */
 
   --accent:                var(--cairn-brand-dark-muted);
   --accent-foreground:     var(--cairn-brand-400);
 
-  --destructive:           var(--cairn-ember);
+  /* ember-solid keeps white text legible on dark surfaces too (6.6:1). */
+  --destructive:           var(--cairn-ember-solid);
   --destructive-foreground:var(--cairn-white);
 
   --border:                oklch(0.3492 0.0034 286.22); /* #3A3A3C */
@@ -170,6 +203,9 @@
   --color-popover-foreground:   var(--popover-foreground);
   --color-primary:              var(--primary);
   --color-primary-foreground:   var(--primary-foreground);
+  --color-brand-solid:          var(--brand-solid);
+  --color-brand-solid-hover:    var(--brand-solid-hover);
+  --color-brand-contrast:       var(--brand-contrast);
   --color-secondary:            var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted:                var(--muted);
@@ -212,6 +248,24 @@
   /* Typography */
   --font-sans: 'Space Grotesk', sans-serif;
   --font-mono: 'Space Mono', monospace;
+
+  /* App type scale (14px anchor, ratio ≈1.2) — text-app-* utilities */
+  --text-app-caption:    0.75rem;    /* 12px */
+  --text-app-body-sm:    0.8125rem;  /* 13px */
+  --text-app-body:       0.875rem;   /* 14px — anchor */
+  --text-app-heading-sm: 1.0625rem;  /* 17px */
+  --text-app-heading-md: 1.25rem;    /* 20px */
+  --text-app-heading-lg: 1.5rem;     /* 24px */
+  --text-app-display:    1.8125rem;  /* 29px */
+
+  /* Marketing type scale (16px anchor, ratio ≈1.25) — text-mkt-* utilities */
+  --text-mkt-eyebrow:    0.8125rem;  /* 13px */
+  --text-mkt-caption:    0.875rem;   /* 14px */
+  --text-mkt-body:       1rem;       /* 16px — anchor */
+  --text-mkt-body-lg:    1.25rem;    /* 20px */
+  --text-mkt-subheading: 1.5625rem;  /* 25px */
+  --text-mkt-heading:    3.0625rem;  /* 49px */
+  --text-mkt-display:    4.75rem;    /* 76px */
 }
 
 /* ─── Base styles ───────────────────────────────────────────────────── */
@@ -226,8 +280,21 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     font-feature-settings: 'rlig' 1, 'calt' 1;
-    /* Slightly tighter line height to compensate for Space Grotesk's natural width */
-    line-height: 1.65;
+    /*
+     * APP TYPE SCALE — anchored at 14px body, modular ratio ≈ 1.2 (minor third).
+     * Every step is derived from the 14px base:
+     *   caption     12px  (0.75rem)    400  lh 1.5   +0.005em
+     *   body-sm     13px  (0.8125rem)  400  lh 1.55   0
+     *   body        14px  (0.875rem)   400  lh 1.6    0      ← ANCHOR
+     *   label       14px  (0.875rem)   500  lh 1.4    0
+     *   heading-sm  17px  (1.0625rem)  500  lh 1.4   -0.011em   (14 × 1.2)
+     *   heading-md  20px  (1.25rem)    500  lh 1.3   -0.017em   (× 1.2²)
+     *   heading-lg  24px  (1.5rem)     500  lh 1.25  -0.022em   (× 1.2³)
+     *   display     29px  (1.8125rem)  600  lh 1.15  -0.03em    (× 1.2⁴)
+     * Line height 1.6 on body — slightly tight for Space Grotesk's natural width.
+     */
+    font-size: 0.875rem;   /* 14px — app body anchor */
+    line-height: 1.6;
   }
 
   /*
@@ -245,13 +312,14 @@
   }
 
   /*
-   * Headings: negative tracking increases with size.
-   * Cairn spec: 600 weight only at 22px (heading-lg) and above.
+   * Headings (app scale): negative tracking increases with size.
+   * Cairn spec: 600 weight is the ceiling, used only at the display step.
+   * h1 display 29 / h2 heading-lg 24 / h3 heading-md 20 / h4 heading-sm 17.
    */
-  h1 { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.03em;  line-height: 1.15; }
-  h2 { font-size: 1.375rem; font-weight: 500; letter-spacing: -0.022em; line-height: 1.25; }
-  h3 { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.015em; line-height: 1.3;  }
-  h4 { font-size: 0.9375rem;font-weight: 500; letter-spacing: 0;        line-height: 1.4;  }
+  h1 { font-size: 1.8125rem; font-weight: 600; letter-spacing: -0.03em;  line-height: 1.15; }
+  h2 { font-size: 1.5rem;    font-weight: 500; letter-spacing: -0.022em; line-height: 1.25; }
+  h3 { font-size: 1.25rem;   font-weight: 500; letter-spacing: -0.017em; line-height: 1.3;  }
+  h4 { font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.011em; line-height: 1.4;  }
 
   /*
    * Numeric figures in table cells use tabular nums.
@@ -284,32 +352,56 @@
      * Never replace this token with a raw opacity value for informational text.
      */
     --muted-foreground:   oklch(0.7400 0.0040 275);
-    --primary:            var(--cairn-brand-500);
-    --primary-foreground: oklch(1.0000 0.0000 89.88);
+    /* CTA fill uses the AA-safe solid stop (brand-700, ≥5.8:1 with white) —
+       brand-500 + white is only 3.4–4.6:1 and fails on the 17px CTA label.
+       The permitted CTA glow box-shadow (brand-500 @ 25%) supplies the
+       "light source" luminosity the dark canvas is designed around. */
+    --primary:            var(--brand-solid);
+    --primary-foreground: var(--brand-contrast);
     --accent:             var(--cairn-brand-400);         /* eyebrow colour */
     --accent-foreground:  var(--cairn-brand-400);
     background-color: var(--cairn-mkt-canvas);
     color: oklch(1.0000 0.0000 89.88);
+    /*
+     * MARKETING TYPE SCALE — anchored at 16px body, modular ratio ≈ 1.25
+     * (major third) for more presence than the dense app scale:
+     *   eyebrow      13px  (0.8125rem)  600  lh 1    +0.09em  uppercase
+     *   caption      14px  (0.875rem)   400  lh 1.5   0
+     *   body         16px  (1rem)       400  lh 1.65  0        ← ANCHOR
+     *   body-lg      20px  (1.25rem)    400  lh 1.55 -0.005em  (lead paragraph, 16 × 1.25)
+     *   subheading   25px  (1.5625rem)  500  lh 1.25 -0.018em  (× 1.25²)
+     *   heading      49px  (3.0625rem)  600  lh 1.1  -0.03em   (× 1.25⁵)
+     *   display      76px  (4.75rem)    600  lh 1.0  -0.04em   (× 1.25⁷)
+     */
+    font-size: 1rem;       /* 16px — marketing body anchor */
+    line-height: 1.65;
   }
 
   /* Marketing typography overrides inside .surface-marketing */
   .surface-marketing h1 {
-    font-size: 4.5rem;
+    font-size: 4.75rem;
     font-weight: 600;
     letter-spacing: -0.04em;
     line-height: 1.0;
   }
   .surface-marketing h2 {
-    font-size: 3rem;
+    font-size: 3.0625rem;
     font-weight: 600;
     letter-spacing: -0.03em;
     line-height: 1.1;
   }
   .surface-marketing h3 {
-    font-size: 1.75rem;
+    font-size: 1.5625rem;
     font-weight: 500;
     letter-spacing: -0.018em;
     line-height: 1.25;
+  }
+  /* Lead paragraph — the one body step above anchor (20px). */
+  .surface-marketing .lead {
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    line-height: 1.55;
   }
 
   /* Eyebrow — marketing section labels */

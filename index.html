@@ -12,35 +12,50 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
     rel="stylesheet">
+  <!-- Phosphor Icons (MIT) — Cairn's icon library. Only the four weights used by the system are loaded. -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
   <style>
     :root {
-      --brand-500: #5B6EE1;
-      --brand-400: #818CF8;
+      --brand-500: #5B6EE1;   /* vibrant accent — rings, borders, large display only */
+      --brand-400: #818CF8;   /* dark-mode interactive + marketing eyebrow */
       --brand-50: #E8EAFF;
-      --brand-700: #3A4DC8;
+      --brand-700: #3A4DC8;   /* solid-fill stop */
       --brand-900: #1E2660;
+
+      /* Semantic interactive layer — AA-safe. Solid fills/brand-text use these,
+         never brand-500 (white on brand-500 = 4.41:1, fails normal text). */
+      --brand-solid: var(--brand-700);          /* 6.83:1 with white */
+      --brand-solid-hover: #2E3DA0;             /* brand-700 darkened ~6% L */
+      --brand-contrast: #FFFFFF;
 
       --color-surface: #F5F5F4;
       --color-surface-raised: #FFFFFF;
       --color-border: #E5E5E3;
       --color-border-mid: rgba(0, 0, 0, 0.12);
       --color-text-primary: #18181A;
-      --color-text-secondary: #78716C;
-      --color-text-tertiary: #A09E97;
-      --color-interactive: var(--brand-500);
+      --color-text-secondary: #5F5A54;   /* neutral-text family — 6.3:1 canvas / 7.0:1 white */
+      --color-text-tertiary: #6B6560;     /* neutral-550 — 5.3:1 canvas / 5.7:1 white (was #A09E97, 2.6:1 — failed) */
+      --color-text-secondary-old: #78716C;/* decorative/icon stop only */
+      --color-interactive: var(--brand-solid);  /* brand-text on light surfaces */
 
       --sage: #16A269;
-      --ember: #E05B40;
+      --sage-text: #065F46;
+      --ember: #E05B40;        /* soft/icon ember */
+      --ember-solid: #A8341C;  /* solid destructive fill — 6.6:1 with white */
+      --ember-text: #991B1B;   /* destructive text on muted — 6.8:1 */
 
       --mkt-canvas: #0D0D12;
       --mkt-surface: #16161E;
       --mkt-surface-raised: #1E1E28;
       --mkt-border: rgba(255, 255, 255, 0.08);
       --mkt-text-primary: #FFFFFF;
-      --mkt-text-secondary: rgba(255, 255, 255, 0.65);
-      --mkt-text-tertiary: rgba(255, 255, 255, 0.55);
-      --mkt-brand: #5B6EE1;
-      --mkt-brand-muted: #818CF8;
+      --mkt-text-secondary: rgba(255, 255, 255, 0.65);  /* ≥7.6:1 on all mkt surfaces */
+      --mkt-text-tertiary: rgba(255, 255, 255, 0.55);   /* ≥5.9:1 on all mkt surfaces */
+      --mkt-brand: var(--brand-solid);  /* CTA fill — AA-safe; glow shadow adds luminosity */
+      --mkt-brand-muted: #818CF8;       /* eyebrow / text link — ≥6.0:1 on canvas */
 
       --font-sans: 'Space Grotesk', sans-serif;
       --font-mono: 'Space Mono', monospace;
@@ -216,7 +231,7 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--brand-500);
+      color: var(--color-interactive);
       margin-bottom: 8px;
       display: block;
     }
@@ -529,13 +544,14 @@
     }
 
     .btn-primary {
-      background: var(--brand-500);
-      color: #fff;
-      border-color: var(--brand-500);
+      background: var(--brand-solid);
+      color: var(--brand-contrast);
+      border-color: var(--brand-solid);
     }
 
     .btn-primary:hover {
-      background: var(--brand-700);
+      background: var(--brand-solid-hover);
+      border-color: var(--brand-solid-hover);
     }
 
     .btn-secondary {
@@ -556,8 +572,14 @@
 
     .btn-destructive {
       background: #FEF0ED;
-      color: var(--ember);
+      color: var(--ember-text);   /* was --ember (#E05B40, 3.3:1 — failed); ember-text is 6.8:1 */
       border-color: #F5C4B3;
+    }
+
+    .btn-destructive-solid {
+      background: var(--ember-solid);
+      color: #fff;
+      border-color: var(--ember-solid);
     }
 
     .badge {
@@ -589,7 +611,7 @@
       font-weight: 600;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: var(--brand-500);
+      color: var(--color-interactive);
       margin-bottom: 6px;
     }
 
@@ -1177,7 +1199,7 @@
     }
 
     .pricing-check.active {
-      color: var(--brand-500);
+      color: var(--mkt-brand-muted);
     }
 
     /* Page header */
@@ -1193,7 +1215,7 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--brand-500);
+      color: var(--color-interactive);
       margin-bottom: 10px;
       display: block;
     }
@@ -1279,6 +1301,7 @@
           <a href="#radius" class="nav-link">Border radius</a>
           <a href="#elevation" class="nav-link">Elevation</a>
           <a href="#motion" class="nav-link">Motion</a>
+          <a href="#iconography" class="nav-link">Iconography</a>
         </div>
         <div class="nav-group">
           <span class="nav-group-label">App components</span>
@@ -1723,7 +1746,7 @@
               <div class="surface-rule"><span class="surface-rule-prop">Brand colour</span><span
                   class="surface-rule-val">Interactive elements only. Never decorative.</span></div>
               <div class="surface-rule"><span class="surface-rule-prop">Display size</span><span
-                  class="surface-rule-val">Max 30px</span></div>
+                  class="surface-rule-val">Max 29px</span></div>
               <div class="surface-rule"><span class="surface-rule-prop">Motion</span><span
                   class="surface-rule-val">Micro only. 100–150ms.</span></div>
               <div class="surface-rule"><span class="surface-rule-prop">Shadows</span><span
@@ -1741,7 +1764,7 @@
               <div class="surface-rule"><span class="surface-rule-prop">Brand colour</span><span
                   class="surface-rule-val">Light source on dark canvas. CTAs + eyebrows.</span></div>
               <div class="surface-rule"><span class="surface-rule-prop">Display size</span><span
-                  class="surface-rule-val">48–72px permitted</span></div>
+                  class="surface-rule-val">49–76px permitted</span></div>
               <div class="surface-rule"><span class="surface-rule-prop">Motion</span><span
                   class="surface-rule-val">Entrance + scroll reveals. 250–350ms.</span></div>
               <div class="surface-rule"><span class="surface-rule-prop">Shadows</span><span
@@ -1767,66 +1790,75 @@
             is what makes metric cards and hero headlines feel designed rather than default. It still works at 12px in
             dense UIs without losing legibility.
             <br><br>
-            <strong>Why 600 weight only at 22px+?</strong> Space Grotesk 500 is optically heavier than Inter 500. Using
-            600 at body or label sizes produces a heavy, overworked feeling. 600 is reserved for display-scale headings
-            where the extra weight reads as editorial rather than aggressive.
+            <strong>Why 600 weight only at the display step?</strong> Space Grotesk 500 is optically heavier than Inter
+            500. Using 600 at body or label sizes produces a heavy, overworked feeling. 600 is reserved for the 29px
+            display step where the extra weight reads as editorial rather than aggressive; every smaller heading is 500.
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">App type scale</div>
+            <div class="subsection-title">App type scale — anchored at 14px body, ratio ≈1.2</div>
             <div class="preview">
               <div class="preview-label">Specimens</div>
               <div class="preview-inner">
                 <div class="type-specimen">
-                  <div style="font-size:30px;font-weight:600;letter-spacing:-0.03em;line-height:1.15">Display heading
+                  <div style="font-size:29px;font-weight:600;letter-spacing:-0.03em;line-height:1.15">Display heading
                   </div>
-                  <div class="type-meta">30px / 600 / −0.03em / 1.15 leading — page titles only</div>
+                  <div class="type-meta">display · 29px / 600 / −0.03em / 1.15 leading — page titles only (14 × 1.2⁴)</div>
                 </div>
                 <div class="type-specimen">
-                  <div style="font-size:22px;font-weight:500;letter-spacing:-0.022em;line-height:1.25">Heading 1</div>
-                  <div class="type-meta">22px / 500 / −0.022em — section titles, modal headers</div>
+                  <div style="font-size:24px;font-weight:500;letter-spacing:-0.022em;line-height:1.25">Heading large</div>
+                  <div class="type-meta">heading-lg · 24px / 500 / −0.022em — section titles, modal headers (× 1.2³)</div>
                 </div>
                 <div class="type-specimen">
-                  <div style="font-size:18px;font-weight:500;letter-spacing:-0.015em;line-height:1.3">Heading 2</div>
-                  <div class="type-meta">18px / 500 / −0.015em — card titles, subsections</div>
+                  <div style="font-size:20px;font-weight:500;letter-spacing:-0.017em;line-height:1.3">Heading medium</div>
+                  <div class="type-meta">heading-md · 20px / 500 / −0.017em — card titles, subsections (× 1.2²)</div>
                 </div>
                 <div class="type-specimen">
-                  <div style="font-size:15px;font-weight:500">Label / UI text</div>
-                  <div class="type-meta">15px / 500 / 0 — nav items, table headers, buttons</div>
+                  <div style="font-size:17px;font-weight:500;letter-spacing:-0.011em;line-height:1.4">Heading small</div>
+                  <div class="type-meta">heading-sm · 17px / 500 / −0.011em — dense headings, list group titles (× 1.2)</div>
                 </div>
                 <div class="type-specimen">
-                  <div style="font-size:14px;font-weight:400;color:var(--color-text-secondary);line-height:1.65">Body —
+                  <div style="font-size:14px;font-weight:500">Label / UI text</div>
+                  <div class="type-meta">label · 14px / 500 / 0 — nav items, table headers, buttons</div>
+                </div>
+                <div class="type-specimen">
+                  <div style="font-size:14px;font-weight:400;color:var(--color-text-secondary);line-height:1.6">Body —
                     used for descriptions, secondary content, and help text throughout the application interface.</div>
-                  <div class="type-meta">14px / 400 / 0 / 1.65 leading</div>
+                  <div class="type-meta">body · 14px / 400 / 0 / 1.6 leading — ANCHOR</div>
                 </div>
                 <div class="type-specimen">
-                  <div style="font-size:12px;font-weight:400;color:var(--color-text-tertiary);letter-spacing:0.01em">
+                  <div style="font-size:13px;font-weight:400;color:var(--color-text-secondary);line-height:1.55">Body
+                    small — denser secondary text in tables and compact panels.</div>
+                  <div class="type-meta">body-sm · 13px / 400 / 1.55</div>
+                </div>
+                <div class="type-specimen">
+                  <div style="font-size:12px;font-weight:400;color:var(--color-text-tertiary);letter-spacing:0.005em">
                     Caption — timestamps, metadata, helper text</div>
-                  <div class="type-meta">12px / 400 / +0.01em</div>
+                  <div class="type-meta">caption · 12px / 400 / +0.005em</div>
                 </div>
                 <div class="type-specimen" style="border-bottom:none">
                   <div
                     style="font-family:var(--font-mono);font-size:13px;background:var(--color-surface);padding:3px 8px;border-radius:4px;display:inline-block">
                     Space Mono — code, IDs, keys, financial figures</div>
-                  <div class="type-meta">13px / 400 / Space Mono</div>
+                  <div class="type-meta">mono · 13px / 400 / Space Mono</div>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">Marketing type scale</div>
+            <div class="subsection-title">Marketing type scale — anchored at 16px body, ratio ≈1.25</div>
             <div class="preview-dark">
               <div class="preview-label-dark">Marketing specimens — dark canvas</div>
               <div class="preview-inner">
                 <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid rgba(255,255,255,0.07)">
                   <div
-                    style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#818CF8;margin-bottom:10px">
+                    style="font-size:13px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#818CF8;margin-bottom:10px">
                     Revenue intelligence</div>
                   <div
-                    style="font-size:56px;font-weight:600;letter-spacing:-0.04em;color:#fff;line-height:1.0;margin-bottom:10px">
+                    style="font-size:56px;font-weight:600;letter-spacing:-0.04em;color:#fff;line-height:1.0;margin-bottom:12px">
                     Know exactly where<br>your growth comes from</div>
-                  <div style="font-size:18px;color:rgba(255,255,255,0.65);line-height:1.7;max-width:440px">Connect
+                  <div style="font-size:20px;color:rgba(255,255,255,0.65);line-height:1.55;max-width:460px">Connect
                     billing, CRM, and product data. Stop arguing about numbers and start moving them.</div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
@@ -1841,15 +1873,15 @@
                   <div>
                     <div
                       style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:5px">
-                      Hero</div>
-                    <div style="font-size:14px;font-weight:600;letter-spacing:-0.03em;color:#fff">72px / 600 / −0.04em
+                      Display / Heading</div>
+                    <div style="font-size:14px;font-weight:600;letter-spacing:-0.03em;color:#fff">76px / 49px · 600 / −0.04–0.03em
                     </div>
                   </div>
                   <div>
                     <div
                       style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:5px">
-                      Body lead</div>
-                    <div style="font-size:13px;color:rgba(255,255,255,0.65)">18px / 400 / 1.70</div>
+                      Body / lead</div>
+                    <div style="font-size:13px;color:rgba(255,255,255,0.65)">16px body · 20px lead / 1.65</div>
                   </div>
                 </div>
               </div>
@@ -1916,6 +1948,39 @@
           </div>
 
           <div class="subsection">
+            <div class="subsection-title">Semantic interactive — AA-safe</div>
+            <div class="reasoning">
+              <strong>Why a separate solid stop?</strong> brand-500 is the vibrant accent, but white text on it is only
+              4.41:1 (Orbit) and as low as 3.41:1 (Beacon) — below the 4.5:1 AA threshold for normal text. So solid
+              fills and brand-coloured text reference <code>brand-solid</code> (the brand-700 stop, ≥5.8:1 with white in
+              light mode; brand-400 + ink in dark mode) and <code>brand-contrast</code> for the text on top. brand-500
+              stays for focus rings, 0.5px borders, and large display accents — never a white-text background.
+            </div>
+            <div class="swatch-row">
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#3A4DC8"></div>
+                <div class="swatch-name">brand-solid (700)</div>
+                <div class="swatch-hex">#3A4DC8 · 6.8:1 ✓</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#5B6EE1"></div>
+                <div class="swatch-name">brand-500 — accent only</div>
+                <div class="swatch-hex">#5B6EE1 · 4.4:1 ✗ text</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#A8341C"></div>
+                <div class="swatch-name">ember-solid</div>
+                <div class="swatch-hex">#A8341C · 6.6:1 ✓</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#6B6560"></div>
+                <div class="swatch-name">neutral-text (550)</div>
+                <div class="swatch-hex">#6B6560 · 5.3:1 ✓</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
             <div class="subsection-title">Neutrals (stone)</div>
             <div class="swatch-row">
               <div class="swatch-item">
@@ -1930,8 +1995,8 @@
               </div>
               <div class="swatch-item">
                 <div class="swatch-box" style="background:#78716C"></div>
-                <div class="swatch-name">Stone 500</div>
-                <div class="swatch-hex">#78716C</div>
+                <div class="swatch-name">Stone 500 — icon/decorative</div>
+                <div class="swatch-hex">#78716C · 4.4:1 ✗ body</div>
               </div>
               <div class="swatch-item">
                 <div class="swatch-box" style="background:#1C1917"></div>
@@ -1968,8 +2033,8 @@
               </div>
               <div class="swatch-item">
                 <div class="swatch-box" style="background:#E05B40"></div>
-                <div class="swatch-name">Ember</div>
-                <div class="swatch-hex">#E05B40</div>
+                <div class="swatch-name">Ember — soft/icon</div>
+                <div class="swatch-hex">#E05B40 · use ember-solid for fills</div>
               </div>
               <div class="swatch-item">
                 <div class="swatch-box" style="background:#FEF0ED"></div>
@@ -2152,12 +2217,143 @@
           </div>
         </section>
 
+        <!-- Foundation: Iconography -->
+        <section class="doc-section" id="iconography">
+          <div class="section-header">
+            <span class="section-eyebrow">Foundation</span>
+            <h2 class="section-title">Iconography</h2>
+            <p class="section-desc">Phosphor Icons — MIT licensed, ~1,250 glyphs on a geometric grid. One library
+              across every product and surface. Its six weights let icon weight be tuned per surface rather than
+              locked to one stroke, which is how icons stay legible across the light content area and the always-dark
+              sidebar.</p>
+          </div>
+          <div class="divider"></div>
+          <div class="reasoning">
+            <strong>Why Phosphor?</strong> Its circular and square base forms echo Space Grotesk's geometric-grotesque
+            construction without competing with it, and the single family spans Thin through Duotone — so "bold enough
+            for dark mode" is a weight choice, not a different icon set. Never mix Phosphor with another library:
+            differing grids and stroke logic read as inconsistency even when each icon is clean on its own.
+          </div>
+
+          <div class="preview">
+            <div class="preview-label">The four weights Cairn uses</div>
+            <div class="preview-inner">
+              <div style="display:flex;flex-wrap:wrap;gap:16px">
+                <div style="flex:1;min-width:130px;text-align:center;padding:18px 12px;border:0.5px solid var(--color-border);border-radius:12px">
+                  <i class="ph ph-stack" style="font-size:40px;color:var(--color-text-primary)"></i>
+                  <div style="margin-top:10px;font-weight:500;font-size:14px">Regular</div>
+                  <div style="margin-top:4px;font-size:13px;color:var(--color-text-secondary)">Default. App content, marketing inline, most nav.</div>
+                </div>
+                <div style="flex:1;min-width:130px;text-align:center;padding:18px 12px;border:0.5px solid var(--color-border);border-radius:12px">
+                  <i class="ph-bold ph-stack" style="font-size:40px;color:var(--color-text-primary)"></i>
+                  <div style="margin-top:10px;font-weight:500;font-size:14px">Bold</div>
+                  <div style="margin-top:4px;font-size:13px;color:var(--color-text-secondary)">≤16px and the dark sidebar, where Regular reads thin.</div>
+                </div>
+                <div style="flex:1;min-width:130px;text-align:center;padding:18px 12px;border:0.5px solid var(--color-border);border-radius:12px">
+                  <i class="ph-fill ph-stack" style="font-size:40px;color:var(--color-text-primary)"></i>
+                  <div style="margin-top:10px;font-weight:500;font-size:14px">Fill</div>
+                  <div style="margin-top:4px;font-size:13px;color:var(--color-text-secondary)">Active / selected states only — pairs with nav-item-active.</div>
+                </div>
+                <div style="flex:1;min-width:130px;text-align:center;padding:18px 12px;border:0.5px solid var(--color-border);border-radius:12px">
+                  <i class="ph-duotone ph-stack" style="font-size:40px;color:var(--brand-500)"></i>
+                  <div style="margin-top:10px;font-weight:500;font-size:14px">Duotone</div>
+                  <div style="margin-top:4px;font-size:13px;color:var(--color-text-secondary)">Brand-tinted. Marketing feature cards + empty/onboarding.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="preview">
+            <div class="preview-label">Sizes — on the 4px grid</div>
+            <div class="preview-inner">
+              <div style="display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap">
+                <div style="text-align:center"><i class="ph ph-compass" style="font-size:16px;color:var(--color-text-primary)"></i><div style="margin-top:8px;font-size:12px;color:var(--color-text-secondary)">16 · inline</div></div>
+                <div style="text-align:center"><i class="ph ph-compass" style="font-size:20px;color:var(--color-text-primary)"></i><div style="margin-top:8px;font-size:12px;color:var(--color-text-secondary)">20 · default UI</div></div>
+                <div style="text-align:center"><i class="ph ph-compass" style="font-size:24px;color:var(--color-text-primary)"></i><div style="margin-top:8px;font-size:12px;color:var(--color-text-secondary)">24 · emphasis</div></div>
+                <div style="text-align:center"><i class="ph ph-compass" style="font-size:28px;color:var(--color-text-primary)"></i><div style="margin-top:8px;font-size:12px;color:var(--color-text-secondary)">28 · feature</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="preview">
+            <div class="preview-label">Bold enough for both modes</div>
+            <div class="preview-inner">
+              <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:stretch">
+                <!-- Dark sidebar context -->
+                <div style="flex:1;min-width:200px;background:#0F1330;border-radius:12px;padding:12px">
+                  <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;color:rgba(255,255,255,0.65)">
+                    <i class="ph-bold ph-house" style="font-size:20px"></i><span style="font-size:14px">Dashboard</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;background:rgba(91,110,225,0.15);color:#fff">
+                    <i class="ph-fill ph-folder" style="font-size:20px"></i><span style="font-size:14px;font-weight:500">Projects</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;color:rgba(255,255,255,0.65)">
+                    <i class="ph-bold ph-chart-line" style="font-size:20px"></i><span style="font-size:14px">Reports</span>
+                  </div>
+                  <div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,0.5)">Bold at rest, Fill on the active item</div>
+                </div>
+                <!-- Marketing feature card with duotone brand glyph -->
+                <div style="flex:1;min-width:200px;background:#16161E;border-radius:12px;padding:18px">
+                  <div style="width:32px;height:32px;border-radius:8px;background:rgba(129,140,248,0.12);border:0.5px solid rgba(129,140,248,0.25);display:flex;align-items:center;justify-content:center">
+                    <i class="ph-duotone ph-lightning" style="font-size:20px;color:#818CF8"></i>
+                  </div>
+                  <div style="margin-top:12px;color:#fff;font-weight:500;font-size:14px">Instant insight</div>
+                  <div style="margin-top:4px;color:rgba(255,255,255,0.65);font-size:13px">Duotone glyph in primary-light reads as a light source on the dark canvas.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reasoning">
+            <strong>Duotone and the brand colour.</strong> Duotone is a full-strength foreground path plus a back layer
+            at 20% opacity that tints automatically from the foreground colour — set the foreground to a brand stop and
+            you get a single brand-coloured glyph with a soft tonal fill, no second colour to manage. It is purpose-built
+            for the marketing feature cards (whose 32px containers already carry a brand-tinted background) and is welcome
+            at larger sizes in app empty states and onboarding. Do not scatter duotone through dense working app UI at
+            16–20px: the back layer muddies and it fights the brand-equals-interactive rule. When duotone carries the
+            brand colour on a marketing surface, verify the foreground stop clears 3:1 against the card as a non-text
+            element — <code>primary-light</code> (#818CF8) passes; a darker brand stop may not.
+          </div>
+
+          <div class="subsection-title">Size → use</div>
+          <table class="spec-table">
+            <thead><tr><th>Size</th><th>Token</th><th>Use</th></tr></thead>
+            <tbody>
+              <tr><td>16px</td><td>inline</td><td>Within body/caption text, status dots, dense tables.</td></tr>
+              <tr><td>20px</td><td>ui</td><td>Default. Buttons, toolbar, table actions, nav items.</td></tr>
+              <tr><td>24px</td><td>emphasis</td><td>App top bar, section headers, primary nav.</td></tr>
+              <tr><td>28px</td><td>feature</td><td>Marketing feature-card glyph inside the 32px container.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="subsection-title">Weight &amp; colour → role</div>
+          <table class="spec-table">
+            <thead><tr><th>Context</th><th>Weight</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>App decorative / informational-support</td><td>Regular</td><td>neutral-mid #78716C — never the only carrier of meaning</td></tr>
+              <tr><td>App interactive (at rest)</td><td>Regular</td><td>ink #18181A</td></tr>
+              <tr><td>App interactive (active/selected)</td><td>Fill</td><td>brand-solid — the brand-equals-interactive rule</td></tr>
+              <tr><td>Dark sidebar (rest / active)</td><td>Bold / Fill</td><td>65% white / full white</td></tr>
+              <tr><td>Status</td><td>Regular or Fill</td><td>Sage (success) / Ember (error) — never the brand colour</td></tr>
+              <tr><td>Marketing feature glyph</td><td>Duotone</td><td>primary-light #818CF8 foreground</td></tr>
+            </tbody>
+          </table>
+
+          <div class="reasoning">
+            <strong>Accessibility.</strong> Icons are non-text UI elements and must clear 3:1 against their background.
+            Any icon that is the only label for a control needs an accessible name (<code>aria-label</code>). Decorative
+            icons that repeat adjacent text should be hidden from assistive tech (<code>aria-hidden="true"</code>).
+          </div>
+        </section>
+
         <!-- App: Buttons -->
         <section class="doc-section" id="buttons">
           <div class="section-header">
             <span class="section-eyebrow">App components</span>
             <h2 class="section-title">Buttons</h2>
-            <p class="section-desc">Four variants. One primary per view. No gradients on any button variant.</p>
+            <p class="section-desc">One primary per view. No gradients on any button variant. The primary fill is
+              brand-solid (brand-700), not brand-500 — white text on brand-500 fails AA (4.41:1); brand-700 clears
+              6.8:1.</p>
           </div>
           <div class="divider"></div>
           <div class="preview">
@@ -2168,6 +2364,7 @@
                 <button class="btn btn-secondary">Secondary</button>
                 <button class="btn btn-ghost">Ghost</button>
                 <button class="btn btn-destructive">Destructive</button>
+                <button class="btn btn-destructive-solid">Delete</button>
               </div>
             </div>
           </div>
@@ -2206,10 +2403,16 @@
                 <td>Tertiary actions, toolbar actions, low-emphasis.</td>
               </tr>
               <tr>
-                <td>Destructive</td>
+                <td>Destructive (subtle)</td>
                 <td>36px</td>
                 <td>14px / 500</td>
-                <td>Delete, remove. Ember colour. Never use primary red.</td>
+                <td>error-text on error-muted (6.8:1). Ember family — never primary red.</td>
+              </tr>
+              <tr>
+                <td>Destructive (solid)</td>
+                <td>36px</td>
+                <td>14px / 500</td>
+                <td>ember-solid fill + white (6.6:1). High-emphasis delete.</td>
               </tr>
             </tbody>
           </table>
@@ -2259,7 +2462,7 @@
               <label
                 style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-text-primary);cursor:pointer">
                 <div
-                  style="width:16px;height:16px;border-radius:4px;border:0.5px solid var(--brand-500);background:var(--brand-500);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  style="width:16px;height:16px;border-radius:4px;border:0.5px solid var(--brand-500);background:var(--brand-solid);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                   <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
                     <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round"
                       stroke-linejoin="round" />
@@ -2356,7 +2559,7 @@
             <div class="preview-label-dark">Button variants — dark canvas</div>
             <div class="preview-inner" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
               <button
-                style="font-family:var(--font-sans);background:var(--brand-500);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:15px;font-weight:500;cursor:default;letter-spacing:-0.01em">Start
+                style="font-family:var(--font-sans);background:var(--mkt-brand);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:15px;font-weight:500;cursor:default;letter-spacing:-0.01em;box-shadow:0 0 24px rgba(91,110,225,0.25)">Start
                 free trial</button>
               <button
                 style="font-family:var(--font-sans);background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.25);padding:11px 22px;border-radius:8px;font-size:15px;font-weight:500;cursor:default">See
@@ -2391,7 +2594,7 @@
                 Connect billing, CRM, and product data in one place.</div>
               <div style="display:flex;align-items:center;justify-content:center;gap:10px">
                 <button
-                  style="font-family:var(--font-sans);background:var(--brand-500);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:500;cursor:default">Start
+                  style="font-family:var(--font-sans);background:var(--brand-solid);color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:500;cursor:default">Start
                   free trial</button>
                 <button
                   style="font-family:var(--font-sans);background:transparent;color:rgba(255,255,255,0.6);border:none;padding:12px 14px;font-size:15px;cursor:default">See
@@ -2638,7 +2841,7 @@
                 style="font-size:24px;font-weight:600;letter-spacing:-0.03em;color:#fff;line-height:1.15;margin-bottom:10px">
                 Know exactly where your growth comes from</div>
               <button
-                style="font-family:var(--font-sans);background:var(--brand-500);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:default">Start
+                style="font-family:var(--font-sans);background:var(--brand-solid);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:default">Start
                 free trial</button>
             </div>
             <div class="handoff-app">
@@ -2649,7 +2852,7 @@
                 style="background:var(--color-surface-raised);border:0.5px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden">
                 <div style="background:#0F1330;height:32px;display:flex;align-items:center;padding:0 10px;gap:7px">
                   <div
-                    style="width:18px;height:18px;border-radius:4px;background:var(--brand-500);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0">
+                    style="width:18px;height:18px;border-radius:4px;background:var(--brand-solid);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0">
                     O</div>
                   <span style="font-size:12px;font-weight:500;color:#fff">Orbit</span>
                 </div>
@@ -2660,7 +2863,7 @@
                     <div
                       style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:0.5px solid var(--brand-500);border-radius:7px;background:var(--brand-50)">
                       <div
-                        style="width:16px;height:16px;border-radius:50%;background:var(--brand-500);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;flex-shrink:0">
+                        style="width:16px;height:16px;border-radius:50%;background:var(--brand-solid);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;flex-shrink:0">
                         1</div>
                       <span style="font-size:12px;font-weight:500;color:var(--brand-700)">Connect your first data
                         source</span>
@@ -2742,8 +2945,10 @@
           </div>
           <div class="divider"></div>
           <div class="reasoning">
-            <strong>Key rules for dark mode colour shifts:</strong> Brand colour lightens (500 → 400) because saturated
-            colours at 500 feel too heavy on dark backgrounds. The muted tint inverts — a light 50-stop tint on a dark
+            <strong>Key rules for dark mode colour shifts:</strong> The interactive fill (brand-solid) flips from the
+            brand-700 stop with white text in light mode to the brand-400 stop with ink text in dark mode — saturated
+            colours feel too heavy on dark backgrounds, and both stops clear AA on their respective surfaces. The muted
+            tint inverts — a light 50-stop tint on a dark
             surface reads as a light bleed, not a badge. Nav stays darkest even in dark mode — losing the hierarchy
             between nav and page background makes the sidebar disappear visually. Surface hierarchy inverts: in light
             mode, page is stone-50 and cards are white (lighter). In dark mode, page is ink-950 and cards are ink-900
@@ -2761,8 +2966,8 @@
               <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val">
                   <div class="token-dot" style="background:#18181A"></div>#18181A
                 </span></div>
-              <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val">
-                  <div class="token-dot" style="background:#5B6EE1"></div>#5B6EE1 (500)
+              <div class="token-row"><span class="token-key">--color-interactive (solid)</span><span class="token-val">
+                  <div class="token-dot" style="background:#3A4DC8"></div>#3A4DC8 (700)
                 </span></div>
               <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val">
                   <div class="token-dot" style="background:#E8EAFF;border-color:rgba(0,0,0,0.08)"></div>#E8EAFF (50)
@@ -2794,8 +2999,8 @@
             <span class="k">--color-surface-raised</span>: <span class="s">#FFFFFF</span>;
             <span class="k">--color-border</span>: <span class="s">#E5E5E3</span>;
             <span class="k">--color-text-primary</span>: <span class="s">#18181A</span>;
-            <span class="k">--color-text-secondary</span>: <span class="s">#78716C</span>;
-            <span class="k">--color-interactive</span>: <span class="k">var</span>(<span class="s">--brand-500</span>);
+            <span class="k">--color-text-secondary</span>: <span class="s">#6B6560</span>;
+            <span class="k">--color-interactive</span>: <span class="k">var</span>(<span class="s">--brand-solid</span>);
             <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span
               class="s">--brand-50</span>);
             <span class="k">--nav-background</span>: <span class="k">var</span>(<span class="s">--brand-900</span>);

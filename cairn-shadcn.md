@@ -72,15 +72,16 @@ This table shows how each shadcn-svelte CSS variable maps to Cairn's design syst
 | `--card-foreground` | `ink` | `#18181A` | Same as body text. |
 | `--popover` | `neutral-raised` | `#FFFFFF` | Dropdowns and popovers use the same raised surface as cards. |
 | `--popover-foreground` | `ink` | `#18181A` | — |
-| `--primary` | `primary` | `#5B6EE1` | Brand colour. Used on primary buttons, focus rings, active states only. In dark mode shifts to `primary-light` (#818CF8 — lighter stop). |
-| `--primary-foreground` | `white` | `#FFFFFF` | White text on brand-coloured backgrounds. |
+| `--primary` | `brand-solid` | `#3A4DC8` | Solid interactive fill = brand-700, **not** brand-500. White text on brand-500 fails AA (4.41:1); brand-700 clears 6.8:1. Dark mode shifts to `brand-400` (#818CF8) with ink text. |
+| `--primary-foreground` | `brand-contrast` | `#FFFFFF` | Text/icon on `--primary`. White in light mode, ink in dark mode. |
+| `--brand-solid` / `--brand-solid-hover` / `--brand-contrast` | semantic | `#3A4DC8` / −6% L / `#FFFFFF` | The AA-safe interactive trio. Use `bg-brand-solid hover:bg-brand-solid-hover text-brand-contrast` for any solid brand fill. Never fill with brand-500. |
 | `--secondary` | `neutral-50` | `#F5F5F4` | Secondary button background — stone surface, not white. |
 | `--secondary-foreground` | `ink` | `#18181A` | — |
 | `--muted` | `neutral-50` | `#F5F5F4` | Ghost elements, disabled areas, placeholder backgrounds. |
-| `--muted-foreground` | `neutral-500` | `#78716C` | Secondary and tertiary text. Stone-500 reads as "subdued" without being illegible. |
+| `--muted-foreground` | `neutral-550` | `#6B6560` | Secondary and tertiary text. Stone-550 reads as "subdued" while clearing 4.5:1 on the stone-50 canvas (5.3:1) as well as white cards — stone-500 (#78716C) only reached 4.4:1 on the canvas. |
 | `--accent` | `primary-50` | `#E8EAFF` | Hover state for ghost elements, sidebar active items, selected rows. Light brand tint. |
 | `--accent-foreground` | `primary-700` | `#3A4DC8` | Text on accent backgrounds — darker brand stop for contrast. |
-| `--destructive` | `ember` | `#E05B40` | Delete and critical error actions. Ember, not a red variant of the brand colour. |
+| `--destructive` | `ember-solid` | `#A8341C` | Filled delete/critical actions. Ember-solid (6.6:1 with white), **not** soft ember (#E05B40, 3.7:1 — fails). Soft ember is for icons/borders and the subtle destructive variant (`error-text` on `error-muted`). |
 | `--destructive-foreground` | `white` | `#FFFFFF` | — |
 | `--border` | `neutral-200` | `#E5E5E3` | All structural borders. Used at 0.5px throughout (see base styles). |
 | `--input` | `neutral-200` | `#E5E5E3` | Input borders at rest. |
@@ -95,10 +96,10 @@ This table shows how each shadcn-svelte CSS variable maps to Cairn's design syst
 |----------|-------|------|--------|
 | `--background` | stone-50 `#F5F5F4` | ink `#18181A` | — |
 | `--card` | white `#FFFFFF` | ink-900 `#232325` | Slightly lighter than background — same hierarchy logic, inverted. |
-| `--primary` | brand-500 `#5B6EE1` | brand-400 `#818CF8` | Saturated 500 is too heavy on dark backgrounds. |
+| `--primary` (`brand-solid`) | brand-700 `#3A4DC8` | brand-400 `#818CF8` | Light: dark stop + white text (≥5.8:1). Dark: lighter stop + ink text (5.9:1) — saturated stops are too heavy on dark backgrounds. |
 | `--accent` | brand-50 `#E8EAFF` | brand-dark-muted `#1E254A` | Light tint on dark surface reads as a light bleed, not a badge. |
 | `--border` | stone-200 `#E5E5E3` | ink-700 `#3A3A3C` | — |
-| `--muted-foreground` | stone-500 `#78716C` | stone-400 `#A09E97` | Lightened for dark mode contrast. |
+| `--muted-foreground` | stone-550 `#6B6560` | stone-400 `#A09E97` | Light stop darkened to clear AA on the canvas; dark stop lightened for dark-mode contrast (6.6:1). |
 
 ---
 
@@ -131,7 +132,7 @@ base: "... cursor-default ..."
 
 Cairn button height is 36px (app) / 40px (marketing). shadcn defaults to `h-9` (36px) — this matches. No change needed for the app surface.
 
-Cairn **never uses gradients** on buttons. Ensure no `bg-gradient-*` classes appear in your button component.
+The default (primary) variant fills with `--primary`, which now resolves to `brand-solid` (brand-700), not brand-500 — this is what keeps the white label AA-compliant. Don't override the fill back to a brand-500 utility. Hover uses `--brand-solid-hover`. Cairn **never uses gradients** on buttons — ensure no `bg-gradient-*` classes appear in your button component.
 
 ### Badge
 
@@ -198,7 +199,7 @@ Wrap marketing sections in the `.surface-marketing` class. shadcn components ins
       <p class="eyebrow">Feature</p>
       <CardTitle class="text-white">Your data, always current</CardTitle>
     </CardHeader>
-    <CardContent class="text-white/55">
+    <CardContent class="text-muted-foreground">
       Changes appear within seconds.
     </CardContent>
   </Card>
@@ -210,7 +211,7 @@ Wrap marketing sections in the `.surface-marketing` class. shadcn components ins
 </section>
 ```
 
-The `eyebrow` utility class applies `text-[12px] font-semibold tracking-[0.09em] uppercase` with `color: var(--cairn-brand-400)` — the brand-muted colour, not white.
+The `eyebrow` utility class applies `text-[13px] font-semibold tracking-[0.09em] uppercase` with `color: var(--cairn-brand-400)` — the brand-muted colour, not white. Marketing body copy is 16px (`--text-mkt-body`); use `text-muted-foreground` for secondary copy, never a raw white-opacity value (see Design.md).
 
 ---
 
@@ -218,7 +219,7 @@ The `eyebrow` utility class applies `text-[12px] font-semibold tracking-[0.09em]
 
 1. Define the 7 brand primitive values in `app.css` under a new `[data-theme]` selector
 2. Set `data-theme="your-product"` on `<html>` in your layout
-3. Check WCAG AA contrast (4.5:1) for the new brand colour on both light and dark surfaces
+3. Check WCAG AA contrast (4.5:1): `--cairn-brand-700` against white (it is the solid-button fill via `brand-solid`), `--cairn-brand-400` against `mkt-canvas` and ink (dark-mode interactive + eyebrow), and `--cairn-brand-700` against `--cairn-brand-50` (accent text)
 4. Independently author `--cairn-brand-dark-nav` — do not mechanically darken the brand colour
 
 ```css
