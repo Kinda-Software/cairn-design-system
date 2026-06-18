@@ -29,6 +29,8 @@ npx shadcn-svelte@latest init
 # 'orbit' | 'beacon' | 'vault' | 'pulse'
 ```
 
+**New product theme?** No bikeshedding — generate the palettes in Distil (Primary/Secondary/Accent, plus Neutral if you want your own), paste the CSS-variable output into a `[data-theme]` block, set the attribute. The semantic and component layers re-derive automatically.
+
 See [`cairn-shadcn.md`](cairn-shadcn.md) for the complete setup walkthrough and [`Design.md`](Design.md) for the full token reference.
 
 ## Using with coding agents

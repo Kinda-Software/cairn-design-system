@@ -1354,6 +1354,9 @@
         <p class="page-header-desc">Named after the stone trail markers of the Peak District — a cairn guides you
           through uncertain terrain without getting in your way. This system works the same: one shared foundation,
           per-product brand colour, two distinct surfaces for app UI and marketing, Space Grotesk throughout.</p>
+        <p class="page-header-desc"><strong>Cairn is a set of instructions, not a catalogue.</strong> You don't pick a
+          button from a rack of colours and sizes — you choose the pattern whose role fits the job, and the styling
+          follows. Say what an element is <em>for</em>, and Cairn tells you what it looks like.</p>
         <div class="page-header-meta">
           <span class="page-header-meta-item">Space Grotesk + Space Mono</span>
           <span class="page-header-meta-dot"></span>
@@ -2555,71 +2558,68 @@
           <div class="section-header">
             <span class="section-eyebrow">App components</span>
             <h2 class="section-title">Buttons</h2>
-            <p class="section-desc">One primary per view. No gradients on any button variant. The primary fill is
-              <code>primary-solid</code> (the 700 stop), not the 500 stop — white text on 500 fails AA (≈4.4:1); the
-              700 stop clears 7.2:1.</p>
+            <p class="section-desc">Choose by role, not by colour. Match the action to one of four roles and the
+              styling — already AA-safe — follows. The Primary button is the one action that moves the task forward;
+              its solid <code>primary-solid</code> fill is a consequence of that, not a choice you make.</p>
           </div>
           <div class="divider"></div>
           <div class="preview">
-            <div class="preview-label">Variants</div>
+            <div class="preview-label">Roles</div>
             <div class="preview-inner">
               <div class="btn-row">
                 <button class="btn btn-primary">Primary action</button>
                 <button class="btn btn-secondary">Secondary</button>
-                <button class="btn btn-ghost">Ghost</button>
+                <button class="btn btn-ghost">Tertiary</button>
                 <button class="btn btn-destructive">Destructive</button>
                 <button class="btn btn-destructive-solid">Delete</button>
               </div>
             </div>
           </div>
-          <div class="reasoning">
-            <strong>Why is "Sign in" a text link, not a secondary button?</strong> Giving sign-in a button border
-            creates two competing CTAs next to the primary. Sign-in is for returning users who know what they want — it
-            doesn't need to compete. The hierarchy should be: new user (primary CTA) is more prominent than returning
-            user (text link). This also reduces visual noise in the nav.
-          </div>
           <table class="spec-table">
             <thead>
               <tr>
-                <th>Variant</th>
-                <th>Height</th>
-                <th>Font</th>
-                <th>Use</th>
+                <th>Name</th>
+                <th>Choose it when…</th>
+                <th>Style (the consequence)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Primary</td>
-                <td>36px</td>
-                <td>14px / 500</td>
-                <td>One per view. The most important action.</td>
+                <td>this is the one action that initiates or advances the main task — one per view</td>
+                <td>Solid <code>primary-solid</code> (700) fill, white label. No tints, no gradients.</td>
               </tr>
               <tr>
                 <td>Secondary</td>
-                <td>36px</td>
-                <td>14px / 500</td>
-                <td>Alternative actions. Can appear alongside primary.</td>
+                <td>an alternative or parallel action sits alongside the primary without competing</td>
+                <td>Neutral-toned <code>neutral-subtle</code> fill, <code>foreground</code> label.</td>
               </tr>
               <tr>
-                <td>Ghost</td>
-                <td>36px</td>
-                <td>14px / 500</td>
-                <td>Tertiary actions, toolbar actions, low-emphasis.</td>
+                <td>Tertiary</td>
+                <td>the action is low-stakes, a toolbar action, or an escape hatch — Cancel, Back, Close</td>
+                <td>Ghost: transparent, <code>neutral-fg</code> label, <code>primary-bg</code> hover.</td>
               </tr>
               <tr>
-                <td>Destructive (subtle)</td>
-                <td>36px</td>
-                <td>14px / 500</td>
-                <td>error-text on error-muted (6.8:1). Ember family — never primary red.</td>
-              </tr>
-              <tr>
-                <td>Destructive (solid)</td>
-                <td>36px</td>
-                <td>14px / 500</td>
-                <td>ember-solid fill + white (6.6:1). High-emphasis delete.</td>
+                <td>Destructive</td>
+                <td>the action causes permanent or hard-to-reverse data loss</td>
+                <td>Subtle <code>error-fg</code> on <code>error-muted</code>; solid <code>error-solid</code> + white
+                  for the confirming step. Ember family — never primary red.</td>
               </tr>
             </tbody>
           </table>
+          <div class="reasoning">
+            <strong>Why the styling lands where it does:</strong> <code>primary-500</code> is the focus ring and is
+            never a button fill — white text on it fails AA (≈4.4:1) while <code>primary-solid</code> (700) clears
+            7.2:1. The Tertiary/ghost label uses <code>neutral-fg</code> (700), not the lighter
+            <code>neutral-500</code>, which fails on the stone hover fill. Destructive uses the Ember family in two
+            emphasis levels (subtle <code>error-fg</code>/<code>error-muted</code>, solid <code>error-solid</code> +
+            white at 6.6:1) — never a red tint of the brand colour. All four roles are 36px tall, 14px / 500 label.
+            <br><br>
+            <strong>Why is "Sign in" a text link, not a secondary button?</strong> Giving sign-in a button border
+            creates two competing CTAs next to the primary. Sign-in is for returning users who know what they want — it
+            doesn't need to compete. The hierarchy should be: new user (primary CTA) is more prominent than returning
+            user (text link). This also reduces visual noise in the nav.
+          </div>
         </section>
 
         <!-- App: Badges -->
@@ -3091,35 +3091,46 @@
           <div class="section-header">
             <span class="section-eyebrow">Multi-product</span>
             <h2 class="section-title">Per-product theming</h2>
-            <p class="section-desc">Each product re-authors only its three Layer 1 palette ramps — Primary, Secondary,
-              Accent — under a <code
-                style="font-family:var(--font-mono);font-size:12px;background:var(--color-surface);padding:2px 6px;border-radius:4px">data-theme</code>
-              attribute. The shared Neutral ramp and all of Layers 2 and 3 are inherited.</p>
+            <p class="section-desc">No bikeshedding — pick colours, drop them in, ship. A product theme is two steps:
+              generate palettes, then accept the default semantic mappings. You never hand-author a semantic or
+              component token.</p>
           </div>
           <div class="divider"></div>
           <div class="reasoning">
-            <strong>Why author whole ramps instead of a handful of tokens?</strong> The semantic layer (Layer 2) reads
-            specific stops from each ramp — <code>solid</code> from 700 (light) and 400 (dark), <code>muted</code> from
-            200, <code>bg</code> from 50, nav from 950, and so on. Give it a complete, evenly-spaced ramp and every
-            semantic slot — in both modes — resolves automatically. A product theme never touches a semantic or
-            component token.
+            <strong>Step 1 — Pick colours, generate palettes.</strong> Generate the 50→950 ramps with
+            <strong>Distil</strong>, which emits Primary, Secondary, Accent and Neutral as 11-stop palettes in CSS
+            variables, Tailwind config, or W3C design-tokens JSON. Take the CSS-variables output and paste it into a
+            <code>[data-theme]</code> block as <code>--cairn-{palette}-{stop}</code>. That is the entire authoring step.
             <br><br>
-            <strong>Two checks when authoring a ramp:</strong> the <code>700</code> stop must clear ≥4.5:1 against white
-            (it is the light-mode <code>solid</code> fill) and the <code>400</code> stop must clear ≥4.5:1 against ink
-            (the dark-mode <code>solid</code> fill). Keep the 50→950 lightness rhythm so the recipe holds, and choose a
-            deliberate hue triad rather than mechanically rotating.
+            <strong>Step 2 — Check the semantic mappings.</strong> Layer 2's defaults apply automatically — the recipe
+            reads fixed stops from each ramp (<code>solid</code>←700/400, <code>muted</code>←200, <code>bg</code>←50,
+            nav←950) in both modes, so every slot resolves the moment the ramps land. Spot-check the result; tweak a
+            mapping only if a brand needs it. The two AA guardrails — <code>700</code> ≥4.5:1 on white,
+            <code>400</code> ≥4.5:1 on ink — are inherent to the recipe and satisfied by construction when the ramp
+            keeps an even 50→950 lightness rhythm (Distil's output does). Verify, don't hand-tune.
+          </div>
+          <div class="reasoning">
+            <strong>Neutral is replaceable, not fixed.</strong> Warm stone is the recommended default — sharing it
+            gives every product a common surface character — but it is a normal Layer 1 ramp. Paste Distil's Neutral
+            ramp into the <code>[data-theme]</code> block and <code>background</code> / <code>card</code> /
+            <code>border</code> / <code>muted-foreground</code> retint automatically. Two things to keep right: the
+            <code>ink</code>/<code>white</code> text primitives are independent of the ramp, so the new neutral's
+            <code>50</code>/<code>100</code> stops must stay light enough for ink body text to clear AA; and the
+            dark-mode <code>card</code>/<code>border</code>/<code>input</code> surfaces are fixed values, so a fully
+            custom <em>dark</em> neutral means overriding those three too.
           </div>
           <div class="code-block">
-            <span class="c">/* Per-product Layer 1 ramps — Primary/Secondary/Accent, 50→950 */</span>
-            [<span class="k">data-theme</span>=<span class="s">"orbit"</span>] { <span class="c">/* default — indigo / teal / amber */</span> }
+            <span class="c">/* Paste Distil's CSS-variable output — one [data-theme] block per product */</span>
+            [<span class="k">data-theme</span>=<span class="s">"orbit"</span>] { <span class="c">/* default — indigo / teal / amber, defined in :root */</span> }
 
-            [<span class="k">data-theme</span>=<span class="s">"beacon"</span>] {  <span class="c">/* green / blue / gold */</span>
+            [<span class="k">data-theme</span>=<span class="s">"beacon"</span>] {  <span class="c">/* green / blue / gold — from Distil */</span>
             <span class="k">--cairn-primary-50</span>:  <span class="s">oklch(0.971 0.0216 164.8)</span>;
             <span class="c">/* … 100–900 … */</span>
             <span class="k">--cairn-primary-700</span>: <span class="s">oklch(0.47 0.1242 164.8)</span>; <span class="c">/* light solid */</span>
             <span class="k">--cairn-primary-400</span>: <span class="s">oklch(0.712 0.1283 164.8)</span>; <span class="c">/* dark solid */</span>
             <span class="k">--cairn-primary-950</span>: <span class="s">oklch(0.232 0.0567 164.8)</span>; <span class="c">/* nav */</span>
-            <span class="c">/* --cairn-secondary-* (blue) and --cairn-accent-* (gold) ramps follow */</span>
+            <span class="c">/* --cairn-secondary-* and --cairn-accent-* ramps follow; */</span>
+            <span class="c">/* add --cairn-neutral-* only to replace the shared warm stone */</span>
             }
           </div>
         </section>
@@ -3217,25 +3228,24 @@
           <div class="section-header">
             <span class="section-eyebrow">Multi-product</span>
             <h2 class="section-title">Creating a new theme</h2>
-            <p class="section-desc">Each product authors three Layer 1 ramps — Primary, Secondary, Accent — of eleven
-              stops each (50→950). Everything else — typography, spacing, the shared Neutral ramp, radius, the entire
-              semantic and component layers — updates automatically.</p>
+            <p class="section-desc">The practical walkthrough of the two steps above: generate palettes with Distil,
+              paste them into a <code
+                style="font-family:var(--font-mono);font-size:12px;background:var(--color-surface);padding:2px 6px;border-radius:4px">data-theme</code>
+              block, set the attribute, done. No semantic or component tokens to author.</p>
           </div>
           <div class="divider"></div>
 
-          <div class="reasoning">
-            <strong>Keep the 50→950 lightness rhythm.</strong> The semantic layer reads fixed stops from each ramp
-            (<code>solid</code>←700/400, <code>muted</code>←200, <code>bg</code>←50, nav←950). If a ramp's stops are
-            unevenly spaced, the semantic slots drift out of balance. Author each ramp at the same lightness cadence
-            as the default Orbit ramps, holding hue roughly constant and letting chroma peak near the 500 stop.
-            Pick a deliberate hue triad for Primary / Secondary / Accent rather than mechanically rotating the wheel.
-          </div>
-
           <div class="subsection">
-            <div class="subsection-title">The three ramps</div>
-            <div class="code-block"><span class="c">/* app.css — one [data-theme] block per product */</span>
+            <div class="subsection-title">1 · Generate &amp; paste the palettes</div>
+            <div class="reasoning" style="margin-bottom:12px;">
+              Generate the ramps in <strong>Distil</strong> and export as <strong>CSS variables</strong>. Distil emits
+              Primary, Secondary, Accent and Neutral as 11 evenly-spaced stops (50→950) — the even rhythm is what keeps
+              every semantic slot in balance, so the AA guardrails hold by construction. Paste Primary / Secondary /
+              Accent below; add the Neutral ramp only if this product should leave the shared warm stone.
+            </div>
+            <div class="code-block"><span class="c">/* app.css — paste Distil's CSS-variable output */</span>
               [<span class="k">data-theme</span>=<span class="s">"yourproduct"</span>] {
-              <span class="c">/* Primary — 11 stops */</span>
+              <span class="c">/* Primary — 11 stops, 50→950 */</span>
               <span class="k">--cairn-primary-50</span>:  <span class="s">oklch(…)</span>;
               <span class="c">/* … 100 200 300 400 500 600 700 800 900 … */</span>
               <span class="k">--cairn-primary-950</span>: <span class="s">oklch(…)</span>;
@@ -3243,58 +3253,13 @@
               <span class="k">--cairn-secondary-50</span>: <span class="s">oklch(…)</span>; <span class="c">/* … →950 */</span>
               <span class="c">/* Accent — 11 stops */</span>
               <span class="k">--cairn-accent-50</span>:    <span class="s">oklch(…)</span>; <span class="c">/* … →950 */</span>
-              <span class="c">/* Neutral is shared — do not re-author */</span>
+              <span class="c">/* Neutral — optional; omit to keep shared warm stone */</span>
               }
             </div>
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">Which stops the semantic layer reads</div>
-            <table class="spec-table">
-              <thead>
-                <tr>
-                  <th>Stop</th>
-                  <th>Semantic slot it feeds</th>
-                  <th>Contrast requirement</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>500</code></td>
-                  <td>Focus rings, 0.5px borders, large display accents</td>
-                  <td>≥ 3:1 as a non-text UI element</td>
-                </tr>
-                <tr>
-                  <td><code>700</code></td>
-                  <td>Light-mode <code>solid</code> fill, <code>fg</code> text</td>
-                  <td>≥ 4.5:1 on white (#FFFFFF) — WCAG AA</td>
-                </tr>
-                <tr>
-                  <td><code>400</code></td>
-                  <td>Dark-mode <code>solid</code> fill, marketing eyebrow text</td>
-                  <td>≥ 4.5:1 on ink &amp; on #0D0D12 (marketing canvas)</td>
-                </tr>
-                <tr>
-                  <td><code>200</code> / <code>50</code></td>
-                  <td><code>muted</code> badge fills / <code>bg</code> washes</td>
-                  <td>Must support the <code>fg</code> (700) stop at ≥ 4.5:1</td>
-                </tr>
-                <tr>
-                  <td><code>900</code> / <code>950</code></td>
-                  <td>Light nav background / deep nav &amp; dark surfaces</td>
-                  <td>White text at 100% must pass AA ≥ 4.5:1</td>
-                </tr>
-                <tr>
-                  <td><code>800</code> / <code>900</code> (dark)</td>
-                  <td>Dark-mode <code>muted</code> / <code>subtle</code> fills</td>
-                  <td>Must be dark — a 50-stop tint would read as light bleed</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="subsection">
-            <div class="subsection-title">Set the theme in your layout</div>
+            <div class="subsection-title">2 · Set the theme in your layout</div>
             <div class="code-block"><span class="c">// src/routes/+layout.svelte</span>
               &lt;<span class="k">html</span> <span class="s">data-theme</span>=<span class="s">"yourproduct"</span>
               <span class="s">lang</span>=<span class="s">"en"</span>&gt;
@@ -3304,49 +3269,15 @@
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">Ship checklist</div>
-            <table class="spec-table">
-              <thead>
-                <tr>
-                  <th>Check</th>
-                  <th>Pass condition</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Each ramp's 700 stop on white</td>
-                  <td>≥ 4.5:1 contrast ratio — it is the light-mode solid fill</td>
-                </tr>
-                <tr>
-                  <td>Each ramp's 400 stop on ink (dark solid)</td>
-                  <td>≥ 4.5:1 contrast ratio (WCAG AA)</td>
-                </tr>
-                <tr>
-                  <td>primary-400 on #0D0D12 (marketing eyebrow)</td>
-                  <td>≥ 4.5:1 contrast ratio (WCAG AA)</td>
-                </tr>
-                <tr>
-                  <td>fg (700) on muted (200) and bg (50)</td>
-                  <td>≥ 4.5:1 contrast ratio (WCAG AA)</td>
-                </tr>
-                <tr>
-                  <td>White (100%) on primary-950 (nav)</td>
-                  <td>≥ 4.5:1 contrast ratio</td>
-                </tr>
-                <tr>
-                  <td>All three ramps follow the 50→950 lightness rhythm</td>
-                  <td>Evenly spaced — not mechanically derived from one stop</td>
-                </tr>
-                <tr>
-                  <td>data-theme set on &lt;html&gt; in root layout</td>
-                  <td>All semantic + component tokens resolve through Layer 1</td>
-                </tr>
-                <tr>
-                  <td>Run Design.md linter</td>
-                  <td><code>npx @google/design.md lint Design.md</code> exits 0</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="subsection-title">3 · Verify</div>
+            <div class="reasoning">
+              The AA guardrails are inherent to the recipe — with an even Distil ramp they pass by construction, so this
+              is a confirmation, not a tuning pass. Spot-check: the <code>700</code> stop ≥4.5:1 on white and the
+              <code>400</code> stop ≥4.5:1 on ink (the light/dark solid fills), and <code>primary-400</code> ≥4.5:1 on
+              the <code>#0D0D12</code> marketing canvas (eyebrow text). If you replaced Neutral, also confirm its
+              <code>50</code>/<code>100</code> stops hold ink body text at AA. Then run
+              <code>npx @google/design.md lint Design.md</code> — it should exit 0.
+            </div>
           </div>
         </section>
       </div>

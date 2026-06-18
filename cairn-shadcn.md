@@ -220,13 +220,13 @@ The `eyebrow` utility class applies `text-[13px] font-semibold tracking-[0.09em]
 
 ## Adding a new product theme
 
-1. Author the three Layer 1 ramps (Primary, Secondary, Accent) — 11 stops each, 50→950 — in `app.css` under a new `[data-theme]` selector. The Neutral ramp is shared; don't re-author it. Layers 2 and 3 (and the shadcn bridge) re-derive automatically.
-2. Set `data-theme="your-product"` on `<html>` in your layout
-3. Check WCAG AA contrast (4.5:1) on each ramp: the `700` stop against white (light-mode `solid` fill), the `400` stop against ink (dark-mode `solid` fill) — and for Primary, the `400` stop against `mkt-canvas` (marketing eyebrow). The `fg` (700) stop must clear 4.5:1 on the `muted` (200) and `bg` (50) stops.
-4. Keep the 50→950 lightness rhythm — author at the same cadence as the default Orbit ramps rather than mechanically deriving stops from one colour.
+No bikeshedding — pick colours, drop them in, ship. Two steps:
+
+1. **Generate & paste the palettes.** Generate the 50→950 ramps with **Distil** and export as CSS variables. Distil emits Primary, Secondary, Accent and Neutral as 11 evenly-spaced stops in your choice of CSS variables, Tailwind config, or W3C design-tokens JSON. Paste the CSS-variables output into a new `[data-theme]` selector in `app.css` as `--cairn-{palette}-{stop}`. Layers 2 and 3 (and the shadcn bridge) re-derive automatically — you never author a semantic or component token. Neutral defaults to the shared warm stone; include Distil's Neutral ramp only to give this product its own.
+2. **Set `data-theme="your-product"`** on `<html>` in your layout, then verify. The AA guardrails are inherent to the recipe and hold by construction when the ramp is evenly spaced (Distil's is) — confirm, don't hand-tune: the `700` stop ≥4.5:1 on white (light solid fill), the `400` stop ≥4.5:1 on ink (dark solid fill), and `primary-400` ≥4.5:1 on `mkt-canvas` (marketing eyebrow). If you replaced Neutral, also confirm its `50`/`100` stops hold ink body text at AA, and override the dark-mode `--card`/`--border`/`--input` values (these are fixed, not neutral stops). Run `npx @google/design.md lint Design.md` — it should exit 0.
 
 ```css
-/* app.css */
+/* app.css — paste Distil's CSS-variable output */
 [data-theme="newproduct"] {
   /* Primary — 11 stops */
   --cairn-primary-50:   oklch(...);
@@ -238,6 +238,6 @@ The `eyebrow` utility class applies `text-[13px] font-semibold tracking-[0.09em]
   /* Accent — 11 stops (50→950) */
   --cairn-accent-50:    oklch(...);
   /* … */
-  /* Neutral is shared — do not re-author */
+  /* Neutral — optional; omit to keep shared warm stone */
 }
 ```
