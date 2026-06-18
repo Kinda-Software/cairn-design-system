@@ -19,16 +19,16 @@
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
   <style>
     :root {
-      --brand-500: #5B6EE1;   /* vibrant accent — rings, borders, large display only */
-      --brand-400: #818CF8;   /* dark-mode interactive + marketing eyebrow */
-      --brand-50: #E8EAFF;
-      --brand-700: #3A4DC8;   /* solid-fill stop */
-      --brand-900: #1E2660;
+      --brand-500: #667BEF;   /* primary-500 — vibrant accent: rings, borders, large display only */
+      --brand-400: #8198FF;   /* primary-400 — dark-mode solid + marketing eyebrow */
+      --brand-50: #EFF5FF;    /* primary-50 */
+      --brand-700: #404DB3;   /* primary-700 — solid-fill stop */
+      --brand-900: #212A65;   /* primary-900 — nav */
 
       /* Semantic interactive layer — AA-safe. Solid fills/brand-text use these,
-         never brand-500 (white on brand-500 = 4.41:1, fails normal text). */
-      --brand-solid: var(--brand-700);          /* 6.83:1 with white */
-      --brand-solid-hover: #2E3DA0;             /* brand-700 darkened ~6% L */
+         never the 500 stop (white on primary-500 ≈ 4.4:1, fails normal text). */
+      --brand-solid: var(--brand-700);          /* 7.2:1 with white */
+      --brand-solid-hover: #353F96;             /* primary-700 darkened ~6% L */
       --brand-contrast: #FFFFFF;
 
       --color-surface: #F5F5F4;
@@ -55,7 +55,7 @@
       --mkt-text-secondary: rgba(255, 255, 255, 0.65);  /* ≥7.6:1 on all mkt surfaces */
       --mkt-text-tertiary: rgba(255, 255, 255, 0.55);   /* ≥5.9:1 on all mkt surfaces */
       --mkt-brand: var(--brand-solid);  /* CTA fill — AA-safe; glow shadow adds luminosity */
-      --mkt-brand-muted: #818CF8;       /* eyebrow / text link — ≥6.0:1 on canvas */
+      --mkt-brand-muted: #8198FF;       /* primary-400 — eyebrow / text link, ≥6.0:1 on canvas */
 
       --font-sans: 'Space Grotesk', sans-serif;
       --font-mono: 'Space Mono', monospace;
@@ -1413,7 +1413,8 @@
             <div class="subsection-title">3 · Set the product theme</div>
             <div class="subsection-desc">In your root <code>+layout.svelte</code>, set <code>data-theme</code> on the
               html element. The theme name maps to a <code>[data-theme]</code> block in <code>app.css</code> which
-              defines the 7 brand primitive tokens.</div>
+              re-authors the product's Layer 1 palette ramps (Primary, Secondary, Accent). The semantic and component
+              layers re-derive automatically.</div>
             <div class="code-block">&lt;<span class="k">script</span>&gt;
               <span class="c">// 'orbit' | 'beacon' | 'vault' | 'pulse'</span>
               <span class="k">const</span> product = <span class="s">'orbit'</span>;
@@ -1693,24 +1694,26 @@
 
           <div class="arch-grid">
             <div class="arch-card">
-              <div class="arch-card-num">Layer 1</div>
-              <div class="arch-card-title">Primitive tokens</div>
-              <div class="arch-card-body">Raw values. Never used directly in components. Define the full palette.</div>
-              <div class="arch-card-tokens">indigo-500<br>stone-200<br>sage-600<br>radius-lg</div>
+              <div class="arch-card-num">Layer 1 — authored per product</div>
+              <div class="arch-card-title">Global palettes</div>
+              <div class="arch-card-body">Raw colour ramps. Four palettes — Primary, Secondary, Accent, Neutral — each
+                a full 50→950 ramp. Never referenced directly by components.</div>
+              <div class="arch-card-tokens">--cairn-primary-500<br>--cairn-secondary-200<br>--cairn-accent-700<br>--cairn-neutral-950</div>
             </div>
             <div class="arch-card" style="border-color: #C7CBFF;">
-              <div class="arch-card-num">Layer 2 — swapped per product &amp; mode</div>
+              <div class="arch-card-num">Layer 2 — light + dark</div>
               <div class="arch-card-title">Semantic tokens</div>
-              <div class="arch-card-body">Named by purpose. Components reference only these. This layer absorbs all
-                theme and mode switches.</div>
-              <div class="arch-card-tokens">color-interactive<br>color-surface<br>color-text-primary<br>nav-background
+              <div class="arch-card-body">Seven-slot recipe per palette, defined for both modes. Components reference
+                only these. This layer absorbs every theme and mode switch.</div>
+              <div class="arch-card-tokens">--primary-solid<br>--primary-subtle<br>--accent-fg<br>--secondary-contrast
               </div>
             </div>
             <div class="arch-card">
-              <div class="arch-card-num">Layer 3 — optional</div>
+              <div class="arch-card-num">Layer 3</div>
               <div class="arch-card-title">Component tokens</div>
-              <div class="arch-card-body">For complex components that need their own overrides. Used sparingly.</div>
-              <div class="arch-card-tokens">nav-bg<br>badge-text<br>focus-ring</div>
+              <div class="arch-card-body">Bind a semantic token onto a component part. The shadcn variable layer
+                (<code>--primary</code>, <code>--border</code>) consumes this layer downstream.</div>
+              <div class="arch-card-tokens">--primary-button-background<br>--badge-accent-background<br>--input-ring</div>
             </div>
           </div>
         </section>
@@ -1900,8 +1903,10 @@
           <div class="section-header">
             <span class="section-eyebrow">Foundation</span>
             <h2 class="section-title">Colour</h2>
-            <p class="section-desc">Indigo is the default brand colour (Orbit product). Each product defines its own
-              brand ramp. Stone neutrals carry all app surface structure. Sage and Ember are status-only.</p>
+            <p class="section-desc">Colour is a three-layer system. <strong>Layer 1</strong> is four global palettes —
+              Primary, Secondary, Accent, Neutral — each a full 50→950 ramp, authored per product (default shown:
+              Orbit). <strong>Layer 2</strong> derives a seven-slot semantic recipe per palette for light and dark.
+              Stone neutrals carry all app surface structure; Sage and Ember stay status-only.</p>
           </div>
           <div class="divider"></div>
 
@@ -1916,97 +1921,296 @@
             there. Decorative brand colour dilutes the interactive signal and makes the UI harder to scan.
           </div>
 
+          <div class="subsection-title" style="margin-bottom:4px;">Layer 1 — global palettes (Orbit)</div>
+
           <div class="subsection">
-            <div class="subsection-title">Brand (default — Orbit)</div>
+            <div class="subsection-title">Primary — Orbit indigo</div>
             <div class="swatch-row">
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#E8EAFF"></div>
-                <div class="swatch-name">Indigo 50</div>
-                <div class="swatch-hex">#E8EAFF</div>
+                <div class="swatch-box" style="background:#EFF5FF"></div>
+                <div class="swatch-name">primary 50</div>
+                <div class="swatch-hex">#EFF5FF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#5B6EE1"></div>
-                <div class="swatch-name">Indigo 500</div>
-                <div class="swatch-hex">#5B6EE1</div>
+                <div class="swatch-box" style="background:#DFEAFF"></div>
+                <div class="swatch-name">primary 100</div>
+                <div class="swatch-hex">#DFEAFF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#3A4DC8"></div>
-                <div class="swatch-name">Indigo 700</div>
-                <div class="swatch-hex">#3A4DC8</div>
+                <div class="swatch-box" style="background:#C3D5FF"></div>
+                <div class="swatch-name">primary 200</div>
+                <div class="swatch-hex">#C3D5FF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#1E2660"></div>
-                <div class="swatch-name">Indigo 900</div>
-                <div class="swatch-hex">#1E2660</div>
+                <div class="swatch-box" style="background:#A2B9FF"></div>
+                <div class="swatch-name">primary 300</div>
+                <div class="swatch-hex">#A2B9FF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#818CF8"></div>
-                <div class="swatch-name">Indigo 400</div>
-                <div class="swatch-hex">#818CF8</div>
+                <div class="swatch-box" style="background:#8198FF"></div>
+                <div class="swatch-name">primary 400 — dark solid</div>
+                <div class="swatch-hex">#8198FF</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#667BEF"></div>
+                <div class="swatch-name">primary 500 — accent/ring</div>
+                <div class="swatch-hex">#667BEF · 4.4:1 ✗ text</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#5263D4"></div>
+                <div class="swatch-name">primary 600</div>
+                <div class="swatch-hex">#5263D4</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#404DB3"></div>
+                <div class="swatch-name">primary 700 — light solid</div>
+                <div class="swatch-hex">#404DB3 · 7.2:1 ✓</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#303A8D"></div>
+                <div class="swatch-name">primary 800</div>
+                <div class="swatch-hex">#303A8D</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#212A65"></div>
+                <div class="swatch-name">primary 900</div>
+                <div class="swatch-hex">#212A65</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#13193F"></div>
+                <div class="swatch-name">primary 950 — nav</div>
+                <div class="swatch-hex">#13193F</div>
               </div>
             </div>
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">Semantic interactive — AA-safe</div>
+            <div class="subsection-title">Secondary — Orbit teal</div>
+            <div class="swatch-row">
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#E9F9F9"></div>
+                <div class="swatch-name">secondary 50</div>
+                <div class="swatch-hex">#E9F9F9</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#D3F3F2"></div>
+                <div class="swatch-name">secondary 100</div>
+                <div class="swatch-hex">#D3F3F2</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#AAE5E4"></div>
+                <div class="swatch-name">secondary 200</div>
+                <div class="swatch-hex">#AAE5E4</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#76D2D1"></div>
+                <div class="swatch-name">secondary 300</div>
+                <div class="swatch-hex">#76D2D1</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#3EB6B6"></div>
+                <div class="swatch-name">secondary 400</div>
+                <div class="swatch-hex">#3EB6B6</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#009B9C"></div>
+                <div class="swatch-name">secondary 500</div>
+                <div class="swatch-hex">#009B9C</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#008485"></div>
+                <div class="swatch-name">secondary 600</div>
+                <div class="swatch-hex">#008485</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#006B6C"></div>
+                <div class="swatch-name">secondary 700 — solid</div>
+                <div class="swatch-hex">#006B6C</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#005354"></div>
+                <div class="swatch-name">secondary 800</div>
+                <div class="swatch-hex">#005354</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#003B3C"></div>
+                <div class="swatch-name">secondary 900</div>
+                <div class="swatch-hex">#003B3C</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#002424"></div>
+                <div class="swatch-name">secondary 950</div>
+                <div class="swatch-hex">#002424</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <div class="subsection-title">Accent — Orbit amber</div>
+            <div class="swatch-row">
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#FFF3E5"></div>
+                <div class="swatch-name">accent 50</div>
+                <div class="swatch-hex">#FFF3E5</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#FFE7CB"></div>
+                <div class="swatch-name">accent 100</div>
+                <div class="swatch-hex">#FFE7CB</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#FCCF9D"></div>
+                <div class="swatch-name">accent 200</div>
+                <div class="swatch-hex">#FCCF9D</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#F1B164"></div>
+                <div class="swatch-name">accent 300</div>
+                <div class="swatch-hex">#F1B164</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#DA9026"></div>
+                <div class="swatch-name">accent 400</div>
+                <div class="swatch-hex">#DA9026</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#BF7300"></div>
+                <div class="swatch-name">accent 500</div>
+                <div class="swatch-hex">#BF7300</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#A65D00"></div>
+                <div class="swatch-name">accent 600</div>
+                <div class="swatch-hex">#A65D00</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#8A4800"></div>
+                <div class="swatch-name">accent 700 — solid</div>
+                <div class="swatch-hex">#8A4800</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#6C3600"></div>
+                <div class="swatch-name">accent 800</div>
+                <div class="swatch-hex">#6C3600</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#4D2600"></div>
+                <div class="swatch-name">accent 900</div>
+                <div class="swatch-hex">#4D2600</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#2F1600"></div>
+                <div class="swatch-name">accent 950</div>
+                <div class="swatch-hex">#2F1600</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <div class="subsection-title">Neutral — shared warm stone</div>
+            <div class="swatch-row">
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#F6F5F4"></div>
+                <div class="swatch-name">neutral 50 — canvas</div>
+                <div class="swatch-hex">#F6F5F4</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#EDEBE8"></div>
+                <div class="swatch-name">neutral 100</div>
+                <div class="swatch-hex">#EDEBE8</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#DBD7D3"></div>
+                <div class="swatch-name">neutral 200 — border</div>
+                <div class="swatch-hex">#DBD7D3</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#C4BFB9"></div>
+                <div class="swatch-name">neutral 300</div>
+                <div class="swatch-hex">#C4BFB9</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#A7A19A"></div>
+                <div class="swatch-name">neutral 400 — dark text</div>
+                <div class="swatch-hex">#A7A19A</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#8D867F"></div>
+                <div class="swatch-name">neutral 500 — decorative</div>
+                <div class="swatch-hex">#8D867F</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#767069"></div>
+                <div class="swatch-name">neutral 600</div>
+                <div class="swatch-hex">#767069</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#5F5A54"></div>
+                <div class="swatch-name">neutral 700 — text</div>
+                <div class="swatch-hex">#5F5A54 · 6.4:1 ✓</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#494540"></div>
+                <div class="swatch-name">neutral 800</div>
+                <div class="swatch-hex">#494540</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#34312D"></div>
+                <div class="swatch-name">neutral 900 — dark card</div>
+                <div class="swatch-hex">#34312D</div>
+              </div>
+              <div class="swatch-item">
+                <div class="swatch-box" style="background:#1F1D1B"></div>
+                <div class="swatch-name">neutral 950 — dark canvas</div>
+                <div class="swatch-hex">#1F1D1B</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="subsection">
+            <div class="subsection-title">Layer 2 — semantic recipe (Primary, light)</div>
             <div class="reasoning">
-              <strong>Why a separate solid stop?</strong> brand-500 is the vibrant accent, but white text on it is only
-              4.41:1 (Orbit) and as low as 3.41:1 (Beacon) — below the 4.5:1 AA threshold for normal text. So solid
-              fills and brand-coloured text reference <code>brand-solid</code> (the brand-700 stop, ≥5.8:1 with white in
-              light mode; brand-400 + ink in dark mode) and <code>brand-contrast</code> for the text on top. brand-500
-              stays for focus rings, 0.5px borders, and large display accents — never a white-text background.
+              <strong>One recipe, every palette.</strong> Each palette resolves the same seven slots, so components
+              treat Primary, Secondary, Accent and Neutral identically. In dark mode the recipe inverts
+              (bg→950, subtle→900, muted→800, emphasized→700, <code>solid</code>→400, fg→300, contrast→ink).
+              <code>solid</code> pins to the 700 stop — not 500 — because white on 500 is only ~3.4–4.6:1, while 700
+              clears ≥6.2:1 across all products.
             </div>
             <div class="swatch-row">
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#3A4DC8"></div>
-                <div class="swatch-name">brand-solid (700)</div>
-                <div class="swatch-hex">#3A4DC8 · 6.8:1 ✓</div>
+                <div class="swatch-box" style="background:#EFF5FF"></div>
+                <div class="swatch-name">bg (50)</div>
+                <div class="swatch-hex">#EFF5FF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#5B6EE1"></div>
-                <div class="swatch-name">brand-500 — accent only</div>
-                <div class="swatch-hex">#5B6EE1 · 4.4:1 ✗ text</div>
+                <div class="swatch-box" style="background:#DFEAFF"></div>
+                <div class="swatch-name">subtle (100)</div>
+                <div class="swatch-hex">#DFEAFF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#A8341C"></div>
-                <div class="swatch-name">ember-solid</div>
-                <div class="swatch-hex">#A8341C · 6.6:1 ✓</div>
+                <div class="swatch-box" style="background:#C3D5FF"></div>
+                <div class="swatch-name">muted (200)</div>
+                <div class="swatch-hex">#C3D5FF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#6B6560"></div>
-                <div class="swatch-name">neutral-text (550)</div>
-                <div class="swatch-hex">#6B6560 · 5.3:1 ✓</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="subsection">
-            <div class="subsection-title">Neutrals (stone)</div>
-            <div class="swatch-row">
-              <div class="swatch-item">
-                <div class="swatch-box" style="background:#F5F5F4"></div>
-                <div class="swatch-name">Stone 50</div>
-                <div class="swatch-hex">#F5F5F4</div>
+                <div class="swatch-box" style="background:#A2B9FF"></div>
+                <div class="swatch-name">emphasized (300)</div>
+                <div class="swatch-hex">#A2B9FF</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#E5E5E3"></div>
-                <div class="swatch-name">Stone 200</div>
-                <div class="swatch-hex">#E5E5E3</div>
+                <div class="swatch-box" style="background:#404DB3"></div>
+                <div class="swatch-name">solid (700)</div>
+                <div class="swatch-hex">#404DB3 · 7.2:1 ✓</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#78716C"></div>
-                <div class="swatch-name">Stone 500 — icon/decorative</div>
-                <div class="swatch-hex">#78716C · 4.4:1 ✗ body</div>
+                <div class="swatch-box" style="background:#404DB3"></div>
+                <div class="swatch-name">fg (700)</div>
+                <div class="swatch-hex">#404DB3</div>
               </div>
               <div class="swatch-item">
-                <div class="swatch-box" style="background:#1C1917"></div>
-                <div class="swatch-name">Stone 900</div>
-                <div class="swatch-hex">#1C1917</div>
-              </div>
-              <div class="swatch-item">
-                <div class="swatch-box" style="background:#18181A"></div>
-                <div class="swatch-name">Ink</div>
-                <div class="swatch-hex">#18181A</div>
+                <div class="swatch-box" style="background:#FFFFFF;border:0.5px solid #DBD7D3"></div>
+                <div class="swatch-name">contrast</div>
+                <div class="swatch-hex">#FFFFFF</div>
               </div>
             </div>
           </div>
@@ -2352,8 +2556,8 @@
             <span class="section-eyebrow">App components</span>
             <h2 class="section-title">Buttons</h2>
             <p class="section-desc">One primary per view. No gradients on any button variant. The primary fill is
-              brand-solid (brand-700), not brand-500 — white text on brand-500 fails AA (4.41:1); brand-700 clears
-              6.8:1.</p>
+              <code>primary-solid</code> (the 700 stop), not the 500 stop — white text on 500 fails AA (≈4.4:1); the
+              700 stop clears 7.2:1.</p>
           </div>
           <div class="divider"></div>
           <div class="preview">
@@ -2887,51 +3091,35 @@
           <div class="section-header">
             <span class="section-eyebrow">Multi-product</span>
             <h2 class="section-title">Per-product theming</h2>
-            <p class="section-desc">Each product defines 7 brand tokens under a <code
+            <p class="section-desc">Each product re-authors only its three Layer 1 palette ramps — Primary, Secondary,
+              Accent — under a <code
                 style="font-family:var(--font-mono);font-size:12px;background:var(--color-surface);padding:2px 6px;border-radius:4px">data-theme</code>
-              attribute. Everything else is shared.</p>
+              attribute. The shared Neutral ramp and all of Layers 2 and 3 are inherited.</p>
           </div>
           <div class="divider"></div>
           <div class="reasoning">
-            <strong>Why not override semantic tokens directly per product?</strong> If products override
-            <code>--color-interactive</code> directly, you lose the ability to control light/dark mode separately. The
-            brand primitive tokens (<code>--brand-500</code>, etc.) sit between primitives and semantic tokens —
-            semantic tokens reference brand tokens, brand tokens are set per product. This means a product theme file
-            only needs to define 7 values, and the entire semantic layer — including dark mode variants — updates
-            automatically.
+            <strong>Why author whole ramps instead of a handful of tokens?</strong> The semantic layer (Layer 2) reads
+            specific stops from each ramp — <code>solid</code> from 700 (light) and 400 (dark), <code>muted</code> from
+            200, <code>bg</code> from 50, nav from 950, and so on. Give it a complete, evenly-spaced ramp and every
+            semantic slot — in both modes — resolves automatically. A product theme never touches a semantic or
+            component token.
             <br><br>
-            <strong>Important caveat:</strong> not all brand colours work in all positions. A pale or low-saturation
-            brand colour cannot be used as a nav background the same way deep indigo can. Each product's theme file must
-            be authored with care — <code>--brand-dark-nav</code> in particular may need to be an independently chosen
-            dark value rather than a mechanical darkening of the brand colour.
+            <strong>Two checks when authoring a ramp:</strong> the <code>700</code> stop must clear ≥4.5:1 against white
+            (it is the light-mode <code>solid</code> fill) and the <code>400</code> stop must clear ≥4.5:1 against ink
+            (the dark-mode <code>solid</code> fill). Keep the 50→950 lightness rhythm so the recipe holds, and choose a
+            deliberate hue triad rather than mechanically rotating.
           </div>
           <div class="code-block">
-            <span class="c">/* Required per-product brand tokens */</span>
-            [<span class="k">data-theme</span>=<span class="s">"orbit"</span>] {
-            <span class="k">--brand-500</span>: <span class="s">#5B6EE1</span>; <span class="c">/* Primary interactive
-              */</span>
-            <span class="k">--brand-400</span>: <span class="s">#818CF8</span>; <span class="c">/* Dark mode variant
-              (lighter) */</span>
-            <span class="k">--brand-50</span>: <span class="s">#E8EAFF</span>; <span class="c">/* Light muted fill
-              */</span>
-            <span class="k">--brand-700</span>: <span class="s">#3A4DC8</span>; <span class="c">/* Text on brand-50
-              background */</span>
-            <span class="k">--brand-900</span>: <span class="s">#1E2660</span>; <span class="c">/* Nav background (light
-              mode) */</span>
-            <span class="k">--brand-dark-muted</span>: <span class="s">#1E254A</span>; <span class="c">/* Dark mode
-              badge fill */</span>
-            <span class="k">--brand-dark-nav</span>: <span class="s">#0F1330</span>; <span class="c">/* Dark mode nav —
-              independently authored */</span>
-            }
+            <span class="c">/* Per-product Layer 1 ramps — Primary/Secondary/Accent, 50→950 */</span>
+            [<span class="k">data-theme</span>=<span class="s">"orbit"</span>] { <span class="c">/* default — indigo / teal / amber */</span> }
 
-            [<span class="k">data-theme</span>=<span class="s">"beacon"</span>] {
-            <span class="k">--brand-500</span>: <span class="s">#0E9E72</span>;
-            <span class="k">--brand-400</span>: <span class="s">#34C98F</span>;
-            <span class="k">--brand-50</span>: <span class="s">#D4F5EA</span>;
-            <span class="k">--brand-700</span>: <span class="s">#097355</span>;
-            <span class="k">--brand-900</span>: <span class="s">#065440</span>;
-            <span class="k">--brand-dark-muted</span>: <span class="s">#0A2E22</span>;
-            <span class="k">--brand-dark-nav</span>: <span class="s">#031F18</span>;
+            [<span class="k">data-theme</span>=<span class="s">"beacon"</span>] {  <span class="c">/* green / blue / gold */</span>
+            <span class="k">--cairn-primary-50</span>:  <span class="s">oklch(0.971 0.0216 164.8)</span>;
+            <span class="c">/* … 100–900 … */</span>
+            <span class="k">--cairn-primary-700</span>: <span class="s">oklch(0.47 0.1242 164.8)</span>; <span class="c">/* light solid */</span>
+            <span class="k">--cairn-primary-400</span>: <span class="s">oklch(0.712 0.1283 164.8)</span>; <span class="c">/* dark solid */</span>
+            <span class="k">--cairn-primary-950</span>: <span class="s">oklch(0.232 0.0567 164.8)</span>; <span class="c">/* nav */</span>
+            <span class="c">/* --cairn-secondary-* (blue) and --cairn-accent-* (gold) ramps follow */</span>
             }
           </div>
         </section>
@@ -2945,8 +3133,8 @@
           </div>
           <div class="divider"></div>
           <div class="reasoning">
-            <strong>Key rules for dark mode colour shifts:</strong> The interactive fill (brand-solid) flips from the
-            brand-700 stop with white text in light mode to the brand-400 stop with ink text in dark mode — saturated
+            <strong>Key rules for dark mode colour shifts:</strong> The interactive fill (<code>primary-solid</code>)
+            flips from the 700 stop with white text in light mode to the 400 stop with ink text in dark mode — saturated
             colours feel too heavy on dark backgrounds, and both stops clear AA on their respective surfaces. The muted
             tint inverts — a light 50-stop tint on a dark
             surface reads as a light bleed, not a badge. Nav stays darkest even in dark mode — losing the hierarchy
@@ -2958,7 +3146,7 @@
             <div class="token-card">
               <div class="token-card-title" style="color:var(--brand-500)">Light mode</div>
               <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val">
-                  <div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4
+                  <div class="token-dot" style="background:#F6F5F4;border-color:rgba(0,0,0,0.1)"></div>#F6F5F4
                 </span></div>
               <div class="token-row"><span class="token-key">--color-surface-raised</span><span class="token-val">
                   <div class="token-dot" style="background:#FFFFFF;border-color:rgba(0,0,0,0.1)"></div>#FFFFFF
@@ -2967,14 +3155,14 @@
                   <div class="token-dot" style="background:#18181A"></div>#18181A
                 </span></div>
               <div class="token-row"><span class="token-key">--color-interactive (solid)</span><span class="token-val">
-                  <div class="token-dot" style="background:#3A4DC8"></div>#3A4DC8 (700)
+                  <div class="token-dot" style="background:#404DB3"></div>#404DB3 (700)
                 </span></div>
               <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val">
-                  <div class="token-dot" style="background:#E8EAFF;border-color:rgba(0,0,0,0.08)"></div>#E8EAFF (50)
+                  <div class="token-dot" style="background:#EFF5FF;border-color:rgba(0,0,0,0.08)"></div>#EFF5FF (bg/50)
                 </span></div>
             </div>
             <div class="token-card">
-              <div class="token-card-title" style="color:#818CF8">Dark mode</div>
+              <div class="token-card-title" style="color:#8198FF">Dark mode</div>
               <div class="token-row"><span class="token-key">--color-surface</span><span class="token-val">
                   <div class="token-dot" style="background:#18181A"></div>#18181A
                 </span></div>
@@ -2982,24 +3170,24 @@
                   <div class="token-dot" style="background:#232325"></div>#232325
                 </span></div>
               <div class="token-row"><span class="token-key">--color-text-primary</span><span class="token-val">
-                  <div class="token-dot" style="background:#F5F5F4;border-color:rgba(0,0,0,0.1)"></div>#F5F5F4
+                  <div class="token-dot" style="background:#F6F5F4;border-color:rgba(0,0,0,0.1)"></div>#F6F5F4
                 </span></div>
               <div class="token-row"><span class="token-key">--color-interactive</span><span class="token-val">
-                  <div class="token-dot" style="background:#818CF8"></div>#818CF8 (400)
+                  <div class="token-dot" style="background:#8198FF"></div>#8198FF (400)
                 </span></div>
               <div class="token-row"><span class="token-key">--color-interactive-muted</span><span class="token-val">
-                  <div class="token-dot" style="background:#1E254A"></div>#1E254A (dark)
+                  <div class="token-dot" style="background:#212A65"></div>#212A65 (900)
                 </span></div>
             </div>
           </div>
           <div class="code-block">
             <span class="c">/* Semantic tokens — light defaults */</span>
             :<span class="k">root</span> {
-            <span class="k">--color-surface</span>: <span class="s">#F5F5F4</span>;
+            <span class="k">--color-surface</span>: <span class="s">#F6F5F4</span>;
             <span class="k">--color-surface-raised</span>: <span class="s">#FFFFFF</span>;
-            <span class="k">--color-border</span>: <span class="s">#E5E5E3</span>;
+            <span class="k">--color-border</span>: <span class="s">#DBD7D3</span>;
             <span class="k">--color-text-primary</span>: <span class="s">#18181A</span>;
-            <span class="k">--color-text-secondary</span>: <span class="s">#6B6560</span>;
+            <span class="k">--color-text-secondary</span>: <span class="s">#5F5A54</span>;
             <span class="k">--color-interactive</span>: <span class="k">var</span>(<span class="s">--brand-solid</span>);
             <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span
               class="s">--brand-50</span>);
@@ -3012,8 +3200,8 @@
             <span class="k">--color-surface</span>: <span class="s">#18181A</span>;
             <span class="k">--color-surface-raised</span>: <span class="s">#232325</span>;
             <span class="k">--color-border</span>: <span class="s">#3A3A3C</span>;
-            <span class="k">--color-text-primary</span>: <span class="s">#F5F5F4</span>;
-            <span class="k">--color-text-secondary</span>: <span class="s">#A09E97</span>;
+            <span class="k">--color-text-primary</span>: <span class="s">#F6F5F4</span>;
+            <span class="k">--color-text-secondary</span>: <span class="s">#A7A19A</span>;
             <span class="k">--color-interactive</span>: <span class="k">var</span>(<span class="s">--brand-400</span>);
             <span class="k">--color-interactive-muted</span>:<span class="k">var</span>(<span
               class="s">--brand-dark-muted</span>);
@@ -3029,87 +3217,77 @@
           <div class="section-header">
             <span class="section-eyebrow">Multi-product</span>
             <h2 class="section-title">Creating a new theme</h2>
-            <p class="section-desc">Each product requires exactly 7 brand primitive tokens. Everything else —
-              typography, spacing, neutral palette, radius, component behaviour — is shared and updates automatically
-              when those 7 values change.</p>
+            <p class="section-desc">Each product authors three Layer 1 ramps — Primary, Secondary, Accent — of eleven
+              stops each (50→950). Everything else — typography, spacing, the shared Neutral ramp, radius, the entire
+              semantic and component layers — updates automatically.</p>
           </div>
           <div class="divider"></div>
 
           <div class="reasoning">
-            <strong>Don't mechanically darken the brand colour for <code>--brand-dark-nav</code>.</strong> Not all brand
-            colours work in all positions. A pale or low-saturation brand colour cannot serve as a nav background the
-            same way deep indigo can. <code>--brand-dark-nav</code> should be independently chosen — a dark surface that
-            feels right as a sidebar, not a mathematical shade derived from the brand. Treat it as a dedicated
-            dark-surface colour that happens to share the brand's hue family.
+            <strong>Keep the 50→950 lightness rhythm.</strong> The semantic layer reads fixed stops from each ramp
+            (<code>solid</code>←700/400, <code>muted</code>←200, <code>bg</code>←50, nav←950). If a ramp's stops are
+            unevenly spaced, the semantic slots drift out of balance. Author each ramp at the same lightness cadence
+            as the default Orbit ramps, holding hue roughly constant and letting chroma peak near the 500 stop.
+            Pick a deliberate hue triad for Primary / Secondary / Accent rather than mechanically rotating the wheel.
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">The 7 brand tokens</div>
+            <div class="subsection-title">The three ramps</div>
             <div class="code-block"><span class="c">/* app.css — one [data-theme] block per product */</span>
               [<span class="k">data-theme</span>=<span class="s">"yourproduct"</span>] {
-              <span class="k">--brand-500</span>: <span class="s">oklch(…)</span>; <span class="c">/* Primary
-                interactive — buttons, focus rings */</span>
-              <span class="k">--brand-400</span>: <span class="s">oklch(…)</span>; <span class="c">/* Dark mode variant
-                — lighter stop */</span>
-              <span class="k">--brand-50</span>: <span class="s">oklch(…)</span>; <span class="c">/* Light muted fill —
-                badge bg, hover states */</span>
-              <span class="k">--brand-700</span>: <span class="s">oklch(…)</span>; <span class="c">/* Text on brand-50
-                backgrounds */</span>
-              <span class="k">--brand-900</span>: <span class="s">oklch(…)</span>; <span class="c">/* Nav background
-                (light mode) */</span>
-              <span class="k">--brand-dark-muted</span>: <span class="s">oklch(…)</span>; <span class="c">/* Dark mode
-                badge fill — must be a dark stop */</span>
-              <span class="k">--brand-dark-nav</span>: <span class="s">oklch(…)</span>; <span class="c">/* Dark mode nav
-                — independently authored */</span>
+              <span class="c">/* Primary — 11 stops */</span>
+              <span class="k">--cairn-primary-50</span>:  <span class="s">oklch(…)</span>;
+              <span class="c">/* … 100 200 300 400 500 600 700 800 900 … */</span>
+              <span class="k">--cairn-primary-950</span>: <span class="s">oklch(…)</span>;
+              <span class="c">/* Secondary — 11 stops */</span>
+              <span class="k">--cairn-secondary-50</span>: <span class="s">oklch(…)</span>; <span class="c">/* … →950 */</span>
+              <span class="c">/* Accent — 11 stops */</span>
+              <span class="k">--cairn-accent-50</span>:    <span class="s">oklch(…)</span>; <span class="c">/* … →950 */</span>
+              <span class="c">/* Neutral is shared — do not re-author */</span>
               }
             </div>
           </div>
 
           <div class="subsection">
-            <div class="subsection-title">What each token drives</div>
+            <div class="subsection-title">Which stops the semantic layer reads</div>
             <table class="spec-table">
               <thead>
                 <tr>
-                  <th>Token</th>
-                  <th>Used in</th>
+                  <th>Stop</th>
+                  <th>Semantic slot it feeds</th>
                   <th>Contrast requirement</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><code>--brand-500</code></td>
-                  <td>Primary buttons, focus rings, active nav items, links</td>
+                  <td><code>500</code></td>
+                  <td>Focus rings, 0.5px borders, large display accents</td>
+                  <td>≥ 3:1 as a non-text UI element</td>
+                </tr>
+                <tr>
+                  <td><code>700</code></td>
+                  <td>Light-mode <code>solid</code> fill, <code>fg</code> text</td>
                   <td>≥ 4.5:1 on white (#FFFFFF) — WCAG AA</td>
                 </tr>
                 <tr>
-                  <td><code>--brand-400</code></td>
-                  <td>Dark mode buttons, marketing eyebrow text</td>
-                  <td>≥ 4.5:1 on #0D0D12 (marketing canvas)</td>
+                  <td><code>400</code></td>
+                  <td>Dark-mode <code>solid</code> fill, marketing eyebrow text</td>
+                  <td>≥ 4.5:1 on ink &amp; on #0D0D12 (marketing canvas)</td>
                 </tr>
                 <tr>
-                  <td><code>--brand-50</code></td>
-                  <td>Badge backgrounds, focus fill, hover states, selected rows</td>
-                  <td>Must support brand-700 text at ≥ 4.5:1</td>
+                  <td><code>200</code> / <code>50</code></td>
+                  <td><code>muted</code> badge fills / <code>bg</code> washes</td>
+                  <td>Must support the <code>fg</code> (700) stop at ≥ 4.5:1</td>
                 </tr>
                 <tr>
-                  <td><code>--brand-700</code></td>
-                  <td>Text on brand-50 backgrounds, badge labels</td>
-                  <td>≥ 4.5:1 on brand-50 — WCAG AA</td>
-                </tr>
-                <tr>
-                  <td><code>--brand-900</code></td>
-                  <td>Light mode nav background</td>
-                  <td>White text at 45% opacity must be legible</td>
-                </tr>
-                <tr>
-                  <td><code>--brand-dark-muted</code></td>
-                  <td>Dark mode badge fill, muted interactive backgrounds</td>
-                  <td>Must be dark — a tint (50-stop) would read as light bleed</td>
-                </tr>
-                <tr>
-                  <td><code>--brand-dark-nav</code></td>
-                  <td>Dark mode nav background</td>
+                  <td><code>900</code> / <code>950</code></td>
+                  <td>Light nav background / deep nav &amp; dark surfaces</td>
                   <td>White text at 100% must pass AA ≥ 4.5:1</td>
+                </tr>
+                <tr>
+                  <td><code>800</code> / <code>900</code> (dark)</td>
+                  <td>Dark-mode <code>muted</code> / <code>subtle</code> fills</td>
+                  <td>Must be dark — a 50-stop tint would read as light bleed</td>
                 </tr>
               </tbody>
             </table>
@@ -3136,32 +3314,32 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>brand-500 on white</td>
+                  <td>Each ramp's 700 stop on white</td>
+                  <td>≥ 4.5:1 contrast ratio — it is the light-mode solid fill</td>
+                </tr>
+                <tr>
+                  <td>Each ramp's 400 stop on ink (dark solid)</td>
                   <td>≥ 4.5:1 contrast ratio (WCAG AA)</td>
                 </tr>
                 <tr>
-                  <td>brand-400 on #0D0D12</td>
+                  <td>primary-400 on #0D0D12 (marketing eyebrow)</td>
                   <td>≥ 4.5:1 contrast ratio (WCAG AA)</td>
                 </tr>
                 <tr>
-                  <td>brand-700 on brand-50</td>
+                  <td>fg (700) on muted (200) and bg (50)</td>
                   <td>≥ 4.5:1 contrast ratio (WCAG AA)</td>
                 </tr>
                 <tr>
-                  <td>White (45% opacity) on brand-900</td>
-                  <td>Nav resting state legible</td>
-                </tr>
-                <tr>
-                  <td>White (100%) on brand-dark-nav</td>
+                  <td>White (100%) on primary-950 (nav)</td>
                   <td>≥ 4.5:1 contrast ratio</td>
                 </tr>
                 <tr>
-                  <td>brand-dark-nav independently authored</td>
-                  <td>Not a mechanical darkening of brand-900</td>
+                  <td>All three ramps follow the 50→950 lightness rhythm</td>
+                  <td>Evenly spaced — not mechanically derived from one stop</td>
                 </tr>
                 <tr>
                   <td>data-theme set on &lt;html&gt; in root layout</td>
-                  <td>All semantic tokens resolve through brand layer</td>
+                  <td>All semantic + component tokens resolve through Layer 1</td>
                 </tr>
                 <tr>
                   <td>Run Design.md linter</td>
