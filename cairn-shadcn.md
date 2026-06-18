@@ -62,44 +62,45 @@ npx shadcn-svelte@latest add mode-watcher
 
 ## Token mapping
 
-This table shows how each shadcn-svelte CSS variable maps to Cairn's design system tokens, and the reasoning behind each choice.
+The shadcn variable layer is a **downstream consumer** of Cairn's Layer 2 (semantic) and Layer 3 (component) tokens. shadcn vars resolve through the component token, which resolves through a Layer 2 semantic token, which resolves through a Layer 1 ramp stop — so a `data-theme` swap or mode flip updates everything automatically. Hexes below are the default Orbit product (light mode).
 
-| shadcn variable | Cairn token | Hex (light) | Reasoning |
-|-----------------|-------------|-------------|-----------|
-| `--background` | `neutral-50` | `#F5F5F4` | App page canvas. Stone-tinted warm white — never pure grey. |
+| shadcn variable | Resolves through | Hex (light) | Reasoning |
+|-----------------|------------------|-------------|-----------|
+| `--background` | `neutral-50` | `#F6F5F4` | App page canvas. Stone-tinted warm white — never pure grey. |
 | `--foreground` | `ink` | `#18181A` | Primary text. Near-black with a faint warm undertone. |
-| `--card` | `neutral-raised` | `#FFFFFF` | Cards sit above the canvas — pure white against stone-50 background gives clear hierarchy. |
+| `--card` | `card` → white | `#FFFFFF` | Cards sit above the canvas — pure white against stone-50 gives clear hierarchy. |
 | `--card-foreground` | `ink` | `#18181A` | Same as body text. |
-| `--popover` | `neutral-raised` | `#FFFFFF` | Dropdowns and popovers use the same raised surface as cards. |
+| `--popover` | `card` → white | `#FFFFFF` | Dropdowns and popovers use the same raised surface as cards. |
 | `--popover-foreground` | `ink` | `#18181A` | — |
-| `--primary` | `brand-solid` | `#3A4DC8` | Solid interactive fill = brand-700, **not** brand-500. White text on brand-500 fails AA (4.41:1); brand-700 clears 6.8:1. Dark mode shifts to `brand-400` (#818CF8) with ink text. |
-| `--primary-foreground` | `brand-contrast` | `#FFFFFF` | Text/icon on `--primary`. White in light mode, ink in dark mode. |
-| `--brand-solid` / `--brand-solid-hover` / `--brand-contrast` | semantic | `#3A4DC8` / −6% L / `#FFFFFF` | The AA-safe interactive trio. Use `bg-brand-solid hover:bg-brand-solid-hover text-brand-contrast` for any solid brand fill. Never fill with brand-500. |
-| `--secondary` | `neutral-50` | `#F5F5F4` | Secondary button background — stone surface, not white. |
-| `--secondary-foreground` | `ink` | `#18181A` | — |
-| `--muted` | `neutral-50` | `#F5F5F4` | Ghost elements, disabled areas, placeholder backgrounds. |
-| `--muted-foreground` | `neutral-550` | `#6B6560` | Secondary and tertiary text. Stone-550 reads as "subdued" while clearing 4.5:1 on the stone-50 canvas (5.3:1) as well as white cards — stone-500 (#78716C) only reached 4.4:1 on the canvas. |
-| `--accent` | `primary-50` | `#E8EAFF` | Hover state for ghost elements, sidebar active items, selected rows. Light brand tint. |
-| `--accent-foreground` | `primary-700` | `#3A4DC8` | Text on accent backgrounds — darker brand stop for contrast. |
-| `--destructive` | `ember-solid` | `#A8341C` | Filled delete/critical actions. Ember-solid (6.6:1 with white), **not** soft ember (#E05B40, 3.7:1 — fails). Soft ember is for icons/borders and the subtle destructive variant (`error-text` on `error-muted`). |
+| `--primary` | `--primary-button-background` → `primary-solid` (700) | `#404DB3` | Solid interactive fill = 700 stop, **not** 500. White on 500 fails AA (≈4.4:1); 700 clears 7.2:1. Dark mode shifts to the 400 stop (`#8198FF`) with ink text. |
+| `--primary-foreground` | `primary-contrast` | `#FFFFFF` | Text/icon on `--primary`. White in light, ink in dark. |
+| `--secondary` | `--secondary-button-background` → `neutral-subtle` | `#EDEBE8` | Secondary button background — neutral-toned alternative action, not white. |
+| `--secondary-foreground` | `foreground` | `#18181A` | — |
+| `--muted` | `neutral-subtle` | `#EDEBE8` | Ghost elements, disabled areas, placeholder backgrounds. |
+| `--muted-foreground` | `neutral-700` | `#5F5A54` | Secondary/tertiary text. Clears 4.5:1 on both the stone canvas and white cards. neutral-500 (#8D867F) is decorative/icon-only. |
+| `--accent` | `primary-bg` (50) | `#EFF5FF` | Hover state for ghost elements, sidebar active items, selected rows. Light brand tint. |
+| `--accent-foreground` | `primary-fg` (700) | `#404DB3` | Text on accent backgrounds — darker brand stop for contrast. |
+| `--destructive` | `--destructive-button-background` → `error-solid` | `#A8341C` | Filled delete/critical actions. Ember-solid (6.6:1 with white), **not** soft ember (#E05B40, 3.7:1 — fails). Soft ember is for icons/borders and the subtle destructive variant (`error-fg` on `error-muted`). |
 | `--destructive-foreground` | `white` | `#FFFFFF` | — |
-| `--border` | `neutral-200` | `#E5E5E3` | All structural borders. Used at 0.5px throughout (see base styles). |
-| `--input` | `neutral-200` | `#E5E5E3` | Input borders at rest. |
-| `--ring` | `primary` | `#5B6EE1` | Focus ring colour. Applied at 12% opacity in the focus-visible rule. |
+| `--border` | `neutral-200` | `#DBD7D3` | All structural borders. Used at 0.5px throughout (see base styles). |
+| `--input` | `input-border` → `neutral-200` | `#DBD7D3` | Input borders at rest. |
+| `--ring` | `input-ring` → `focus-ring` (primary-500) | `#667BEF` | Focus ring colour. Applied at 12% opacity in the focus-visible rule. |
 | `--radius` | `radius-lg` | `12px` | Cairn's card radius is the base. shadcn derives sm/md/xl from this. See radius mapping below. |
-| `--sidebar` | nav bg | `#0F1330` | Sidebar is always dark in Cairn — product context, not content. |
-| `--sidebar-accent` | brand/15% | `rgba(...)` | Active sidebar item background: brand at 15% opacity. |
+| `--sidebar` | `primary-950` | `#13193F` | Sidebar is always dark in Cairn — product context, not content. |
+| `--sidebar-accent` | primary-500 / 15% | `rgba(...)` | Active sidebar item background: primary at 15% opacity. |
+
+> **Secondary & Accent brand palettes:** shadcn's own `--secondary` and `--accent` carry pre-existing UI meaning (neutral secondary button, ghost-hover tint) and are bridged to the Neutral/Primary palettes above. To use Cairn's **Secondary** (teal) and **Accent** (amber) brand palettes, reach the Layer 2/3 tokens directly via the generated Tailwind utilities — e.g. `bg-secondary-solid text-secondary-contrast`, `bg-accent-muted text-accent-fg`, or the component tokens `--badge-secondary-background` / `--badge-accent-background`.
 
 ### Dark mode changes
 
 | Variable | Light | Dark | Reason |
 |----------|-------|------|--------|
-| `--background` | stone-50 `#F5F5F4` | ink `#18181A` | — |
-| `--card` | white `#FFFFFF` | ink-900 `#232325` | Slightly lighter than background — same hierarchy logic, inverted. |
-| `--primary` (`brand-solid`) | brand-700 `#3A4DC8` | brand-400 `#818CF8` | Light: dark stop + white text (≥5.8:1). Dark: lighter stop + ink text (5.9:1) — saturated stops are too heavy on dark backgrounds. |
-| `--accent` | brand-50 `#E8EAFF` | brand-dark-muted `#1E254A` | Light tint on dark surface reads as a light bleed, not a badge. |
-| `--border` | stone-200 `#E5E5E3` | ink-700 `#3A3A3C` | — |
-| `--muted-foreground` | stone-550 `#6B6560` | stone-400 `#A09E97` | Light stop darkened to clear AA on the canvas; dark stop lightened for dark-mode contrast (6.6:1). |
+| `--background` | stone-50 `#F6F5F4` | ink `#18181A` | — |
+| `--card` | white `#FFFFFF` | `#232325` | Slightly lighter than background — same hierarchy logic, inverted. |
+| `--primary` (`primary-solid`) | 700 `#404DB3` | 400 `#8198FF` | Light: dark stop + white text (≥6.2:1). Dark: lighter stop + ink text (≥6.4:1) — saturated stops are too heavy on dark backgrounds. |
+| `--accent` | primary-bg `#EFF5FF` | primary-900 `#212A65` | Light tint on dark surface reads as a light bleed, not a badge. |
+| `--border` | stone-200 `#DBD7D3` | `#3A3A3C` | — |
+| `--muted-foreground` | neutral-700 `#5F5A54` | neutral-400 `#A7A19A` | Light stop darkened to clear AA on the canvas; dark stop lightened for dark-mode contrast (6.6:1). |
 
 ---
 
@@ -132,7 +133,7 @@ base: "... cursor-default ..."
 
 Cairn button height is 36px (app) / 40px (marketing). shadcn defaults to `h-9` (36px) — this matches. No change needed for the app surface.
 
-The default (primary) variant fills with `--primary`, which now resolves to `brand-solid` (brand-700), not brand-500 — this is what keeps the white label AA-compliant. Don't override the fill back to a brand-500 utility. Hover uses `--brand-solid-hover`. Cairn **never uses gradients** on buttons — ensure no `bg-gradient-*` classes appear in your button component.
+The default (primary) variant fills with `--primary`, which resolves through `--primary-button-background` to `primary-solid` (the 700 stop), not the 500 stop — this is what keeps the white label AA-compliant. Don't override the fill back to a 500-stop utility. Hover uses `--primary-button-background-hover` (`primary-solid-hover`). Cairn **never uses gradients** on buttons — ensure no `bg-gradient-*` classes appear in your button component.
 
 ### Badge
 
@@ -145,11 +146,13 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:     "bg-accent text-accent-foreground",       // brand / active
+        default:     "bg-primary-muted text-primary-fg",          // brand / active
+        secondary:   "bg-secondary-muted text-secondary-fg",      // Secondary palette
+        accent:      "bg-accent-muted text-accent-fg",            // Accent palette
         success:     "bg-success-muted text-success-foreground",
-        destructive: "bg-destructive/10 text-destructive",
+        destructive: "bg-error-muted text-error-foreground",
         warning:     "bg-warning-muted text-warning-foreground",
-        outline:     "bg-muted text-muted-foreground border",  // neutral / archived
+        outline:     "bg-muted text-muted-foreground border",     // neutral / archived
       }
     }
   }
@@ -211,26 +214,30 @@ Wrap marketing sections in the `.surface-marketing` class. shadcn components ins
 </section>
 ```
 
-The `eyebrow` utility class applies `text-[13px] font-semibold tracking-[0.09em] uppercase` with `color: var(--cairn-brand-400)` — the brand-muted colour, not white. Marketing body copy is 16px (`--text-mkt-body`); use `text-muted-foreground` for secondary copy, never a raw white-opacity value (see Design.md).
+The `eyebrow` utility class applies `text-[13px] font-semibold tracking-[0.09em] uppercase` with `color: var(--cairn-primary-400)` — the lighter primary stop, not white. Marketing body copy is 16px (`--text-mkt-body`); use `text-muted-foreground` for secondary copy, never a raw white-opacity value (see Design.md).
 
 ---
 
 ## Adding a new product theme
 
-1. Define the 7 brand primitive values in `app.css` under a new `[data-theme]` selector
+1. Author the three Layer 1 ramps (Primary, Secondary, Accent) — 11 stops each, 50→950 — in `app.css` under a new `[data-theme]` selector. The Neutral ramp is shared; don't re-author it. Layers 2 and 3 (and the shadcn bridge) re-derive automatically.
 2. Set `data-theme="your-product"` on `<html>` in your layout
-3. Check WCAG AA contrast (4.5:1): `--cairn-brand-700` against white (it is the solid-button fill via `brand-solid`), `--cairn-brand-400` against `mkt-canvas` and ink (dark-mode interactive + eyebrow), and `--cairn-brand-700` against `--cairn-brand-50` (accent text)
-4. Independently author `--cairn-brand-dark-nav` — do not mechanically darken the brand colour
+3. Check WCAG AA contrast (4.5:1) on each ramp: the `700` stop against white (light-mode `solid` fill), the `400` stop against ink (dark-mode `solid` fill) — and for Primary, the `400` stop against `mkt-canvas` (marketing eyebrow). The `fg` (700) stop must clear 4.5:1 on the `muted` (200) and `bg` (50) stops.
+4. Keep the 50→950 lightness rhythm — author at the same cadence as the default Orbit ramps rather than mechanically deriving stops from one colour.
 
 ```css
 /* app.css */
 [data-theme="newproduct"] {
-  --cairn-brand-500:        oklch(...); /* primary interactive */
-  --cairn-brand-400:        oklch(...); /* dark mode variant — lighter */
-  --cairn-brand-50:         oklch(...); /* light muted fill */
-  --cairn-brand-700:        oklch(...); /* text on brand-50 background */
-  --cairn-brand-900:        oklch(...); /* nav background (light mode) */
-  --cairn-brand-dark-muted: oklch(...); /* dark mode badge fill */
-  --cairn-brand-dark-nav:   oklch(...); /* dark mode nav — independently chosen */
+  /* Primary — 11 stops */
+  --cairn-primary-50:   oklch(...);
+  /* … 100 200 300 400 500 600 700 800 900 … */
+  --cairn-primary-950:  oklch(...);
+  /* Secondary — 11 stops (50→950) */
+  --cairn-secondary-50: oklch(...);
+  /* … */
+  /* Accent — 11 stops (50→950) */
+  --cairn-accent-50:    oklch(...);
+  /* … */
+  /* Neutral is shared — do not re-author */
 }
 ```

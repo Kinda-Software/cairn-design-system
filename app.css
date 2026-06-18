@@ -5,8 +5,26 @@
  * Drop this file into your SvelteKit project as src/app.css
  * and import it in your root +layout.svelte.
  *
- * Per-product theming: wrap your app root in data-theme="beacon" etc.
- * and override the --brand-* primitives defined at the bottom of this file.
+ * ─── THREE-LAYER TOKEN ARCHITECTURE ──────────────────────────────────
+ *
+ *   Layer 1 — Global palettes (primitives)
+ *     Raw colour ramps: --cairn-{primary|secondary|accent|neutral}-{50…950}.
+ *     Authored per product. Never referenced directly by components.
+ *
+ *   Layer 2 — Semantic tokens (per palette, light + dark)
+ *     Purpose-named slots derived from Layer 1:
+ *       --{palette}-bg / -subtle / -muted / -emphasized / -solid / -fg / -contrast
+ *     plus the surface + status semantics (--background, --foreground, …).
+ *     This layer absorbs every light/dark and per-product switch.
+ *
+ *   Layer 3 — Component tokens
+ *     Element-level slots that map a semantic token onto a component, e.g.
+ *       --primary-button-background: var(--primary-solid)
+ *     The shadcn variable layer (--primary, --secondary, --border, …) is a
+ *     downstream consumer of Layer 2/3 — every shadcn component keeps working.
+ *
+ * Per-product theming: set data-theme="beacon" (etc.) on the root element.
+ * A product authors only its Layer 1 ramps; Layers 2 and 3 re-derive for free.
  *
  * Dark mode: shadcn-svelte uses a .dark class on <html>.
  * Wire this up with mode-watcher: https://mode-watcher.svecosystem.com
@@ -18,205 +36,408 @@
 /* ─── Dark mode variant ────────────────────────────────────────────── */
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Cairn primitives ─────────────────────────────────────────────── */
-/*
- * These are the raw palette values. Never reference these directly in
- * components — use the semantic tokens below. The brand primitives are
- * overridden per-product via data-theme attributes.
- */
+/* ════════════════════════════════════════════════════════════════════
+   LAYER 1 — GLOBAL PALETTES (primitives)
+   ════════════════════════════════════════════════════════════════════
+   Raw values only. Never reference these directly in components — use the
+   Layer 2 semantic tokens. Each palette is a full 50→950 ramp. The default
+   product is Orbit (indigo primary); other products override these ramps
+   via [data-theme] at the bottom of this file.
+   ──────────────────────────────────────────────────────────────────── */
 :root {
-  /* Brand primitives — default product: Orbit (indigo) */
-  --cairn-brand-500:        oklch(0.5834 0.1747 272.76); /* #5B6EE1 */
-  --cairn-brand-400:        oklch(0.6801 0.1583 276.93); /* #818CF8 — dark mode */
-  --cairn-brand-50:         oklch(0.9418 0.0284 281.50); /* #E8EAFF */
-  --cairn-brand-700:        oklch(0.4834 0.1909 270.66); /* #3A4DC8 */
-  --cairn-brand-900:        oklch(0.2994 0.1026 272.66); /* #1E2660 */
-  --cairn-brand-dark-muted: oklch(0.2792 0.0685 273.13); /* #1E254A */
-  --cairn-brand-dark-nav:   oklch(0.1993 0.0591 275.38); /* #0F1230 */
+  /* Primary ramp — Orbit indigo */
+  --cairn-primary-50:        oklch(0.971 0.028 272.8);   /* #EFF5FF */
+  --cairn-primary-100:       oklch(0.94 0.0525 272.8);   /* #DFEAFF */
+  --cairn-primary-200:       oklch(0.882 0.0963 272.8);  /* #C3D5FF */
+  --cairn-primary-300:       oklch(0.806 0.14 272.8);    /* #A2B9FF */
+  --cairn-primary-400:       oklch(0.712 0.1662 272.8);  /* #8198FF — dark-mode solid */
+  --cairn-primary-500:       oklch(0.624 0.175 272.8);   /* #667BEF — vibrant accent / ring */
+  --cairn-primary-600:       oklch(0.548 0.1732 272.8);  /* #5263D4 */
+  --cairn-primary-700:       oklch(0.47 0.161 272.8);    /* #404DB3 — light-mode solid (AA) */
+  --cairn-primary-800:       oklch(0.392 0.1365 272.8);  /* #303A8D */
+  --cairn-primary-900:       oklch(0.314 0.105 272.8);   /* #212A65 — nav background */
+  --cairn-primary-950:       oklch(0.232 0.0735 272.8);  /* #13193F — deep nav */
 
-  /* Stone neutrals — warm-tinted, never pure grey */
-  --cairn-neutral-50:   oklch(0.9699 0.0013 106.42); /* #F5F5F4 */
-  --cairn-neutral-200:  oklch(0.9213 0.0027 106.45); /* #E5E5E3 */
-  --cairn-neutral-500:  oklch(0.5534 0.0116 58.07);  /* #78716C — decorative/icon use only, fails AA as body text on canvas */
-  --cairn-neutral-550:  oklch(0.5107 0.0109 62.43);  /* #6B6560 — secondary TEXT stop, 5.3:1 on canvas / 5.7:1 on white */
-  --cairn-neutral-900:  oklch(0.2161 0.0061 56.04);  /* #1C1917 */
-  --cairn-ink:          oklch(0.2099 0.0039 286.06); /* #18181A */
-  --cairn-white:        oklch(1.0000 0.0000 89.88);  /* #FFFFFF */
+  /* Secondary ramp — Orbit teal */
+  --cairn-secondary-50:      oklch(0.971 0.0176 195.0);  /* #E9F9F9 */
+  --cairn-secondary-100:     oklch(0.94 0.033 195.0);    /* #D3F3F2 */
+  --cairn-secondary-200:     oklch(0.882 0.0605 195.0);  /* #AAE5E4 */
+  --cairn-secondary-300:     oklch(0.806 0.088 195.0);   /* #76D2D1 */
+  --cairn-secondary-400:     oklch(0.712 0.1045 195.0);  /* #3EB6B6 */
+  --cairn-secondary-500:     oklch(0.624 0.11 195.0);    /* #009B9C */
+  --cairn-secondary-600:     oklch(0.548 0.1089 195.0);  /* #008485 */
+  --cairn-secondary-700:     oklch(0.47 0.1012 195.0);   /* #006B6C */
+  --cairn-secondary-800:     oklch(0.392 0.0858 195.0);  /* #005354 */
+  --cairn-secondary-900:     oklch(0.314 0.066 195.0);   /* #003B3C */
+  --cairn-secondary-950:     oklch(0.232 0.0462 195.0);  /* #002424 */
 
-  /* Status */
-  --cairn-sage:         oklch(0.6300 0.1403 158.87); /* #16A269 */
-  --cairn-sage-muted:   oklch(0.9505 0.0507 163.05); /* #D1FAE5 */
-  --cairn-sage-text:    oklch(0.4318 0.0865 166.91); /* #065F46 */
-  --cairn-ember:        oklch(0.6380 0.1719 33.25);  /* #E05B40 — soft/icon ember; fails white text, never a solid-button fill */
-  --cairn-ember-solid:  oklch(0.4949 0.1561 33.41);  /* #A8341C — solid destructive fill, 6.6:1 with white */
-  --cairn-ember-muted:  oklch(0.9653 0.0157 32.01);  /* #FEF0ED */
-  --cairn-ember-text:   oklch(0.4437 0.1613 26.90);  /* #991B1B — 6.8:1+ on ember-muted */
-  --cairn-warning-muted:oklch(0.9619 0.0580 95.62);  /* #FEF3C7 */
-  --cairn-warning-text: oklch(0.4732 0.1247 46.20);  /* #92400E */
+  /* Accent ramp — Orbit amber */
+  --cairn-accent-50:         oklch(0.971 0.024 70.0);    /* #FFF3E5 */
+  --cairn-accent-100:        oklch(0.94 0.045 70.0);     /* #FFE7CB */
+  --cairn-accent-200:        oklch(0.882 0.0825 70.0);   /* #FCCF9D */
+  --cairn-accent-300:        oklch(0.806 0.12 70.0);     /* #F1B164 */
+  --cairn-accent-400:        oklch(0.712 0.1425 70.0);   /* #DA9026 */
+  --cairn-accent-500:        oklch(0.624 0.15 70.0);     /* #BF7300 */
+  --cairn-accent-600:        oklch(0.548 0.1485 70.0);   /* #A65D00 */
+  --cairn-accent-700:        oklch(0.47 0.138 70.0);     /* #8A4800 */
+  --cairn-accent-800:        oklch(0.392 0.117 70.0);    /* #6C3600 */
+  --cairn-accent-900:        oklch(0.314 0.09 70.0);     /* #4D2600 */
+  --cairn-accent-950:        oklch(0.232 0.063 70.0);    /* #2F1600 */
 
-  /* Marketing canvas — always explicit, never inherited */
+  /* Neutral ramp — shared warm stone, never pure grey */
+  --cairn-neutral-50:        oklch(0.971 0.0021 70.0);   /* #F6F5F4 — app canvas */
+  --cairn-neutral-100:       oklch(0.94 0.0039 70.0);    /* #EDEBE8 */
+  --cairn-neutral-200:       oklch(0.882 0.0072 70.0);   /* #DBD7D3 — borders */
+  --cairn-neutral-300:       oklch(0.806 0.0104 70.0);   /* #C4BFB9 */
+  --cairn-neutral-400:       oklch(0.712 0.0123 70.0);   /* #A7A19A — dark-mode secondary text */
+  --cairn-neutral-500:       oklch(0.624 0.013 70.0);    /* #8D867F — decorative/icon only */
+  --cairn-neutral-600:       oklch(0.548 0.0129 70.0);   /* #767069 */
+  --cairn-neutral-700:       oklch(0.47 0.012 70.0);     /* #5F5A54 — secondary TEXT stop (AA) */
+  --cairn-neutral-800:       oklch(0.392 0.0101 70.0);   /* #494540 */
+  --cairn-neutral-900:       oklch(0.314 0.0078 70.0);   /* #34312D — dark-mode card */
+  --cairn-neutral-950:       oklch(0.232 0.0055 70.0);   /* #1F1D1B — dark-mode canvas */
+
+  /* Base anchors */
+  --cairn-white:        oklch(1.0000 0.0000 89.88);      /* #FFFFFF */
+  --cairn-ink:          oklch(0.2099 0.0039 286.06);     /* #18181A — primary text / dark contrast */
+
+  /* Status families — system state only, never branding or decoration */
+  --cairn-sage:         oklch(0.6300 0.1403 158.87);     /* #16A269 — success icon/border */
+  --cairn-sage-muted:   oklch(0.9505 0.0507 163.05);     /* #D1FAE5 */
+  --cairn-sage-text:    oklch(0.4318 0.0865 166.91);     /* #065F46 — success solid/text */
+  --cairn-ember:        oklch(0.6380 0.1719 33.25);      /* #E05B40 — soft/icon ember */
+  --cairn-ember-solid:  oklch(0.4949 0.1561 33.41);      /* #A8341C — destructive fill, 6.6:1 white */
+  --cairn-ember-muted:  oklch(0.9653 0.0157 32.01);      /* #FEF0ED */
+  --cairn-ember-text:   oklch(0.4437 0.1613 26.90);      /* #991B1B */
+  --cairn-warning-muted:oklch(0.9619 0.0580 95.62);      /* #FEF3C7 */
+  --cairn-warning-text: oklch(0.4732 0.1247 46.20);      /* #92400E */
+
+  /* Marketing canvas — always explicit, never inherited from the app theme */
   --cairn-mkt-canvas:        oklch(0.1615 0.0105 285.17); /* #0D0D12 */
   --cairn-mkt-surface:       oklch(0.2040 0.0158 284.91); /* #16161E */
   --cairn-mkt-surface-raised:oklch(0.2396 0.0190 284.87); /* #1E1E28 */
 }
 
-/* ─── Shadcn semantic tokens — light mode ──────────────────────────── */
-/*
- * These are the variables shadcn-svelte components consume.
- * They map Cairn's token architecture onto shadcn's naming convention.
- * Components reference these; never the primitives above.
- */
+/* ════════════════════════════════════════════════════════════════════
+   LAYER 2 — SEMANTIC TOKENS · LIGHT MODE
+   ════════════════════════════════════════════════════════════════════
+   Purpose-named slots derived from Layer 1. Every palette exposes the
+   same seven-slot recipe so components treat all palettes identically:
+
+     bg          50   lightest wash / page-level palette surface
+     subtle      100  hover on ghost items, selected rows
+     muted       200  badge / chip fills
+     emphasized  300  stronger fills, active fills, palette borders
+     solid       700  bold fill behind contrast text — AA-safe (≥6.2:1 white)
+     fg          700  palette-tinted text on a neutral surface
+     contrast    white text/icon colour that sits on -solid
+
+   Solid is pinned to the 700 stop (not 500): the 500 stop is vibrant but
+   only ~3.4–4.6:1 with white. 700 clears ≥6.2:1 across all products.
+   ──────────────────────────────────────────────────────────────────── */
 :root {
-  /*
-   * Brand interactive layer — semantic, AA-safe.
-   * brand-500 is vibrant but only reaches 3.4–4.6:1 with white, so it must
-   * NOT carry white text or sit under body text. These two tokens are the
-   * accessible interactive pair every component should reference for solid
-   * fills and brand-coloured text:
-   *   --brand-solid    : the fill behind white text / brand text on light
-   *                      surfaces. Resolves to brand-700 (≥5.8:1 with white,
-   *                      all four products) in light mode; brand-400 in dark.
-   *   --brand-contrast : the text/icon colour that sits on --brand-solid.
-   * Keep brand-500 for focus rings, 0.5px borders, and large display accents
-   * only — never for normal-size text or as a white-text background.
-   */
-  --brand-solid:           var(--cairn-brand-700);
-  --brand-contrast:        var(--cairn-white);
-  /* Hover darkens the solid fill by ~6% lightness, hue-locked, mode-agnostic. */
-  --brand-solid-hover:     oklch(from var(--brand-solid) calc(l - 0.06) c h);
+  /* Primary */
+  --primary-bg:           var(--cairn-primary-50);
+  --primary-subtle:       var(--cairn-primary-100);
+  --primary-muted:        var(--cairn-primary-200);
+  --primary-emphasized:   var(--cairn-primary-300);
+  --primary-solid:        var(--cairn-primary-700);
+  --primary-solid-hover:  oklch(from var(--primary-solid) calc(l - 0.06) c h);
+  --primary-fg:           var(--cairn-primary-700);
+  --primary-contrast:     var(--cairn-white);
 
-  /* Page canvas */
-  --background:            var(--cairn-neutral-50);
-  --foreground:            var(--cairn-ink);
+  /* Secondary */
+  --secondary-bg:          var(--cairn-secondary-50);
+  --secondary-subtle:      var(--cairn-secondary-100);
+  --secondary-muted:       var(--cairn-secondary-200);
+  --secondary-emphasized:  var(--cairn-secondary-300);
+  --secondary-solid:       var(--cairn-secondary-700);
+  --secondary-solid-hover: oklch(from var(--secondary-solid) calc(l - 0.06) c h);
+  --secondary-fg:          var(--cairn-secondary-700);
+  --secondary-contrast:    var(--cairn-white);
 
-  /* Cards and raised surfaces */
-  --card:                  var(--cairn-white);
-  --card-foreground:       var(--cairn-ink);
+  /* Accent */
+  --accent-bg:            var(--cairn-accent-50);
+  --accent-subtle:        var(--cairn-accent-100);
+  --accent-muted:         var(--cairn-accent-200);
+  --accent-emphasized:    var(--cairn-accent-300);
+  --accent-solid:         var(--cairn-accent-700);
+  --accent-solid-hover:   oklch(from var(--accent-solid) calc(l - 0.06) c h);
+  --accent-fg:            var(--cairn-accent-700);
+  --accent-contrast:      var(--cairn-white);
 
-  /* Popovers, dropdowns, command palette */
-  --popover:               var(--cairn-white);
-  --popover-foreground:    var(--cairn-ink);
+  /* Neutral */
+  --neutral-bg:           var(--cairn-neutral-50);
+  --neutral-subtle:       var(--cairn-neutral-100);
+  --neutral-muted:        var(--cairn-neutral-200);
+  --neutral-emphasized:   var(--cairn-neutral-300);
+  --neutral-solid:        var(--cairn-neutral-700);
+  --neutral-solid-hover:  oklch(from var(--neutral-solid) calc(l - 0.06) c h);
+  --neutral-fg:           var(--cairn-neutral-700);
+  --neutral-contrast:     var(--cairn-white);
 
-  /* Primary — brand interactive colour. Points at the AA-safe solid stop. */
-  --primary:               var(--brand-solid);
-  --primary-foreground:    var(--brand-contrast);
+  /* ── Surface semantics (palette-independent) ──────────────────────── */
+  --background:           var(--cairn-neutral-50);
+  --foreground:           var(--cairn-ink);
+  --card:                 var(--cairn-white);
+  --card-foreground:      var(--cairn-ink);
+  --popover:              var(--cairn-white);
+  --popover-foreground:   var(--cairn-ink);
+  /* Secondary/helper text — neutral-700 clears 4.5:1 on canvas and white card */
+  --muted-foreground:     var(--cairn-neutral-700);
+  --border:               var(--cairn-neutral-200);
+  --input-border:         var(--cairn-neutral-200);
+  --focus-ring:           var(--cairn-primary-500);
 
-  /* Secondary — alternative actions */
-  --secondary:             var(--cairn-neutral-50);
-  --secondary-foreground:  var(--cairn-ink);
+  /* ── Status semantics ─────────────────────────────────────────────── */
+  --success-solid:        var(--cairn-sage-text);
+  --success-muted:        var(--cairn-sage-muted);
+  --success-fg:           var(--cairn-sage-text);
+  --error-solid:          var(--cairn-ember-solid);
+  --error-muted:          var(--cairn-ember-muted);
+  --error-fg:             var(--cairn-ember-text);
+  --warning-muted:        var(--cairn-warning-muted);
+  --warning-fg:           var(--cairn-warning-text);
+}
 
-  /* Muted — ghost elements, disabled, placeholder areas */
-  --muted:                 var(--cairn-neutral-50);
-  /* Secondary text uses neutral-550 (not 500) so it clears 4.5:1 on the
-     stone-50 canvas as well as on white cards. */
-  --muted-foreground:      var(--cairn-neutral-550);
+/* ════════════════════════════════════════════════════════════════════
+   LAYER 2 — SEMANTIC TOKENS · DARK MODE
+   ════════════════════════════════════════════════════════════════════
+   The recipe inverts: tint backgrounds use the dark end of the ramp, and
+   `solid` shifts to the lighter 400 stop with ink contrast text — saturated
+   500/700 fills are too heavy on dark surfaces. Verified AA: 400 behind ink
+   clears ≥6.4:1 across all products.
 
-  /* Accent — hover states on ghost/nav items */
-  --accent:                var(--cairn-brand-50);
-  --accent-foreground:     var(--cairn-brand-700);
+     bg 950 · subtle 900 · muted 800 · emphasized 700 · solid 400 · fg 300
+   ──────────────────────────────────────────────────────────────────── */
+.dark {
+  /* Primary */
+  --primary-bg:           var(--cairn-primary-950);
+  --primary-subtle:       var(--cairn-primary-900);
+  --primary-muted:        var(--cairn-primary-800);
+  --primary-emphasized:   var(--cairn-primary-700);
+  --primary-solid:        var(--cairn-primary-400);
+  --primary-solid-hover:  oklch(from var(--primary-solid) calc(l + 0.06) c h);
+  --primary-fg:           var(--cairn-primary-300);
+  --primary-contrast:     var(--cairn-ink);
 
-  /* Destructive — delete, remove, critical errors.
-     Solid fill uses ember-solid (6.6:1 with white); the soft/subtle variant
-     pairs ember-text on ember-muted (see components / Design.md). */
-  --destructive:           var(--cairn-ember-solid);
-  --destructive-foreground:var(--cairn-white);
+  /* Secondary */
+  --secondary-bg:          var(--cairn-secondary-950);
+  --secondary-subtle:      var(--cairn-secondary-900);
+  --secondary-muted:       var(--cairn-secondary-800);
+  --secondary-emphasized:  var(--cairn-secondary-700);
+  --secondary-solid:       var(--cairn-secondary-400);
+  --secondary-solid-hover: oklch(from var(--secondary-solid) calc(l + 0.06) c h);
+  --secondary-fg:          var(--cairn-secondary-300);
+  --secondary-contrast:    var(--cairn-ink);
 
-  /* Structural */
-  --border:                var(--cairn-neutral-200);
-  --input:                 var(--cairn-neutral-200);
-  --ring:                  var(--cairn-brand-500);
+  /* Accent */
+  --accent-bg:            var(--cairn-accent-950);
+  --accent-subtle:        var(--cairn-accent-900);
+  --accent-muted:         var(--cairn-accent-800);
+  --accent-emphasized:    var(--cairn-accent-700);
+  --accent-solid:         var(--cairn-accent-400);
+  --accent-solid-hover:   oklch(from var(--accent-solid) calc(l + 0.06) c h);
+  --accent-fg:            var(--cairn-accent-300);
+  --accent-contrast:      var(--cairn-ink);
+
+  /* Neutral */
+  --neutral-bg:           var(--cairn-neutral-950);
+  --neutral-subtle:       var(--cairn-neutral-900);
+  --neutral-muted:        var(--cairn-neutral-800);
+  --neutral-emphasized:   var(--cairn-neutral-700);
+  --neutral-solid:        var(--cairn-neutral-400);
+  --neutral-solid-hover:  oklch(from var(--neutral-solid) calc(l + 0.06) c h);
+  --neutral-fg:           var(--cairn-neutral-300);
+  --neutral-contrast:     var(--cairn-ink);
+
+  /* ── Surface semantics ────────────────────────────────────────────── */
+  --background:           var(--cairn-ink);              /* #18181A */
+  --foreground:           var(--cairn-neutral-50);
+  --card:                 oklch(0.2570 0.0037 286.14);   /* #232325 — lighter than bg */
+  --card-foreground:      var(--cairn-neutral-50);
+  --popover:              oklch(0.2570 0.0037 286.14);
+  --popover-foreground:   var(--cairn-neutral-50);
+  --muted-foreground:     var(--cairn-neutral-400);       /* #A7A19A — 6.6:1 on dark bg */
+  --border:               oklch(0.3492 0.0034 286.22);   /* #3A3A3C */
+  --input-border:         oklch(0.3492 0.0034 286.22);
+  --focus-ring:           var(--cairn-primary-400);
+
+  /* ── Status semantics ─────────────────────────────────────────────── */
+  --success-solid:        var(--cairn-sage);
+  --error-solid:          var(--cairn-ember-solid);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   LAYER 3 — COMPONENT TOKENS
+   ════════════════════════════════════════════════════════════════════
+   Element-level slots that bind a Layer 2 semantic token onto a specific
+   component part. Components reference these (or the shadcn bridge below);
+   they never reach past this layer into Layer 1 or 2. Re-bind a slot here
+   to re-skin a component without touching palettes or component code.
+   ──────────────────────────────────────────────────────────────────── */
+:root {
+  /* Primary button — one per view; solid fill, no tint or gradient */
+  --primary-button-background:        var(--primary-solid);
+  --primary-button-foreground:        var(--primary-contrast);
+  --primary-button-background-hover:  var(--primary-solid-hover);
+
+  /* Secondary button — neutral-toned alternative action (Cairn semantics) */
+  --secondary-button-background:       var(--neutral-subtle);
+  --secondary-button-foreground:       var(--foreground);
+  --secondary-button-background-hover: var(--neutral-muted);
+
+  /* Ghost / toolbar button — tertiary actions */
+  --ghost-button-foreground:           var(--neutral-fg);
+  --ghost-button-background-hover:     var(--primary-bg);
+
+  /* Destructive button — Ember family; filled uses error-solid (6.6:1 white) */
+  --destructive-button-background:     var(--error-solid);
+  --destructive-button-foreground:     var(--cairn-white);
+
+  /* Badges — colour encodes meaning; pill shape only */
+  --badge-primary-background:   var(--primary-muted);
+  --badge-primary-foreground:   var(--primary-fg);
+  --badge-secondary-background: var(--secondary-muted);
+  --badge-secondary-foreground: var(--secondary-fg);
+  --badge-accent-background:    var(--accent-muted);
+  --badge-accent-foreground:    var(--accent-fg);
+  --badge-success-background:   var(--success-muted);
+  --badge-success-foreground:   var(--success-fg);
+  --badge-error-background:     var(--error-muted);
+  --badge-error-foreground:     var(--error-fg);
+  --badge-warning-background:   var(--warning-muted);
+  --badge-warning-foreground:   var(--warning-fg);
+
+  /* Form inputs — 36px height; ring uses the vibrant 500 stop (non-text, ≥3:1) */
+  --input-background:    var(--card);
+  --input-foreground:    var(--foreground);
+  --input-border-color:  var(--input-border);
+  --input-ring:          var(--focus-ring);
+
+  /* Sidebar — always dark in Cairn, regardless of mode */
+  --sidebar:               var(--cairn-primary-950);
+  --sidebar-foreground:    var(--cairn-white);
+  /* Pinned to the 700 stop so white text/icons clear AA in either mode —
+     the 400 dark-mode solid would fail white text on the always-dark nav. */
+  --sidebar-primary:       var(--cairn-primary-700);
+  --sidebar-primary-foreground: var(--cairn-white);
+  --sidebar-accent:        oklch(from var(--cairn-primary-500) l c h / 0.15);
+  --sidebar-accent-foreground: var(--cairn-white);
+  --sidebar-border:        oklch(1.0000 0.0000 89.88 / 0.07);
+  --sidebar-ring:          var(--cairn-primary-400);
+}
+
+.dark {
+  --sidebar:               var(--cairn-primary-950);
+  --sidebar-border:        oklch(1.0000 0.0000 89.88 / 0.07);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SHADCN BRIDGE — downstream consumer of Layers 2 & 3
+   ════════════════════════════════════════════════════════════════════
+   These are the variables shadcn-svelte components read. They map Cairn's
+   token architecture onto shadcn's naming convention so the component
+   library keeps working unchanged. Note: shadcn's `secondary`/`accent`
+   carry their own UI meaning (neutral secondary button, ghost-hover tint)
+   that predates Cairn's Secondary/Accent brand palettes — they are bridged
+   to neutral/primary here on purpose. Use the Layer 2/3 tokens (or the
+   Tailwind `*-secondary-*` / `*-accent-*` utilities) to reach the brand
+   palettes directly.
+   ──────────────────────────────────────────────────────────────────── */
+:root {
+  --primary:               var(--primary-button-background);
+  --primary-foreground:    var(--primary-button-foreground);
+  --secondary:             var(--secondary-button-background);
+  --secondary-foreground:  var(--secondary-button-foreground);
+  --muted:                 var(--neutral-subtle);
+  /* --muted-foreground defined in Layer 2 */
+  --accent:                var(--primary-bg);             /* ghost-hover tint */
+  --accent-foreground:     var(--primary-fg);
+  --destructive:           var(--destructive-button-background);
+  --destructive-foreground:var(--destructive-button-foreground);
+  --input:                 var(--input-border-color);
+  --ring:                  var(--input-ring);
 
   /* Radius — Cairn uses 12px as the base "card" radius */
   --radius: 12px;
-
-  /* Sidebar — always dark in Cairn, regardless of mode */
-  --sidebar:               oklch(0.1993 0.0591 275.38); /* #0F1330 */
-  --sidebar-foreground:    oklch(1.0000 0.0000 89.88);
-  /* Sidebar is always dark in both modes, with white foreground — pin to the
-     brand-700 stop so white text/icons clear AA (≥5.8:1) regardless of mode.
-     brand-500 here would fail (4.41:1) if it ever backs a label. */
-  --sidebar-primary:       var(--cairn-brand-700);
-  --sidebar-primary-foreground: var(--cairn-white);
-  --sidebar-accent:        oklch(0.5834 0.1747 272.76 / 0.15); /* brand-500 at 15% */
-  --sidebar-accent-foreground: oklch(1.0000 0.0000 89.88);
-  --sidebar-border:        oklch(1.0000 0.0000 89.88 / 0.07); /* white/7% */
-  --sidebar-ring:          var(--cairn-brand-400);
 }
 
-/* ─── Shadcn semantic tokens — dark mode ───────────────────────────── */
-/*
- * Surface hierarchy inverts in dark mode:
- * Light: page=stone-50, cards=white (lighter than page)
- * Dark:  page=ink-950, cards=ink-900 (lighter than page — same logic)
- *
- * Brand colour shifts from 500 to 400 (lighter stop) — saturated colours
- * at 500 are too heavy on dark backgrounds.
- */
 .dark {
-  /* Interactive layer flips to the lighter stop: brand-400 + ink text gives
-     5.9–8.4:1 on dark surfaces (saturated 500/700 are too heavy / too dark). */
-  --brand-solid:           var(--cairn-brand-400);
-  --brand-contrast:        var(--cairn-ink);
-
-  --background:            oklch(0.2099 0.0039 286.06); /* ink #18181A */
-  --foreground:            oklch(0.9699 0.0013 106.42); /* stone-50 */
-
-  --card:                  oklch(0.2570 0.0037 286.14); /* #232325 — lighter than bg */
-  --card-foreground:       oklch(0.9699 0.0013 106.42);
-
-  --popover:               oklch(0.2570 0.0037 286.14);
-  --popover-foreground:    oklch(0.9699 0.0013 106.42);
-
-  --primary:               var(--brand-solid);          /* lighter stop in dark mode */
-  --primary-foreground:    var(--brand-contrast);
-
-  --secondary:             oklch(0.2570 0.0037 286.14);
-  --secondary-foreground:  oklch(0.9699 0.0013 106.42);
-
-  --muted:                 oklch(0.2570 0.0037 286.14);
-  --muted-foreground:      oklch(0.6989 0.0103 93.62);  /* stone-400 #A09E97 — 6.6:1 on dark bg, 5.9:1 on card */
-
-  --accent:                var(--cairn-brand-dark-muted);
-  --accent-foreground:     var(--cairn-brand-400);
-
-  /* ember-solid keeps white text legible on dark surfaces too (6.6:1). */
-  --destructive:           var(--cairn-ember-solid);
-  --destructive-foreground:var(--cairn-white);
-
-  --border:                oklch(0.3492 0.0034 286.22); /* #3A3A3C */
-  --input:                 oklch(0.3492 0.0034 286.22);
-  --ring:                  var(--cairn-brand-400);
-
-  /* Sidebar stays dark in dark mode — just goes slightly deeper */
-  --sidebar:               var(--cairn-brand-dark-nav);
-  --sidebar-border:        oklch(1.0000 0.0000 89.88 / 0.07);
+  --accent:                var(--cairn-primary-900);      /* dark ghost-hover tint */
+  --accent-foreground:     var(--cairn-primary-300);
 }
 
 /* ─── @theme — expose tokens as Tailwind utilities ─────────────────── */
 @theme inline {
-  /* Colours */
+  /* Surface + shadcn semantics */
   --color-background:           var(--background);
   --color-foreground:           var(--foreground);
   --color-card:                 var(--card);
   --color-card-foreground:      var(--card-foreground);
   --color-popover:              var(--popover);
   --color-popover-foreground:   var(--popover-foreground);
-  --color-primary:              var(--primary);
-  --color-primary-foreground:   var(--primary-foreground);
-  --color-brand-solid:          var(--brand-solid);
-  --color-brand-solid-hover:    var(--brand-solid-hover);
-  --color-brand-contrast:       var(--brand-contrast);
-  --color-secondary:            var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted:                var(--muted);
   --color-muted-foreground:     var(--muted-foreground);
-  --color-accent:               var(--accent);
-  --color-accent-foreground:    var(--accent-foreground);
   --color-destructive:          var(--destructive);
   --color-destructive-foreground:var(--destructive-foreground);
   --color-border:               var(--border);
   --color-input:                var(--input);
   --color-ring:                 var(--ring);
+
+  /* Layer 2 semantic palette tokens — bg-primary-solid, text-accent-fg, … */
+  --color-primary:              var(--primary);
+  --color-primary-foreground:   var(--primary-foreground);
+  --color-primary-bg:           var(--primary-bg);
+  --color-primary-subtle:       var(--primary-subtle);
+  --color-primary-muted:        var(--primary-muted);
+  --color-primary-emphasized:   var(--primary-emphasized);
+  --color-primary-solid:        var(--primary-solid);
+  --color-primary-solid-hover:  var(--primary-solid-hover);
+  --color-primary-fg:           var(--primary-fg);
+  --color-primary-contrast:     var(--primary-contrast);
+
+  --color-secondary:            var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-bg:          var(--secondary-bg);
+  --color-secondary-subtle:      var(--secondary-subtle);
+  --color-secondary-muted:       var(--secondary-muted);
+  --color-secondary-emphasized:  var(--secondary-emphasized);
+  --color-secondary-solid:       var(--secondary-solid);
+  --color-secondary-solid-hover: var(--secondary-solid-hover);
+  --color-secondary-fg:          var(--secondary-fg);
+  --color-secondary-contrast:    var(--secondary-contrast);
+
+  --color-accent:               var(--accent);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-accent-bg:            var(--accent-bg);
+  --color-accent-subtle:        var(--accent-subtle);
+  --color-accent-muted:         var(--accent-muted);
+  --color-accent-emphasized:    var(--accent-emphasized);
+  --color-accent-solid:         var(--accent-solid);
+  --color-accent-solid-hover:   var(--accent-solid-hover);
+  --color-accent-fg:            var(--accent-fg);
+  --color-accent-contrast:      var(--accent-contrast);
+
+  --color-neutral-bg:           var(--neutral-bg);
+  --color-neutral-subtle:       var(--neutral-subtle);
+  --color-neutral-muted:        var(--neutral-muted);
+  --color-neutral-emphasized:   var(--neutral-emphasized);
+  --color-neutral-solid:        var(--neutral-solid);
+  --color-neutral-fg:           var(--neutral-fg);
+  --color-neutral-contrast:     var(--neutral-contrast);
+
+  /* Status colours — bg-success, text-error-foreground, … */
+  --color-success:              var(--success-solid);
+  --color-success-muted:        var(--success-muted);
+  --color-success-foreground:   var(--success-fg);
+  --color-error:                var(--error-solid);
+  --color-error-muted:          var(--error-muted);
+  --color-error-foreground:     var(--error-fg);
+  --color-warning-muted:        var(--warning-muted);
+  --color-warning-foreground:   var(--warning-fg);
+
+  /* Sidebar */
   --color-sidebar:              var(--sidebar);
   --color-sidebar-foreground:   var(--sidebar-foreground);
   --color-sidebar-primary:      var(--sidebar-primary);
@@ -225,13 +446,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border:       var(--sidebar-border);
   --color-sidebar-ring:         var(--sidebar-ring);
-
-  /* Cairn status colours — available as bg-success, text-success-foreground etc. */
-  --color-success:              var(--cairn-sage);
-  --color-success-muted:        var(--cairn-sage-muted);
-  --color-success-foreground:   var(--cairn-sage-text);
-  --color-warning-muted:        var(--cairn-warning-muted);
-  --color-warning-foreground:   var(--cairn-warning-text);
 
   /* Marketing surface colours — used inside .surface-marketing wrapper */
   --color-mkt-canvas:           var(--cairn-mkt-canvas);
@@ -352,14 +566,14 @@
      * Never replace this token with a raw opacity value for informational text.
      */
     --muted-foreground:   oklch(0.7400 0.0040 275);
-    /* CTA fill uses the AA-safe solid stop (brand-700, ≥5.8:1 with white) —
-       brand-500 + white is only 3.4–4.6:1 and fails on the 17px CTA label.
-       The permitted CTA glow box-shadow (brand-500 @ 25%) supplies the
+    /* CTA fill uses the AA-safe solid stop (primary-700, ≥6.2:1 with white) —
+       the 500 stop + white is only 3.4–4.6:1 and fails on the 17px CTA label.
+       The permitted CTA glow box-shadow (primary-500 @ 25%) supplies the
        "light source" luminosity the dark canvas is designed around. */
-    --primary:            var(--brand-solid);
-    --primary-foreground: var(--brand-contrast);
-    --accent:             var(--cairn-brand-400);         /* eyebrow colour */
-    --accent-foreground:  var(--cairn-brand-400);
+    --primary:            var(--primary-solid);
+    --primary-foreground: var(--primary-contrast);
+    --accent:             var(--cairn-primary-400);       /* eyebrow colour */
+    --accent-foreground:  var(--cairn-primary-400);
     background-color: var(--cairn-mkt-canvas);
     color: oklch(1.0000 0.0000 89.88);
     /*
@@ -410,9 +624,9 @@
     font-weight: 600;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: var(--cairn-brand-400);
+    color: var(--cairn-primary-400);
   }
-  /* Eyebrow inside surface-marketing inherits brand-muted (#818CF8) automatically */
+  /* Eyebrow inside surface-marketing inherits primary-400 automatically */
 
   /* Border width override — Cairn uses 0.5px throughout */
   .border-cairn { border-width: 0.5px; }
@@ -420,48 +634,140 @@
   /* Featured item border — the one exception: 1px brand colour */
   .border-featured {
     border-width: 1px;
-    border-color: var(--cairn-brand-500);
+    border-color: var(--cairn-primary-500);
   }
 }
 
-/* ─── Per-product theme overrides ──────────────────────────────────── */
-/*
- * Each product overrides the 7 brand primitive tokens.
- * Semantic tokens (--primary, --ring, --sidebar etc.) update automatically.
- * See Cairn design system docs for authoring guidance on --cairn-brand-900
- * and --cairn-brand-dark-nav — these must be independently authored per
- * product; do not mechanically darken the brand colour.
- */
+/* ════════════════════════════════════════════════════════════════════
+   PER-PRODUCT THEMES — Layer 1 overrides only
+   ════════════════════════════════════════════════════════════════════
+   Each product re-authors its Primary, Secondary and Accent ramps. The
+   Neutral ramp is shared (warm stone) across all products. Layers 2 and 3
+   re-derive automatically — no semantic or component token is redefined here.
+
+   Authoring guidance:
+   - Keep the same 50→950 lightness rhythm so the semantic recipe holds.
+   - Verify each ramp's 700 stop clears ≥4.5:1 with white (it is the light-mode
+     `solid` fill) and its 400 stop clears ≥4.5:1 with ink (dark-mode `solid`).
+   - Hues should form a deliberate triad; do not mechanically rotate.
+   ──────────────────────────────────────────────────────────────────── */
 [data-theme="orbit"] {
-  /* Default — indigo. Defined above in :root. No override needed. */
+  /* Default — indigo / teal / amber. Defined above in :root. No override needed. */
 }
 
 [data-theme="beacon"] {
-  --cairn-brand-500:        oklch(0.5764 0.1262 164.81); /* #0E9E72 */
-  --cairn-brand-400:        oklch(0.7338 0.1349 163.39); /* #34C98F */
-  --cairn-brand-50:         oklch(0.9591 0.0445 162.90); /* #D4F5EA */
-  --cairn-brand-700:        oklch(0.4458 0.0997 166.42); /* #097355 */
-  --cairn-brand-900:        oklch(0.3274 0.0744 167.07); /* #065440 */
-  --cairn-brand-dark-muted: oklch(0.2312 0.0481 166.82); /* #0A2E22 */
-  --cairn-brand-dark-nav:   oklch(0.1645 0.0334 167.55); /* #031F18 */
+  /* Primary — green */
+  --cairn-primary-50:        oklch(0.971 0.0216 164.8);  /* #E9FAF2 */
+  --cairn-primary-100:       oklch(0.94 0.0405 164.8);   /* #D3F4E4 */
+  --cairn-primary-200:       oklch(0.882 0.0743 164.8);  /* #AAE8CC */
+  --cairn-primary-300:       oklch(0.806 0.108 164.8);   /* #77D6AE */
+  --cairn-primary-400:       oklch(0.712 0.1283 164.8);  /* #3FBB8E */
+  --cairn-primary-500:       oklch(0.624 0.135 164.8);   /* #00A072 */
+  --cairn-primary-600:       oklch(0.548 0.1337 164.8);  /* #00885D */
+  --cairn-primary-700:       oklch(0.47 0.1242 164.8);   /* #006F49 */
+  --cairn-primary-800:       oklch(0.392 0.1053 164.8);  /* #005637 */
+  --cairn-primary-900:       oklch(0.314 0.081 164.8);   /* #003E27 */
+  --cairn-primary-950:       oklch(0.232 0.0567 164.8);  /* #002516 */
+  /* Secondary — blue */
+  --cairn-secondary-50:      oklch(0.971 0.0224 255.0);  /* #ECF7FF */
+  --cairn-secondary-100:     oklch(0.94 0.042 255.0);    /* #D9EDFF */
+  --cairn-secondary-200:     oklch(0.882 0.077 255.0);   /* #B6DBFF */
+  --cairn-secondary-300:     oklch(0.806 0.112 255.0);   /* #8EC3FF */
+  --cairn-secondary-400:     oklch(0.712 0.133 255.0);   /* #66A5F3 */
+  --cairn-secondary-500:     oklch(0.624 0.14 255.0);    /* #4789DA */
+  --cairn-secondary-600:     oklch(0.548 0.1386 255.0);  /* #3171BF */
+  --cairn-secondary-700:     oklch(0.47 0.1288 255.0);   /* #1F5BA1 */
+  --cairn-secondary-800:     oklch(0.392 0.1092 255.0);  /* #14457E */
+  --cairn-secondary-900:     oklch(0.314 0.084 255.0);   /* #0E315B */
+  --cairn-secondary-950:     oklch(0.232 0.0588 255.0);  /* #081D38 */
+  /* Accent — gold */
+  --cairn-accent-50:         oklch(0.971 0.0224 85.0);   /* #FCF5E5 */
+  --cairn-accent-100:        oklch(0.94 0.042 85.0);     /* #F8EACC */
+  --cairn-accent-200:        oklch(0.882 0.077 85.0);    /* #F0D59E */
+  --cairn-accent-300:        oklch(0.806 0.112 85.0);    /* #E1BA66 */
+  --cairn-accent-400:        oklch(0.712 0.133 85.0);    /* #C89B2A */
+  --cairn-accent-500:        oklch(0.624 0.14 85.0);     /* #AE7F00 */
+  --cairn-accent-600:        oklch(0.548 0.1386 85.0);   /* #966800 */
+  --cairn-accent-700:        oklch(0.47 0.1288 85.0);    /* #7B5200 */
+  --cairn-accent-800:        oklch(0.392 0.1092 85.0);   /* #603F00 */
+  --cairn-accent-900:        oklch(0.314 0.084 85.0);    /* #452C00 */
+  --cairn-accent-950:        oklch(0.232 0.0588 85.0);   /* #2A1A00 */
 }
 
 [data-theme="vault"] {
-  --cairn-brand-500:        oklch(0.5529 0.1751 302.60); /* #9755D4 */
-  --cairn-brand-400:        oklch(0.6882 0.1545 305.14); /* #B97EEC */
-  --cairn-brand-50:         oklch(0.9416 0.0316 307.36); /* #EEE2FA */
-  --cairn-brand-700:        oklch(0.4321 0.1502 301.84); /* #6B35A8 */
-  --cairn-brand-900:        oklch(0.2609 0.1028 303.72); /* #3A1860 */
-  --cairn-brand-dark-muted: oklch(0.2083 0.0693 303.22); /* #261140 */
-  --cairn-brand-dark-nav:   oklch(0.1600 0.0543 304.01); /* #190A2E */
+  /* Primary — purple */
+  --cairn-primary-50:        oklch(0.971 0.028 302.6);   /* #F9F1FF */
+  --cairn-primary-100:       oklch(0.94 0.0525 302.6);   /* #F2E3FF */
+  --cairn-primary-200:       oklch(0.882 0.0963 302.6);  /* #E4C9FF */
+  --cairn-primary-300:       oklch(0.806 0.14 302.6);    /* #D1A9FF */
+  --cairn-primary-400:       oklch(0.712 0.1662 302.6);  /* #B785F7 */
+  --cairn-primary-500:       oklch(0.624 0.175 302.6);   /* #9D68DD */
+  --cairn-primary-600:       oklch(0.548 0.1732 302.6);  /* #8651C3 */
+  --cairn-primary-700:       oklch(0.47 0.161 302.6);    /* #6E3CA4 */
+  --cairn-primary-800:       oklch(0.392 0.1365 302.6);  /* #552D80 */
+  --cairn-primary-900:       oklch(0.314 0.105 302.6);   /* #3C205C */
+  --cairn-primary-950:       oklch(0.232 0.0735 302.6);  /* #241239 */
+  /* Secondary — blue */
+  --cairn-secondary-50:      oklch(0.971 0.0224 258.0);  /* #ECF6FF */
+  --cairn-secondary-100:     oklch(0.94 0.042 258.0);    /* #DAEDFF */
+  --cairn-secondary-200:     oklch(0.882 0.077 258.0);   /* #B9DAFF */
+  --cairn-secondary-300:     oklch(0.806 0.112 258.0);   /* #92C2FF */
+  --cairn-secondary-400:     oklch(0.712 0.133 258.0);   /* #6CA3F4 */
+  --cairn-secondary-500:     oklch(0.624 0.14 258.0);    /* #4E87DA */
+  --cairn-secondary-600:     oklch(0.548 0.1386 258.0);  /* #3970C0 */
+  --cairn-secondary-700:     oklch(0.47 0.1288 258.0);   /* #2759A2 */
+  --cairn-secondary-800:     oklch(0.392 0.1092 258.0);  /* #1B447F */
+  --cairn-secondary-900:     oklch(0.314 0.084 258.0);   /* #13305B */
+  --cairn-secondary-950:     oklch(0.232 0.0588 258.0);  /* #0A1D38 */
+  /* Accent — pink */
+  --cairn-accent-50:         oklch(0.971 0.024 350.0);   /* #FFEFF8 */
+  --cairn-accent-100:        oklch(0.94 0.045 350.0);    /* #FFE0EF */
+  --cairn-accent-200:        oklch(0.882 0.0825 350.0);  /* #FFC2E0 */
+  --cairn-accent-300:        oklch(0.806 0.12 350.0);    /* #FA9FCA */
+  --cairn-accent-400:        oklch(0.712 0.1425 350.0);  /* #E37AAF */
+  --cairn-accent-500:        oklch(0.624 0.15 350.0);    /* #C85C94 */
+  --cairn-accent-600:        oklch(0.548 0.1485 350.0);  /* #AD467D */
+  --cairn-accent-700:        oklch(0.47 0.138 350.0);    /* #903366 */
+  --cairn-accent-800:        oklch(0.392 0.117 350.0);   /* #71254E */
+  --cairn-accent-900:        oklch(0.314 0.09 350.0);    /* #511A38 */
+  --cairn-accent-950:        oklch(0.232 0.063 350.0);   /* #320F21 */
 }
 
 [data-theme="pulse"] {
-  --cairn-brand-500:        oklch(0.6071 0.1748 37.54);  /* #D44B22 */
-  --cairn-brand-400:        oklch(0.7012 0.1620 39.18);  /* #E87050 — adjusted */
-  --cairn-brand-50:         oklch(0.9601 0.0227 37.10);  /* #FAE9E3 */
-  --cairn-brand-700:        oklch(0.4789 0.1482 35.85);  /* #A8350F */
-  --cairn-brand-900:        oklch(0.3098 0.1024 35.20);  /* #5C1A06 */
-  --cairn-brand-dark-muted: oklch(0.2453 0.0665 34.98);  /* #3A1104 */
-  --cairn-brand-dark-nav:   oklch(0.1812 0.0512 35.47);  /* #220A02 */
+  /* Primary — orange */
+  --cairn-primary-50:        oklch(0.971 0.028 37.5);    /* #FFF0E8 */
+  --cairn-primary-100:       oklch(0.94 0.0525 37.5);    /* #FFE0D3 */
+  --cairn-primary-200:       oklch(0.882 0.0963 37.5);   /* #FFC2AB */
+  --cairn-primary-300:       oklch(0.806 0.14 37.5);     /* #FF9E7C */
+  --cairn-primary-400:       oklch(0.712 0.1662 37.5);   /* #F77750 */
+  --cairn-primary-500:       oklch(0.624 0.175 37.5);    /* #DB572D */
+  --cairn-primary-600:       oklch(0.548 0.1732 37.5);   /* #C03F10 */
+  --cairn-primary-700:       oklch(0.47 0.161 37.5);     /* #A12B00 */
+  --cairn-primary-800:       oklch(0.392 0.1365 37.5);   /* #7E1E00 */
+  --cairn-primary-900:       oklch(0.314 0.105 37.5);    /* #5B1600 */
+  --cairn-primary-950:       oklch(0.232 0.0735 37.5);   /* #380C01 */
+  /* Secondary — blue */
+  --cairn-secondary-50:      oklch(0.971 0.0216 235.0);  /* #E8F8FF */
+  --cairn-secondary-100:     oklch(0.94 0.0405 235.0);   /* #D2F0FF */
+  --cairn-secondary-200:     oklch(0.882 0.0743 235.0);  /* #A8E1FF */
+  --cairn-secondary-300:     oklch(0.806 0.108 235.0);   /* #75CBFB */
+  --cairn-secondary-400:     oklch(0.712 0.1283 235.0);  /* #3EAEE6 */
+  --cairn-secondary-500:     oklch(0.624 0.135 235.0);   /* #0092CC */
+  --cairn-secondary-600:     oklch(0.548 0.1337 235.0);  /* #007BB3 */
+  --cairn-secondary-700:     oklch(0.47 0.1242 235.0);   /* #006396 */
+  --cairn-secondary-800:     oklch(0.392 0.1053 235.0);  /* #004C75 */
+  --cairn-secondary-900:     oklch(0.314 0.081 235.0);   /* #003654 */
+  --cairn-secondary-950:     oklch(0.232 0.0567 235.0);  /* #002134 */
+  /* Accent — teal */
+  --cairn-accent-50:         oklch(0.971 0.0176 185.0);  /* #E9FAF7 */
+  --cairn-accent-100:        oklch(0.94 0.033 185.0);    /* #D4F3EE */
+  --cairn-accent-200:        oklch(0.882 0.0605 185.0);  /* #ABE6DD */
+  --cairn-accent-300:        oklch(0.806 0.088 185.0);   /* #79D2C7 */
+  --cairn-accent-400:        oklch(0.712 0.1045 185.0);  /* #44B7AB */
+  --cairn-accent-500:        oklch(0.624 0.11 185.0);    /* #009C90 */
+  --cairn-accent-600:        oklch(0.548 0.1089 185.0);  /* #008579 */
+  --cairn-accent-700:        oklch(0.47 0.1012 185.0);   /* #006C62 */
+  --cairn-accent-800:        oklch(0.392 0.0858 185.0);  /* #00544C */
+  --cairn-accent-900:        oklch(0.314 0.066 185.0);   /* #003C36 */
+  --cairn-accent-950:        oklch(0.232 0.0462 185.0);  /* #002420 */
 }
