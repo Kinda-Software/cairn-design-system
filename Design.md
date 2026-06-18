@@ -428,9 +428,11 @@ components:
 
 Cairn is named after the stone trail markers used by walkers in the Peak District — stacked stones placed at path junctions and summits to guide you through uncertain terrain without demanding attention. This system works the same way: it guides consistent UI decisions across products and surfaces while staying out of the way of the work itself.
 
-Cairn is a multi-product SaaS design system built around restraint and purposefulness. It supports two fundamentally distinct surface types — **App UI** and **Marketing UI** — that share a typographic and structural foundation but follow different rules for how design elements are deployed.
+Cairn is a multi-product SaaS design system built around restraint and purpose. It supports two distinct surface types — **App UI** and **Marketing UI** — that share a typographic and structural foundation but follow different rules for how design elements are used.
 
-## Component Foundation
+**Cairn is a set of instructions, not a catalogue.** You don't pick a button from a rack of colours, sizes, and styles. You choose the pattern whose *role* fits the job, and the styling follows. Reach for the Primary button because it's the one action that moves the task forward — not because you fancied a filled indigo control. The fill, the contrast, the height are already decided. Say what an element is *for*, and Cairn tells you what it looks like.
+
+## Component foundation
 
 **shadcn-svelte is the default component set for all Kinda products.** Cairn does not define bespoke components from scratch — it defines the tokens, constraints, and usage guidelines that are applied on top of shadcn-svelte's component library.
 
@@ -445,23 +447,23 @@ For setup, token mapping, and component-level override code, see [cairn-shadcn.m
 
 **Typeface:** Space Grotesk (400, 500, 600) for all UI and marketing text. Space Mono (400, 700) exclusively for code, numeric financial tables, and technical identifiers. Both fonts share design DNA — the pairing feels intentional rather than assembled.
 
-**Multi-product architecture:** The system hosts multiple products, each with its own brand palettes. All products share the same typography, spacing, radius, motion, and neutral (warm stone) palette. Each product authors its own Primary, Secondary and Accent ramps (50→950); the default product is Orbit (indigo Primary, teal Secondary, amber Accent). Products are themed via a `data-theme` attribute on the root element, which re-authors the Layer 1 ramps. The semantic (Layer 2) and component (Layer 3) tokens reference those ramps, so they update automatically.
+**Multi-product architecture:** The system hosts multiple products, each with its own brand palettes. All products share the same typography, spacing, radius, and motion; the warm stone Neutral palette is shared by default but a product may author its own (see Per-product theming). Each product authors its own Primary, Secondary and Accent ramps (50→950); the default product is Orbit (indigo Primary, teal Secondary, amber Accent). Products are themed via a `data-theme` attribute on the root element, which re-authors the Layer 1 ramps. The semantic (Layer 2) and component (Layer 3) tokens reference those ramps, so they update automatically.
 
-**App UI surface:** Task-based and information-dense. The job is to help users accomplish work efficiently. Brand colour appears only on interactive elements. Stone warm-tinted neutrals carry all surface structure. Personality lives in the font details, nowhere else.
+**App UI surface:** Task-based and information-dense. The job is to help people get their work done. Brand colour appears only on interactive elements. Warm-tinted stone neutrals carry all surface structure. Personality lives in the font details, nowhere else.
 
-**Marketing surface:** Persuasion-based. The job is to build confidence, communicate value, and drive conversion. A dark canvas (`mkt-canvas`, #0D0D12) is the default — it makes the brand colour read as a light source rather than a tint, which is more emotionally activating. Marketing tokens use the `mkt-` prefix and are additive — they never override app tokens.
+**Marketing surface:** Persuasion-based. The job is to build confidence, show the value, and drive conversion. A dark canvas (`mkt-canvas`, #0D0D12) is the default — it makes the brand colour read as a light source rather than a tint, which gives the page more energy. Marketing tokens use the `mkt-` prefix and are additive — they never override app tokens.
 
-## Colors
+## Colours
 
 Cairn organises colour as a **three-layer token system**. Components only ever reference Layer 2 or Layer 3 — they are unaware of which product is active or which mode is set. Swap a Layer 1 ramp behind the tokens and every component updates automatically. Cairn uses warm-tinted stone neutrals rather than pure grey — the slight warmth prevents surfaces from feeling clinical. Brand colour is strictly functional: it signals interactivity in the app and acts as a light source in marketing. Two status families remain reserved for system state: Sage (success) and Ember (error/destructive).
 
-### Layer 1 — Global palettes
+### Layer 1 — global palettes
 
 Four palettes — **Primary**, **Secondary**, **Accent**, **Neutral** — each a full ramp of eleven stops: `50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950`. These are raw values (`--cairn-primary-500`, `--cairn-neutral-200`, …) and are **never referenced directly** by components. The default product (Orbit) ships indigo Primary, teal Secondary, amber Accent; Neutral is shared warm stone across all products. Per-product themes re-author Primary/Secondary/Accent only.
 
 The `500` stop is the vibrant accent of each ramp (focus rings, 0.5px borders, large display accents) — it is **not** AA-safe behind white text (≈3.4–4.6:1), so it never fills a button or carries normal-size text. The `700` stop is the light-mode solid fill (≥6.2:1 with white); the `400` stop is the dark-mode solid fill (≥6.4:1 with ink).
 
-### Layer 2 — Semantic tokens
+### Layer 2 — semantic tokens
 
 Every palette exposes the same seven-slot recipe, so components treat all four palettes identically. Each slot is defined for **both light and dark mode**:
 
@@ -480,11 +482,16 @@ Every palette exposes the same seven-slot recipe, so components treat all four p
 - **Error semantics:** the soft Ember (`ember`, #E05B40) is for icons and borders; it fails white-text contrast, so the **subtle** destructive button pairs `error-fg` on `error-muted` and the **filled** destructive button uses `error-solid` (#A8341C, 6.6:1 with white).
 - **Marketing Canvas (#0D0D12) / Surface (#16161E):** dark marketing surfaces. Always hardcoded — never inherited from the app theme.
 
-### Layer 3 — Component tokens
+### Layer 3 — component tokens
 
 Element-level slots that bind a Layer 2 semantic token onto a specific component part — e.g. `primaryButtonBackground: {primary-solid}`, `badge-accent.backgroundColor: {accent-muted}`, `nav-sidebar.backgroundColor: {primary-950}`. The full set is in the `components:` block of the frontmatter. The **shadcn variable layer is a downstream consumer of this layer** (`--primary` → `--primary-button-background` → `primary-solid`), so shadcn-svelte components keep working unchanged. shadcn's own `--secondary`/`--accent` carry pre-existing UI meaning (neutral secondary button, ghost-hover tint) and are bridged to the Neutral/Primary palettes; reach the Secondary and Accent brand palettes through the Layer 2/3 tokens directly.
 
-**Per-product theming:** A product authors only its three Layer 1 ramps (Primary, Secondary, Accent) under its `[data-theme]` selector — 33 values total, no semantic or component tokens. Layers 2 and 3 re-derive automatically. Two checks when authoring a ramp: its `700` stop must clear ≥4.5:1 against white (the light-mode solid fill) and its `400` stop must clear ≥4.5:1 against ink (the dark-mode solid fill). Keep the 50→950 lightness rhythm so the semantic recipe holds, and choose a deliberate hue triad rather than mechanically rotating.
+**Per-product theming — pick colours, drop them in, ship.** No bikeshedding: a product theme is two steps, and you never hand-author semantic or component tokens.
+
+- **Step 1 — Pick colours, generate palettes.** Choose your brand colours and generate the 50→950 ramps. **Distil** is the supported generator — it emits Primary, Secondary, Accent **and** Neutral as 11-stop palettes in your choice of CSS variables, Tailwind config, or W3C design-tokens JSON. Take the CSS-variables output and paste it into a `[data-theme]` block, named to Cairn's `--cairn-{palette}-{stop}` convention. That's the whole authoring step.
+- **Step 2 — Check/adjust semantic tokens.** Layer 2's default mappings apply automatically — the seven-slot recipe reads fixed stops from each ramp (`solid`←700/400, `muted`←200, `bg`←50, nav←950) in both modes, so every semantic and component slot resolves the moment the ramps land. Spot-check the result and tweak a mapping only if a brand needs it. The two AA guardrails — the `700` stop ≥4.5:1 on white (light solid fill) and the `400` stop ≥4.5:1 on ink (dark solid fill) — are inherent to the recipe and satisfied by construction when the ramp keeps an even 50→950 lightness rhythm; verify, don't hand-tune.
+
+**Neutral is replaceable, not fixed.** Warm stone is the *recommended default* — sharing it across products gives the whole family a common surface character — but it is a normal Layer 1 ramp like the others. To give a product its own neutral, paste Distil's Neutral ramp into its `[data-theme]` block and every surface (`background`, `card`, `border`, `muted-foreground`) retints automatically. Two things to keep right: (1) the `ink`/`white` text-and-contrast primitives are independent of the ramp, so the new neutral's `50`/`100` stops must stay light enough for ink body text to clear AA; (2) the dark-mode `card`, `border`, and `input` surfaces are currently authored as fixed values rather than neutral stops, so a fully custom *dark* neutral means overriding those three as well.
 
 ## Typography
 
@@ -516,7 +523,7 @@ Space Grotesk is used across both surfaces. Its double-storey `a`, spurred `G`, 
 
 ## Layout
 
-The layout uses a 4px base spacing unit. All spacing values are multiples of 4. Page gutters: 24px mobile / 40px desktop for app surfaces. Marketing sections use 80px vertical padding desktop / 48px mobile, maintaining generous breathing room and a strict one-idea-per-section discipline.
+The layout uses a 4px base spacing unit. All spacing values are multiples of 4. Page gutters: 24px mobile / 40px desktop for app surfaces. Marketing sections use 80px vertical padding desktop / 48px mobile, with generous breathing room and one idea per section.
 
 **App layout model:** Fixed sidebar (192px) plus fluid content area. Top navs are not used in the app — they force all products to share horizontal space and overflow as features grow. The sidebar scales vertically without compression and creates clear spatial separation between navigation (left, always dark) and content (right, mode-dependent).
 
@@ -524,7 +531,7 @@ The layout uses a 4px base spacing unit. All spacing values are multiples of 4. 
 
 **App top bar:** 44px height, white background in light mode, `neutral-border` bottom border. Shows page title left, page-level actions right. Does not repeat sidebar navigation.
 
-## Elevation & Depth
+## Elevation & depth
 
 Elevation is expressed through border weight and background contrast — never box shadows in the app UI.
 
@@ -538,7 +545,7 @@ Elevation is expressed through border weight and background contrast — never b
 
 ## Shapes
 
-Each radius value maps to a specific element category. Mixing radius scales within the same view is not permitted.
+Each radius value maps to a specific element category. Don't mix radius scales within the same view.
 
 - **sm (4px):** Chips, inline tags, checkbox corners, small interactive elements
 - **md (8px):** Inputs, buttons, select controls, table action menus
@@ -552,7 +559,18 @@ No rounded corners on single-sided borders — if using a left or top accent bor
 
 The following guidelines apply to the shadcn-svelte components used in all Kinda products. Each entry describes the Cairn constraints and usage rules — the shadcn component files handle the implementation, and `app.css` handles the token values. Where a component needs class additions or variant changes beyond the default token mapping, those are documented in [cairn-shadcn.md](./cairn-shadcn.md).
 
-**Button hierarchy:** One primary button per view. The primary button fills with `primary-solid` (the 700 stop) and white `primary-contrast` text — no tints or gradients. primary-500 is reserved for the focus ring and is never the fill, because white text on primary-500 fails AA (3.4–4.6:1) while primary-solid clears ≥6.2:1. Secondary for alternative actions alongside primary (neutral-toned `neutral-subtle` fill). Ghost for tertiary and toolbar actions, using `neutral-fg` labels (not the lighter neutral-500, which fails on the stone fill). Destructive comes in two forms: the subtle button pairs `error-text` on `error-muted`, and the filled button uses `error-solid` with white. Both use the Ember family — never a red variant of the brand colour.
+Read each entry as a decision, not a menu. Match the job to a role; the styling's already settled. The columns lead with *when to choose* — the look is the consequence.
+
+**Buttons — choose by role, the style follows.** Pick the button whose job matches the action. You never choose a fill colour; each role's styling is settled, and already AA-safe.
+
+| Name | Choose it when… | Style (the consequence) |
+|---|---|---|
+| **Primary** | this is the one action that initiates or advances the main task in the view — one per view | Solid `primary-solid` (700 stop) fill, `primary-contrast` label. No tints, no gradients. |
+| **Secondary** | an alternative or parallel action sits alongside the primary without competing with it | `neutral-subtle` fill, `foreground` label — neutral-toned, so it reads as the quieter choice. |
+| **Tertiary** | the action is low-stakes, a toolbar action, or an escape hatch — Cancel, Back, Close | Ghost: transparent at rest, `neutral-fg` label, fills with `primary-bg` on hover. |
+| **Destructive** | the action causes permanent or hard-to-reverse data loss | Subtle by default — `error-fg` on `error-muted`. Solid (`error-solid` + white) only when it is the confirming action of a destructive step. Ember family — never a red tint of the brand colour. |
+
+Why the styling lands where it does: `primary-500` is reserved for the focus ring and is *never* a button fill — white text on it fails AA (3.4–4.6:1), while `primary-solid` (700) clears ≥6.2:1. The Tertiary/ghost label uses `neutral-fg` (700), not the lighter `neutral-500`, which fails on the stone hover fill. The subtle destructive pairs `error-fg` on `error-muted`; the solid uses `error-solid` (#A8341C, 6.6:1 with white) — the soft Ember (#E05B40) is for icons and borders only and fails as a white-text fill. *(The Tertiary role maps to the `button-ghost` component token; the role name describes the job, the token name describes the treatment.)*
 
 In the marketing nav, "Sign in" is always a plain text link, never a button. It is for returning users who know what they want and must not compete visually with the primary conversion CTA.
 
@@ -572,7 +590,7 @@ In the marketing nav, "Sign in" is always a plain text link, never a button. It 
 
 **The marketing-to-app handoff:** When a user converts (clicks "Start free trial"), the dark sidebar appears immediately as the visual anchor — it signals "you are now in the product." First app load shows an onboarding checklist rather than an empty dashboard, preventing the jarring emptiness after a high-energy marketing conversion. The brand colour (`primary`) is the continuous visual thread: it appears in the marketing CTA button, then immediately in the app sidebar icon and the first active checklist item.
 
-## Do's and Don'ts
+## Do's and don'ts
 
 - Do use brand colour only on interactive elements in the app UI — if it is not tappable or clickable, it should not use the brand colour
 - Do keep one primary CTA per section or view — multiple primary buttons destroy visual hierarchy
